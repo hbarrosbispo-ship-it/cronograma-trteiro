@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cronograma de Estudos - TRTeiros</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --blue:#305496;
+    --blue-dark:#1F4E78;
+    --yellow:#FFF2CC;
+    --gray:#666666;
+    --light:#F5F7FA;
+    --border:#D9D9D9;
+    --green:#2E7D32;
+    --red:#C0392B;
+    --purple1:#6C63FF;
+    --purple2:#4C3FE0;
+  }
+  *{box-sizing:border-box;}
+  body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:var(--light);
+    color:#222;
+    margin:0;
+    padding:0 0 60px 0;
+  }
+  header{
+    background:var(--blue);
+    color:#fff;
+    padding:22px 20px 18px;
+  }
+  header h1{margin:0 0 4px;font-size:22px;}
+  header p{margin:0;font-size:13px;color:#dbe4f5;}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 16px;}
+
+  /* Stopwatch widget */
+  .stopwatch{
+    position:fixed;
+    top:16px;
+    right:16px;
+    z-index:50;
+    background:linear-gradient(135deg,var(--purple1),var(--purple2));
+    color:#fff;
+    border-radius:14px;
+    padding:10px 14px 12px;
+    box-shadow:0 6px 18px rgba(76,63,224,.35);
+    width:210px;
+    font-size:12px;
+  }
+  .sw-head{display:flex;align-items:center;gap:6px;font-weight:bold;letter-spacing:.5px;font-size:11px;opacity:.9;}
+  .sw-time{
+    font-family:'Courier New',monospace;
+    font-size:22px;
+    font-weight:bold;
+    text-align:center;
+    margin:6px 0 8px;
+    background:rgba(255,255,255,.12);
+    border-radius:8px;
+    padding:4px 0;
+  }
+  .sw-controls{display:flex;gap:6px;justify-content:center;margin-bottom:8px;}
+  .sw-controls button{
+    width:30px;height:30px;
+    border-radius:50%;
+    border:none;
+    cursor:pointer;
+    font-size:13px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  #swToggle{background:#4CAF50;color:#fff;}
+  #swToggle.running{background:#E74C3C;}
+  #swReset{background:#ECEBFF;color:var(--purple2);}
+  .sw-apply select{
+    width:100%;
+    font-size:11px;
+    padding:5px;
+    border-radius:6px;
+    border:none;
+    margin-bottom:6px;
+    font-family:inherit;
+  }
+  .sw-apply button{
+    width:100%;
+    background:#fff;
+    color:var(--purple2);
+    border:none;
+    border-radius:6px;
+    padding:6px;
+    font-size:11px;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .sw-apply button:hover{background:#f0eeff;}
+  .sw-tag{
+    font-size:10px;
+    opacity:.85;
+    text-align:center;
+    margin-bottom:6px;
+    min-height:13px;
+  }
+  @media(max-width:820px){
+    .stopwatch{position:static;width:auto;margin:14px 16px 0;}
+  }
+
+  .progress-card{
+    background:#fff;
+    border-radius:10px;
+    box-shadow:0 1px 4px rgba(0,0,0,.08);
+    margin-top:-14px;
+    padding:16px 18px;
+  }
+  .progress-top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px;font-size:13px;color:var(--gray);flex-wrap:wrap;gap:6px;}
+  .progress-top strong{color:var(--blue-dark);font-size:15px;}
+  .progress-bar-bg{background:#e9edf3;border-radius:6px;height:12px;overflow:hidden;}
+  .progress-bar-fill{background:linear-gradient(90deg,#4CAF50,#2E7D32);height:100%;width:0%;transition:width .3s ease;}
+  .summary-stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--gray);}
+  .summary-stats b{color:var(--blue-dark);}
+
+  .day-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:16px 0;overflow:hidden;}
+  .day-head{background:var(--blue-dark);color:#fff;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;}
+  .day-head .d-left{display:flex;align-items:baseline;gap:10px;}
+  .day-head .d-date{font-size:15px;font-weight:bold;}
+  .day-head .d-name{font-size:12px;color:#c9d7ec;}
+  .day-head .d-badge{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:12px;font-size:12px;}
+  .day-head .d-badge-studied{background:#2E7D32;font-weight:bold;}
+
+  table{width:100%;border-collapse:collapse;font-size:12.5px;}
+  thead th{background:#eef1f7;color:var(--blue-dark);text-align:left;padding:7px 8px;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap;}
+  tbody td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr.timing{background:#FFF9E6;}
+
+  .badge-subj{display:inline-block;background:#e3e9f5;color:var(--blue-dark);font-weight:bold;font-size:11px;padding:2px 7px;border-radius:5px;}
+  .badge-type{display:inline-block;font-size:11px;padding:2px 7px;border-radius:5px;font-weight:bold;}
+  .badge-type.leitura{background:#FDEBD0;color:#B9770E;}
+  .badge-type.questoes{background:#D6EAF8;color:#1F618D;}
+  .badge-type.flashcards{background:#E8DAEF;color:#6C3483;}
+  .desc-cell{max-width:340px;}
+  .qc-link{font-size:10.5px;color:var(--blue-dark);text-decoration:none;font-weight:bold;white-space:nowrap;margin-left:4px;}
+  .qc-link:hover{text-decoration:underline;}
+  .topics{font-size:10.5px;color:var(--gray);font-style:italic;margin-top:3px;line-height:1.3;}
+  textarea.topicsedit{display:block;width:100%;font-size:11px;color:var(--gray);font-style:italic;border:1px solid transparent;background:transparent;padding:3px 4px;border-radius:4px;font-family:inherit;margin-top:3px;line-height:1.35;resize:vertical;overflow:hidden;white-space:pre-wrap;}
+  textarea.topicsedit:hover,textarea.topicsedit:focus{border-color:var(--border);background:#fff;font-style:normal;}
+  .file-link{font-size:10.5px;color:#B9770E;text-decoration:none;font-weight:bold;white-space:nowrap;margin-left:4px;}
+  .file-link:hover{text-decoration:underline;}
+
+  select.status{padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:12px;font-family:inherit;}
+  select.status.done{background:#D5F5E3;color:var(--green);font-weight:bold;}
+  .time-cell{white-space:nowrap;}
+  input[type=number].acertos{width:52px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:13px;text-align:center;}
+  input[type=number].qtdedit{width:52px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:13px;text-align:center;}
+  input[type=number].studymin{width:64px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:13px;text-align:center;}
+  .pct{font-weight:bold;}
+  .pct.good{color:var(--green);}
+  .pct.bad{color:var(--red);}
+  .pct.mid{color:#B9770E;}
+  .dash{color:#bbb;}
+  select.moveto{padding:4px 5px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:11px;font-family:inherit;max-width:110px;}
+
+  .tab-bar{display:flex;gap:8px;margin-top:14px;border-bottom:1px solid var(--border);}
+  .tab-btn{background:none;border:none;padding:10px 16px;font-size:13px;font-weight:bold;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;}
+  .tab-btn.active{color:var(--blue-dark);border-bottom-color:var(--blue);}
+  .tab-btn:hover{color:var(--blue-dark);}
+
+  .subtab-bar{display:flex;gap:8px;margin:14px 0 4px;}
+  .subtab-btn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:bold;cursor:pointer;font-family:inherit;}
+  .subtab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .subtab-btn:hover{border-color:var(--blue);}
+
+  .week-section{margin:20px 0 0;}
+  .week-toggle{display:flex;align-items:baseline;gap:10px;background:#eef1f7;border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;user-select:none;flex-wrap:wrap;}
+  .week-toggle:hover{background:#e3e9f5;}
+  .week-toggle-arrow{font-size:10px;color:var(--blue-dark);width:12px;text-align:center;display:inline-block;}
+  .week-toggle-title{font-weight:bold;color:var(--blue-dark);font-size:13.5px;white-space:nowrap;}
+  .week-toggle-sub{font-size:11.5px;color:var(--gray);}
+
+  .charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px;}
+  .chart-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:16px;}
+  .chart-card h3{margin:0 0 4px;font-size:14px;color:var(--blue-dark);}
+  .chart-card .chart-sub{font-size:11.5px;color:var(--gray);margin-bottom:10px;}
+  .chart-card canvas{max-height:180px;}
+  .chart-empty{grid-column:1/-1;text-align:center;color:var(--gray);font-size:13px;padding:30px 0;}
+
+  .note{font-size:12px;color:var(--gray);margin:10px 0 4px;font-style:italic;}
+
+  .week-summary{display:flex;gap:12px;flex-wrap:wrap;margin:14px 0;}
+  .week-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 16px;flex:1;min-width:220px;}
+  .week-card .w-title{font-size:12px;color:var(--gray);font-weight:bold;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px;}
+  .week-card .w-time{font-size:20px;font-weight:bold;color:var(--blue-dark);}
+  .week-card .w-sub{font-size:11.5px;color:var(--gray);margin-top:2px;}
+
+  @media(max-width:640px){
+    thead{display:none;}
+    table, tbody, tr, td{display:block;width:100%;}
+    tbody tr{border-bottom:1px solid var(--border);padding:8px 6px;}
+    tbody td{border:none;padding:4px 4px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+    tbody td::before{content:attr(data-label);font-size:10px;text-transform:uppercase;color:var(--gray);font-weight:bold;}
+    .desc-cell{max-width:none;text-align:right;}
+  }
+</style>
+</head>
+<body>
+
+<div id="bootOverlay" style="position:fixed;inset:0;background:#F5F7FA;z-index:999;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;color:#305496;font-size:15px;">Carregando cronograma…</div>
+
+<header>
+  <div class="wrap">
+    <h1>Cronograma de Estudos - TRTeiros</h1>
+    <p>14/07 a 16/08/2026 &middot; organizado por matéria &middot; páginas conforme os PDFs da pasta &middot; distribuição balanceada por esforço &middot; leitura, questões e desempenho em um só lugar</p>
+  </div>
+</header>
+
+<div class="stopwatch" id="stopwatch">
+  <div class="sw-head">&#9201; CRONÔMETRO</div>
+  <div class="sw-time" id="swTime">00:00:00</div>
+  <div class="sw-tag" id="swTag">nenhuma atividade selecionada</div>
+  <div class="sw-controls">
+    <button id="swToggle" title="Iniciar / pausar">&#9654;</button>
+    <button id="swReset" title="Reiniciar">&#8635;</button>
+  </div>
+  <div class="sw-apply">
+    <select id="swTaskSelect"></select>
+    <button id="swApply">Salvar tempo nesta atividade</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="progress-card">
+    <div class="progress-top">
+      <span>Progresso geral do cronograma</span>
+      <strong id="progressLabel">0%</strong>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="summary-stats">
+      <span>Questões respondidas: <b id="statQ">0/0</b></span>
+      <span>% de acerto geral: <b id="statPct">-</b></span>
+      <span>Tempo total registrado: <b id="statTime">0min</b></span>
+    </div>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tabBtnCronograma">Cronograma</button>
+    <button class="tab-btn" id="tabBtnDesempenho">Desempenho</button>
+  </div>
+
+  <div id="view-cronograma">
+    <p class="note">A visão diária é a principal (com a revisão de flashcards de cada dia). A visão por matéria agrupa as mesmas atividades por Direito Administrativo, Constitucional, Civil, Processual Civil, Processual do Trabalho e do Trabalho, sem os flashcards (que só aparecem na visão diária). Cada semana da visão diária pode ser minimizada ou maximizada clicando na sua barra de título. Preencha status, o tempo total estudado (em minutos) e (para blocos de questões) os acertos. O campo "Qtd" e o campo de assuntos dos blocos de questões são editáveis. Tudo é calculado e salvo automaticamente neste navegador. Use o cronômetro para cronometrar uma atividade e somar o tempo direto na linha. Use "Mover" para remanejar uma atividade para outra data, se precisar. O link "Abrir arquivo" abre o PDF da leitura direto no Okular, sem depender do aplicativo padrão de PDF do Windows, desde que a configuração de abrir_arquivo.ps1 e registrar_protocolo.reg tenha sido feita uma vez (veja as instruções que acompanham este arquivo).</p>
+
+    <div class="week-summary" id="weekSummary"></div>
+
+    <div class="subtab-bar">
+      <button class="subtab-btn" id="subtabDiaria">Visão diária</button>
+      <button class="subtab-btn" id="subtabMateria">Visão por matéria</button>
+    </div>
+
+    <div id="panel-cronograma"></div>
+  </div>
+
+  <div id="view-desempenho" style="display:none;">
+    <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
+    <div class="charts-grid" id="chartsGrid"></div>
+  </div>
+</div>
+
+<script>
+// ---------- Dados ----------
+// Quantidade de páginas conferida com os arquivos reais da pasta (não com o cronograma sugerido original).
+// 13/07 não foi estudado; o cronograma foi redistribuído proporcionalmente entre 14/07 e 24/07 (9 dias úteis).
+const tasks = [
+  {date:'14/07/2026', subj:'DT', type:'Leitura', desc:'Fontes, princípios, sujeitos, responsabilidade e poderes', amount:28, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 01 - Direito do trabalho (Fontes, princípios, sujeitos, responsabilidade e poderes) (28 pgs).pdf'},
+  {date:'14/07/2026', subj:'DCO', type:'Leitura', desc:'Teoria da Constituição', amount:9, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Constitucional\\DCO.Teoria da Constituição (9 pgs).pdf'},
+  {date:'14/07/2026', subj:'DPT', type:'Leitura', desc:'Integração e princípios', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo 01 - Direito processual do trabalho (Integração e princípios do direito processual do trabalho) (10 pgs).pdf'},
+  {date:'14/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'15/07/2026', subj:'DPT', type:'Leitura', desc:'Organização e competência da Justiça do Trabalho', amount:23, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo 02 - Direito processual do trabalho (Organização e competência da Justiça do Trabalho) (23 pgs).pdf'},
+  {date:'15/07/2026', subj:'DA', type:'Leitura', desc:'Introdução e princípios', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Administrativo\\Doutrina\\DA.Capítulo 01 - Direito administrativo (Introdução e princípios) (17 pgs).pdf'},
+  {date:'15/07/2026', subj:'DPT', type:'Leitura', desc:'Sujeitos da relação processual', amount:13, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo 03 - Direito processual do trabalho (Sujeitos da relação processual) (13 pgs).pdf'},
+  {date:'15/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'16/07/2026', subj:'DT', type:'Questões', desc:'Filtro 25A', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=7&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=16474', topics:'Fontes do Direito do Trabalho; princípios; sujeitos da relação de emprego; poderes do empregador'},
+  {date:'16/07/2026', subj:'DCO', type:'Questões', desc:'Filtro 1A', amount:10, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=3&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=8827', topics:'Teoria da Constituição'},
+  {date:'16/07/2026', subj:'DCO', type:'Leitura', desc:'Princípios fundamentais + direitos e deveres individuais e coletivos', amount:15, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Constitucional\\DCO.Capítulo 01 - Princípios fundamentais + direitos e deveres individuais e coletivos (15 pgs).pdf'},
+  {date:'16/07/2026', subj:'DPT', type:'Questões', desc:'Filtro 37A', amount:11, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=11&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=3512', topics:'Integração e princípios; organização e competência da Justiça do Trabalho; sujeitos da relação processual'},
+  {date:'16/07/2026', subj:'DPT', type:'Questões', desc:'Filtro 38A', amount:24, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=11&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=209&subject_ids%5B%5D=16522&subject_ids%5B%5D=16531', topics:'Integração e princípios; organização e competência da Justiça do Trabalho; sujeitos da relação processual'},
+  {date:'16/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'17/07/2026', subj:'DA', type:'Leitura', desc:'Administração Pública + Terceiro Setor', amount:27, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Administrativo\\Doutrina\\DA.Capítulo 02 - Direito administrativo (Administração Pública e Terceiro setor) (27 pgs).pdf'},
+  {date:'17/07/2026', subj:'DA', type:'Questões', desc:'Filtro 11A', amount:10, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=2&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=15938&subject_ids%5B%5D=15940', topics:'Introdução e princípios; Administração Pública; Terceiro Setor'},
+  {date:'17/07/2026', subj:'DPT', type:'Questões', desc:'Filtro 39A', amount:14, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=11&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=16541', topics:'Integração e princípios; organização e competência da Justiça do Trabalho; sujeitos da relação processual'},
+  {date:'17/07/2026', subj:'DT', type:'Leitura', desc:'Estabilidade + CCP', amount:16, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 11 (extra) - Direito do trabalho (Estabilidade + CCP) (16 pgs).pdf'},
+  {date:'17/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'20/07/2026', subj:'DCO', type:'Questões', desc:'Filtro 2A', amount:26, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=3&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=49&subject_ids%5B%5D=16249&subject_ids%5B%5D=16320&subject_ids%5B%5D=16321&subject_ids%5B%5D=18351', topics:'Teoria da Constituição; princípios fundamentais; direitos e deveres individuais e coletivos'},
+  {date:'20/07/2026', subj:'DCO', type:'Leitura', desc:'Direitos sociais + nacionalidade + direitos políticos + partidos políticos', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Constitucional\\DCO.Capítulo 02 - Direitos sociais + nacionalidade + direitos políticos + partidos políticos (17 pgs).pdf'},
+  {date:'20/07/2026', subj:'DA', type:'Questões', desc:'Filtro 12A', amount:24, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=2&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=455&subject_ids%5B%5D=827&subject_ids%5B%5D=1270&subject_ids%5B%5D=1271&subject_ids%5B%5D=15942&subject_ids%5B%5D=15943&subject_ids%5B%5D=15944&subject_ids%5B%5D=16167&subject_ids%5B%5D=16349', topics:'Introdução e princípios; Administração Pública; Terceiro Setor'},
+  {date:'20/07/2026', subj:'DPT', type:'Leitura', desc:'Atos processuais', amount:12, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo 04 - Direito processual do trabalho (Atos processuais) (12 pgs).pdf'},
+  {date:'20/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'21/07/2026', subj:'DPT', type:'Leitura', desc:'Processo eletrônico (Lei 11.419)', amount:7, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Processo eletrônico (lei 11.419) (extra) (7 pgs).pdf'},
+  {date:'21/07/2026', subj:'DT', type:'Questões', desc:'Filtro 36A', amount:24, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=7&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=701&subject_ids%5B%5D=702', topics:'Fontes do Direito do Trabalho; princípios; sujeitos da relação de emprego; poderes do empregador; estabilidade no emprego'},
+  {date:'21/07/2026', subj:'DCO', type:'Questões', desc:'Filtro 3A', amount:54, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=3&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=436&subject_ids%5B%5D=437&subject_ids%5B%5D=438&subject_ids%5B%5D=868', topics:'Teoria da Constituição; princípios fundamentais; direitos e deveres individuais e coletivos; direitos sociais; direitos de nacionalidade; direitos políticos; partidos políticos'},
+  {date:'21/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'22/07/2026', subj:'DPT', type:'Questões', desc:'Filtro 40A', amount:31, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=11&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=1739&subject_ids%5B%5D=2175&subject_ids%5B%5D=16549&subject_ids%5B%5D=16550&subject_ids%5B%5D=16823', topics:'Integração e princípios; organização e competência da Justiça do Trabalho; sujeitos da relação processual; atos processuais; processo eletrônico (Lei 11.419)'},
+  {date:'22/07/2026', subj:'DT', type:'Leitura', desc:'Contrato individual de trabalho', amount:43, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 02 - Direito do trabalho (Contrato individual de trabalho) (43 pgs).pdf'},
+  {date:'22/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'23/07/2026', subj:'DA', type:'Leitura', desc:'Atos administrativos', amount:22, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Administrativo\\Doutrina\\DA.Capítulo 04 - Direito administrativo (Atos administrativos) (22 pgs).pdf'},
+  {date:'23/07/2026', subj:'DA', type:'Leitura', desc:'Poderes administrativos', amount:14, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Administrativo\\Doutrina\\DA.Capítulo 05 - Direito administrativo (Poderes administrativos) (14 pgs).docx.pdf'},
+  {date:'23/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  {date:'24/07/2026', subj:'DT', type:'Questões', desc:'Filtro 26A', amount:65, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=7&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=1044&subject_ids%5B%5D=6604&subject_ids%5B%5D=16489&subject_ids%5B%5D=16506&subject_ids%5B%5D=16507&subject_ids%5B%5D=16508', topics:'Fontes do Direito do Trabalho; princípios; sujeitos da relação de emprego; poderes do empregador; estabilidade no emprego; contrato individual de trabalho'},
+  {date:'24/07/2026', subj:'DA', type:'Questões', desc:'Filtro 13A', amount:23, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=2&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=5', topics:'Introdução e princípios; Administração Pública; Terceiro Setor; atos administrativos; poderes administrativos'},
+  {date:'24/07/2026', subj:'DA', type:'Questões', desc:'Filtro 14A', amount:15, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=2&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=16022', topics:'Introdução e princípios; Administração Pública; Terceiro Setor; atos administrativos; poderes administrativos'},
+  {date:'24/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  // ---- Semana 3 (27/07 a 01/08/2026) ----
+  {date:'27/07/2026', subj:'DPC', type:'Leitura', desc:'Teoria geral do processo', amount:11, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Direito Processual Civil (Teoria geral do processo) (11 pgs).pdf'},
+  {date:'27/07/2026', subj:'DCO', type:'Leitura', desc:'Controle de constitucionalidade', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Constitucional\\DCO.Controle de constitucionalidade (17 pgs).pdf'},
+  {date:'27/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'28/07/2026', subj:'DCI', type:'Leitura', desc:'Pessoas e domicílio', amount:18, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 01 - Pessoas e domicílio (18 pgs).pdf'},
+  {date:'28/07/2026', subj:'DCI', type:'Leitura', desc:'Bens', amount:7, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 02 - Bens (7 pgs).pdf'},
+  {date:'28/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'29/07/2026', subj:'DPC', type:'Questões', desc:'Filtro 54A', amount:2, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=560&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=12&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=53&institute_ids%5B%5D=69&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=81&institute_ids%5B%5D=83&institute_ids%5B%5D=84&institute_ids%5B%5D=86&institute_ids%5B%5D=87&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=19534', topics:'Teoria geral do processo'},
+  {date:'29/07/2026', subj:'DCO', type:'Questões', desc:'Filtro 10A', amount:10, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=3&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=432', topics:'Controle de constitucionalidade'},
+  {date:'29/07/2026', subj:'DPC', type:'Leitura', desc:'Normas fundamentais + jurisdição + limites da jurisdição + competência', amount:19, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Capítulo 01 - Normas fundamentais + jurisdição + limites da jurisdição + competência (19 pgs).pdf'},
+  {date:'29/07/2026', subj:'DA', type:'Leitura', desc:'Bens públicos', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Administrativo\\Doutrina\\DA.Capítulo 08 - Direito administrativo (Bens públicos) (6 pgs).pdf'},
+  {date:'29/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'30/07/2026', subj:'DCI', type:'Questões', desc:'Filtro 45A', amount:31, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=8&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=61&subject_ids%5B%5D=399&subject_ids%5B%5D=11257&subject_ids%5B%5D=12138&subject_ids%5B%5D=16112', topics:'Pessoas e domicílio; Bens'},
+  {date:'30/07/2026', subj:'DCO', type:'Leitura', desc:'Administração pública', amount:18, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Constitucional\\DCO.Capítulo 04 - Administração pública (18 pgs).pdf'},
+  {date:'30/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'31/07/2026', subj:'DPC', type:'Questões', desc:'Filtro 55A', amount:19, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=560&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=12&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=53&institute_ids%5B%5D=69&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=81&institute_ids%5B%5D=83&institute_ids%5B%5D=84&institute_ids%5B%5D=86&institute_ids%5B%5D=87&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=19624&subject_ids%5B%5D=19625&subject_ids%5B%5D=20005&subject_ids%5B%5D=20334&subject_ids%5B%5D=20338', topics:'Teoria geral do processo; Normas fundamentais + jurisdição + limites da jurisdição + competência'},
+  {date:'31/07/2026', subj:'DA', type:'Questões', desc:'Filtro 22A', amount:7, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=2&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=12&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=53&institute_ids%5B%5D=69&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=81&institute_ids%5B%5D=83&institute_ids%5B%5D=84&institute_ids%5B%5D=86&institute_ids%5B%5D=87&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=853', topics:'Bens públicos'},
+  {date:'31/07/2026', subj:'DCI', type:'Leitura', desc:'Fatos jurídicos + atos jurídicos lícitos e ilícitos', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 03 - fatos jurídicos + atos jurídicos lícitos e ilícitos (17 pgs).pdf'},
+  {date:'31/07/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'01/08/2026', subj:'DCO', type:'Questões', desc:'Filtro 5A', amount:13, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=3&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=806', topics:'Controle de constitucionalidade; Administração pública'},
+  {date:'01/08/2026', subj:'DCI', type:'Leitura', desc:'LINDB', amount:9, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Lei de Introdução às Normas do Direito Brasileiro - LINDB (9 pgs).pdf'},
+  {date:'01/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  // ---- Semana 4 (03/08 a 08/08/2026) ----
+  {date:'03/08/2026', subj:'DCI', type:'Questões', desc:'Filtro 46A', amount:20, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=8&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=394&subject_ids%5B%5D=10917&subject_ids%5B%5D=13334&subject_ids%5B%5D=16110&subject_ids%5B%5D=16162', topics:'Pessoas e domicílio; Bens; Fatos jurídicos e atos jurídicos lícitos e ilícitos; LINDB'},
+  {date:'03/08/2026', subj:'DCI', type:'Questões', desc:'Filtro 44A', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=8&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=393', topics:'Pessoas e domicílio; Bens; Fatos jurídicos e atos jurídicos lícitos e ilícitos; LINDB'},
+  {date:'03/08/2026', subj:'DA', type:'Leitura', desc:'Responsabilidade extracontratual do Estado', amount:12, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Administrativo\\Doutrina\\DA.Capítulo 06 - Direito administrativo (Responsabilidade extracontratual do Estado) (12 pgs).pdf'},
+  {date:'03/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'04/08/2026', subj:'DT', type:'Leitura', desc:'Remuneração', amount:36, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 03 - Direito do trabalho (Remuneração) (36 pgs).pdf'},
+  {date:'04/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'05/08/2026', subj:'DA', type:'Questões', desc:'Filtro 20A', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=2&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=10', topics:'Bens públicos; Responsabilidade extracontratual do Estado'},
+  {date:'05/08/2026', subj:'DPC', type:'Leitura', desc:'Sujeitos do processo', amount:42, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Capítulo 02 - Sujeitos do processo (42 pgs).pdf'},
+  {date:'05/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'06/08/2026', subj:'DT', type:'Questões', desc:'Filtro 27A', amount:51, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=7&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=1044&subject_ids%5B%5D=1245&subject_ids%5B%5D=1806&subject_ids%5B%5D=2142&subject_ids%5B%5D=2203&subject_ids%5B%5D=6604&subject_ids%5B%5D=16501&subject_ids%5B%5D=16665', topics:'Remuneração'},
+  {date:'06/08/2026', subj:'DCI', type:'Leitura', desc:'Prescrição e decadência', amount:9, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 04 - Prescrição e decadência (9 pgs).pdf'},
+  {date:'06/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'07/08/2026', subj:'DPC', type:'Leitura', desc:'Continuação: Sujeitos do processo', amount:null, unit:'', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Capítulo 02 - Sujeitos do processo (42 pgs).pdf'},
+  {date:'07/08/2026', subj:'DCI', type:'Leitura', desc:'Responsabilidade civil + atos unilaterais', amount:9, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 07 - Responsabilidade civil + atos unilaterais (9 pgs).pdf'},
+  {date:'07/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'08/08/2026', subj:'DCI', type:'Questões', desc:'Filtro 47A', amount:11, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=8&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=8398', topics:'Pessoas e domicílio; Bens; Fatos jurídicos e atos jurídicos lícitos e ilícitos; LINDB; Prescrição e decadência; Responsabilidade civil e atos unilaterais'},
+  {date:'08/08/2026', subj:'DPC', type:'Leitura', desc:'Tutela provisória + formação', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Capítulo 04 - Tutela provisória + Formação, suspensão e extinção do processo (10 pgs).pdf'},
+  {date:'08/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+
+  // ---- Semana 5 (10/08 a 16/08/2026) ----
+  {date:'10/08/2026', subj:'DPC', type:'Questões', desc:'Filtro 56A', amount:39, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=560&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=12&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=53&institute_ids%5B%5D=69&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=81&institute_ids%5B%5D=83&institute_ids%5B%5D=84&institute_ids%5B%5D=86&institute_ids%5B%5D=87&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=20009&subject_ids%5B%5D=20276&subject_ids%5B%5D=20277', topics:'Teoria geral do processo; Normas fundamentais + jurisdição + limites da jurisdição + competência; Sujeitos do processo; Tutela provisória + formação'},
+  {date:'10/08/2026', subj:'DCI', type:'Questões', desc:'Filtro 51A', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=8&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=12093&subject_ids%5B%5D=16406&subject_ids%5B%5D=16407', topics:'Pessoas e domicílio; Bens; Fatos jurídicos e atos jurídicos lícitos e ilícitos; LINDB; Prescrição e decadência; Responsabilidade civil e atos unilaterais'},
+  {date:'10/08/2026', subj:'DPC', type:'Questões', desc:'Filtro 58A', amount:11, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=560&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=12&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=53&institute_ids%5B%5D=69&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=81&institute_ids%5B%5D=83&institute_ids%5B%5D=84&institute_ids%5B%5D=86&institute_ids%5B%5D=87&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=19004&subject_ids%5B%5D=20266', topics:'Teoria geral do processo; Normas fundamentais + jurisdição + limites da jurisdição + competência; Sujeitos do processo; Tutela provisória + formação'},
+  {date:'10/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'11/08/2026', subj:'DPT', type:'Leitura', desc:'Reclamação trabalhista', amount:39, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo 05 - Direito processual do trabalho (Reclamação trabalhista) (39 pgs).pdf'},
+  {date:'11/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'12/08/2026', subj:'DT', type:'Leitura', desc:'Adicionais', amount:16, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 04 - Direito do trabalho (Adicionais) (16 pgs).pdf'},
+  {date:'12/08/2026', subj:'DT', type:'Leitura', desc:'Férias', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 05 - Direito do trabalho (Férias) (17 pgs).pdf'},
+  {date:'12/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'13/08/2026', subj:'DPT', type:'Questões', desc:'Filtro 40A', amount:29, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=11&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=208&subject_ids%5B%5D=1043&subject_ids%5B%5D=1243&subject_ids%5B%5D=2610&subject_ids%5B%5D=16554&subject_ids%5B%5D=16556&subject_ids%5B%5D=16559&subject_ids%5B%5D=16561&subject_ids%5B%5D=16563', topics:'Reclamação trabalhista'},
+  {date:'13/08/2026', subj:'DPC', type:'Leitura', desc:'Atos processuais', amount:33, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Capítulo 03 - Atos processuais (33 pgs).pdf'},
+  {date:'13/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'14/08/2026', subj:'DT', type:'Questões', desc:'Filtro 29A', amount:21, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=7&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=2311', topics:'Remuneração; Adicionais; Férias'},
+  {date:'14/08/2026', subj:'DT', type:'Questões', desc:'Filtro 28A', amount:18, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=7&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=11&institute_ids%5B%5D=39&institute_ids%5B%5D=79&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=91&institute_ids%5B%5D=92&per_page=20&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=705', topics:'Remuneração; Adicionais; Férias'},
+  {date:'14/08/2026', subj:'DPC', type:'Leitura', desc:'Continuação: Atos processuais', amount:null, unit:'', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Capítulo 03 - Atos processuais (33 pgs).pdf'},
+  {date:'14/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'16/08/2026', subj:'DPC', type:'Questões', desc:'Filtro 57A', amount:23, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=560&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=12&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=53&institute_ids%5B%5D=69&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=81&institute_ids%5B%5D=83&institute_ids%5B%5D=84&institute_ids%5B%5D=86&institute_ids%5B%5D=87&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=19009&subject_ids%5B%5D=20344&subject_ids%5B%5D=20434&subject_ids%5B%5D=20435&subject_ids%5B%5D=20436', topics:'Teoria geral do processo; Normas fundamentais + jurisdição + limites da jurisdição + competência; Sujeitos do processo; Tutela provisória + formação; Atos processuais'},
+  {date:'16/08/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+];
+tasks.forEach((t,i)=>{ t.id='t'+i; t.effort = t.type==='Leitura' ? t.amount*3 : (t.type==='Questões' ? t.amount*1.5 : 20); });
+
+// ---------- Dias do cronograma (fixo até 24/07 - data da mentoria) ----------
+const DATE_ORDER = ['14/07/2026','15/07/2026','16/07/2026','17/07/2026','20/07/2026','21/07/2026','22/07/2026','23/07/2026','24/07/2026',
+  '27/07/2026','28/07/2026','29/07/2026','30/07/2026','31/07/2026','01/08/2026',
+  '03/08/2026','04/08/2026','05/08/2026','06/08/2026','07/08/2026','08/08/2026',
+  '10/08/2026','11/08/2026','12/08/2026','13/08/2026','14/08/2026','16/08/2026'];
+const DAY_INFO = {
+  '14/07/2026':{day:'Terça-feira', week:'Semana 1'},
+  '15/07/2026':{day:'Quarta-feira', week:'Semana 1'},
+  '16/07/2026':{day:'Quinta-feira', week:'Semana 1'},
+  '17/07/2026':{day:'Sexta-feira', week:'Semana 1'},
+  '20/07/2026':{day:'Segunda-feira', week:'Semana 2'},
+  '21/07/2026':{day:'Terça-feira', week:'Semana 2'},
+  '22/07/2026':{day:'Quarta-feira', week:'Semana 2'},
+  '23/07/2026':{day:'Quinta-feira', week:'Semana 2'},
+  '24/07/2026':{day:'Sexta-feira', week:'Semana 2'},
+  '27/07/2026':{day:'Segunda-feira', week:'Semana 3'},
+  '28/07/2026':{day:'Terça-feira', week:'Semana 3'},
+  '29/07/2026':{day:'Quarta-feira', week:'Semana 3'},
+  '30/07/2026':{day:'Quinta-feira', week:'Semana 3'},
+  '31/07/2026':{day:'Sexta-feira', week:'Semana 3'},
+  '01/08/2026':{day:'Sábado', week:'Semana 3'},
+  '03/08/2026':{day:'Segunda-feira', week:'Semana 4'},
+  '04/08/2026':{day:'Terça-feira', week:'Semana 4'},
+  '05/08/2026':{day:'Quarta-feira', week:'Semana 4'},
+  '06/08/2026':{day:'Quinta-feira', week:'Semana 4'},
+  '07/08/2026':{day:'Sexta-feira', week:'Semana 4'},
+  '08/08/2026':{day:'Sábado', week:'Semana 4'},
+  '10/08/2026':{day:'Segunda-feira', week:'Semana 5'},
+  '11/08/2026':{day:'Terça-feira', week:'Semana 5'},
+  '12/08/2026':{day:'Quarta-feira', week:'Semana 5'},
+  '13/08/2026':{day:'Quinta-feira', week:'Semana 5'},
+  '14/08/2026':{day:'Sexta-feira', week:'Semana 5'},
+  '16/08/2026':{day:'Domingo', week:'Semana 5'},
+};
+function shortLabel(date){ const info=DAY_INFO[date]; return date.slice(0,5)+' · '+info.day.replace('-feira',''); }
+
+// ---------- Storage helpers ----------
+// Substitui o antigo localStorage: STORE é um cache em memória hidratado uma vez no
+// boot (fetch ?action=data) e todo lsSet grava local na hora (render continua síncrono)
+// e dispara, em paralelo, um POST para persistir na aba "Dados Cronograma" da planilha.
+const WEBAPP_URL = 'COLE_AQUI_A_URL_DO_APP_DA_WEB_PUBLICADO';
+let STORE = {};
+function lsGet(key, fallback){ const v = STORE[key]; return (v===undefined) ? fallback : v; }
+function lsSet(key, val){
+  STORE[key] = String(val);
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'}, // evita preflight CORS
+    body: JSON.stringify({ key, value: String(val) })
+  }).catch(()=>{ console.warn('Não foi possível salvar "'+key+'" no servidor — verifique a conexão.'); });
+}
+function seedTasksRemote(){
+  fetch(WEBAPP_URL, {
+    method: 'POST',
+    headers: {'Content-Type': 'text/plain;charset=utf-8'},
+    body: JSON.stringify({
+      action: 'seedTasks',
+      tasks: tasks.map(t=>({id:t.id, date:t.date, subj:t.subj, type:t.type, desc:t.desc, amount:t.amount, unit:t.unit}))
+    })
+  }).catch(()=>{});
+}
+function boot(){
+  fetch(WEBAPP_URL + '?action=data')
+    .then(r=>r.json())
+    .then(data=>{
+      STORE = data;
+      document.getElementById('bootOverlay').style.display = 'none';
+      loadTimerState();
+      renderAll();
+      seedTasksRemote();
+    })
+    .catch(err=>{
+      console.error(err);
+      document.getElementById('bootOverlay').textContent = 'Não foi possível carregar os dados salvos. Verifique sua conexão e recarregue a página.';
+    });
+}
+
+function fmtMin(min){
+  const h = Math.floor(min/60), m = Math.round(min%60);
+  return h>0 ? (h+'h'+(m?String(m).padStart(2,'0'):'')) : m+'min';
+}
+function pad(n){ return String(n).padStart(2,'0'); }
+
+// ---------- Render ----------
+function effectiveDate(t){
+  const moved = lsGet('moveto_'+t.id, '');
+  return moved && DAY_INFO[moved] ? moved : t.date;
+}
+function effectiveAmount(t){
+  if(t.type!=='Questões') return t.amount;
+  const v = lsGet('qtd_'+t.id, '');
+  return v==='' ? t.amount : Math.max(1, Number(v));
+}
+function effectiveTopics(t){
+  const v = lsGet('topics_'+t.id, null);
+  return v===null ? (t.topics||'') : v;
+}
+function fileUri(winPath){
+  const parts = winPath.split('\\');
+  const drive = parts[0];
+  const rest = parts.slice(1).map(p=>encodeURIComponent(p));
+  return 'cronfile:///' + drive + '/' + rest.join('/');
+}
+function escapeHtml(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function autoGrow(el){
+  el.style.height = 'auto';
+  el.style.height = (el.scrollHeight+2) + 'px';
+}
+function effectiveEffort(t){
+  if(t.type==='Leitura') return t.amount*3;
+  if(t.type==='Questões') return effectiveAmount(t)*1.5;
+  return 20;
+}
+function groupByDate(list){
+  const map = {};
+  const TYPE_RANK = {Leitura:0, 'Questões':1, Flashcards:2};
+  DATE_ORDER.forEach(d=>{ map[d]=[]; });
+  list.forEach(item=>{ const d=effectiveDate(item); if(!map[d]) map[d]=[]; map[d].push(item); });
+  // ordem fixa dentro do dia: leituras, depois questões, depois flashcards por último
+  Object.keys(map).forEach(d=>{
+    map[d].sort((a,b)=>TYPE_RANK[a.type]-TYPE_RANK[b.type]);
+  });
+  return map;
+}
+// Agrupamento principal da tela: por matéria (em vez de por dia). groupByDate acima
+// continua existindo só para o cálculo do resumo semanal (renderWeekSummary).
+function groupBySubject(list){
+  const map = {};
+  SUBJECTS.forEach(s=>{ map[s]=[]; });
+  map['-'] = [];
+  const TYPE_RANK = {Leitura:0, 'Questões':1, Flashcards:2};
+  list.forEach(item=>{
+    const s = map.hasOwnProperty(item.subj) ? item.subj : '-';
+    map[s].push(item);
+  });
+  Object.keys(map).forEach(s=>{
+    map[s].sort((a,b)=>{
+      const da = effectiveDate(a), db = effectiveDate(b);
+      if(da!==db) return DATE_ORDER.indexOf(da)-DATE_ORDER.indexOf(db);
+      return TYPE_RANK[a.type]-TYPE_RANK[b.type];
+    });
+  });
+  return map;
+}
+
+// ---------- Semanas minimizáveis (visão diária) ----------
+function parseBrDate(str){
+  const [d,m,y] = str.split('/').map(Number);
+  return new Date(y, m-1, d);
+}
+function weekNamesInOrder(){
+  const seen = [];
+  DATE_ORDER.forEach(d=>{ const w = DAY_INFO[d].week; if(seen.indexOf(w)===-1) seen.push(w); });
+  return seen;
+}
+function weekDates(weekName){
+  return DATE_ORDER.filter(d=>DAY_INFO[d].week===weekName);
+}
+// Por padrão, uma semana já totalmente no passado começa minimizada; a semana atual e as futuras
+// começam maximizadas. Se o usuário clicar e minimizar/maximizar manualmente, essa escolha fica
+// salva no localStorage e passa a valer sempre, independente da data.
+function defaultWeekCollapsed(weekName){
+  const dates = weekDates(weekName).map(parseBrDate);
+  const maxDate = new Date(Math.max.apply(null, dates));
+  const today = new Date(); today.setHours(0,0,0,0);
+  return maxDate < today;
+}
+function isWeekCollapsed(weekName){
+  const stored = lsGet('weekCollapsed_'+weekName, null);
+  if(stored===null) return defaultWeekCollapsed(weekName);
+  return stored==='1';
+}
+function setWeekCollapsed(weekName, collapsed){
+  lsSet('weekCollapsed_'+weekName, collapsed ? '1' : '0');
+}
+
+function renderWeekSummary(groups){
+  const box = document.getElementById('weekSummary');
+  if(!box) return;
+  const weeks = {};
+  DATE_ORDER.forEach(date=>{
+    const week = DAY_INFO[date].week;
+    if(!weeks[week]) weeks[week] = { studied:0, estimated:0, atividades:0 };
+    const items = groups[date];
+    weeks[week].studied += items.reduce((s,t)=>s+taskMinutes(t),0);
+    weeks[week].estimated += items.reduce((s,t)=>s+effectiveEffort(t),0);
+    weeks[week].atividades += items.length;
+  });
+  box.innerHTML = Object.keys(weeks).map(week=>{
+    const w = weeks[week];
+    return `
+      <div class="week-card">
+        <div class="w-title">${week}</div>
+        <div class="w-time">${fmtMin(w.studied)} estudados</div>
+        <div class="w-sub">${w.atividades} atividades &middot; ~${fmtMin(w.estimated)} estimados na semana</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderAll(){
+  renderWeekSummary(groupByDate(tasks));
+  renderActiveSubview();
+}
+
+// Alterna entre a visão diária (principal, com flashcards) e a visão por matéria (sem flashcards).
+function renderActiveSubview(){
+  const panel = document.getElementById('panel-cronograma');
+  panel.innerHTML = '';
+  const subview = lsGet('activeSubview','diaria');
+  const btnDiaria = document.getElementById('subtabDiaria');
+  const btnMateria = document.getElementById('subtabMateria');
+  if(btnDiaria) btnDiaria.classList.toggle('active', subview!=='materia');
+  if(btnMateria) btnMateria.classList.toggle('active', subview==='materia');
+
+  if(subview==='materia'){
+    renderMateriaInto(panel);
+  } else {
+    renderDiariaInto(panel);
+  }
+
+  attachRowEvents();
+  populateTaskSelect();
+  updateProgress();
+}
+
+// Visão principal: por dia, agrupada em semanas minimizáveis, com os flashcards de cada dia.
+function renderDiariaInto(panel){
+  const groups = groupByDate(tasks);
+  weekNamesInOrder().forEach(weekName=>{
+    const datesInWeek = weekDates(weekName);
+    if(!datesInWeek.length) return;
+    const collapsed = isWeekCollapsed(weekName);
+    const totalAtividades = datesInWeek.reduce((s,d)=>s+groups[d].length,0);
+    const totalStudied = datesInWeek.reduce((s,d)=>s+groups[d].reduce((ss,t)=>ss+taskMinutes(t),0),0);
+    const rangeLabel = datesInWeek[0].slice(0,5)+' a '+datesInWeek[datesInWeek.length-1].slice(0,5);
+
+    const section = document.createElement('div');
+    section.className = 'week-section';
+
+    const header = document.createElement('div');
+    header.className = 'week-toggle';
+    header.innerHTML = `
+      <span class="week-toggle-arrow">${collapsed ? '&#9654;' : '&#9660;'}</span>
+      <span class="week-toggle-title">${weekName}</span>
+      <span class="week-toggle-sub">${rangeLabel} &middot; ${totalAtividades} atividade${totalAtividades!==1?'s':''} &middot; ${fmtMin(totalStudied)} estudados</span>
+    `;
+    header.addEventListener('click', ()=>{
+      setWeekCollapsed(weekName, !isWeekCollapsed(weekName));
+      renderActiveSubview();
+    });
+    section.appendChild(header);
+
+    if(!collapsed){
+      datesInWeek.forEach(date=>{
+        const items = groups[date];
+        const info = DAY_INFO[date];
+        const dayEffort = items.reduce((s,t)=>s+effectiveEffort(t),0);
+        const dayStudied = items.reduce((s,t)=>s+taskMinutes(t),0);
+        const card = document.createElement('div');
+        card.className='day-card';
+        card.innerHTML = `
+          <div class="day-head">
+            <div class="d-left">
+              <span class="d-date">${date}</span>
+              <span class="d-name">${info.day}</span>
+            </div>
+            <span class="d-badge">${items.length} atividade${items.length!==1?'s':''} &middot; ~${fmtMin(dayEffort)} estimados</span>
+            <span class="d-badge d-badge-studied">${fmtMin(dayStudied)} estudados hoje</span>
+          </div>
+          ${items.length ? `<table>
+            <thead><tr>
+              <th>Matéria</th><th>Atividade</th><th>Descrição</th><th>Qtd</th>
+              <th>Status</th><th>Tempo total (min)</th>
+              <th>Acertos</th><th>Erros</th><th>% Acerto</th><th>Mover</th>
+            </tr></thead>
+            <tbody>${items.map(t=>rowHtml(t,'subj')).join('')}</tbody>
+          </table>` : `<p class="note" style="margin:12px 16px;">Nenhuma atividade neste dia. Mova alguma atividade para cá, se necessário.</p>`}
+        `;
+        section.appendChild(card);
+      });
+    }
+    panel.appendChild(section);
+  });
+}
+
+// Visão secundária: por matéria, sem os cards de Flashcards (esses só aparecem na visão diária).
+function renderMateriaInto(panel){
+  const subjGroups = groupBySubject(tasks);
+  SUBJECTS.forEach(subj=>{
+    const items = subjGroups[subj] || [];
+    const subjEffort = items.reduce((s,t)=>s+effectiveEffort(t),0);
+    const subjStudied = items.reduce((s,t)=>s+taskMinutes(t),0);
+    const card = document.createElement('div');
+    card.className='day-card';
+    card.innerHTML = `
+      <div class="day-head">
+        <div class="d-left">
+          <span class="d-date">${subj}</span>
+          <span class="d-name">${SUBJECT_NAMES[subj]||subj}</span>
+        </div>
+        <span class="d-badge">${items.length} atividade${items.length!==1?'s':''} &middot; ~${fmtMin(subjEffort)} estimados</span>
+        <span class="d-badge d-badge-studied">${fmtMin(subjStudied)} estudados</span>
+      </div>
+      ${items.length ? `<table>
+        <thead><tr>
+          <th>Data</th><th>Atividade</th><th>Descrição</th><th>Qtd</th>
+          <th>Status</th><th>Tempo total (min)</th>
+          <th>Acertos</th><th>Erros</th><th>% Acerto</th><th>Mover</th>
+        </tr></thead>
+        <tbody>${items.map(t=>rowHtml(t,'date')).join('')}</tbody>
+      </table>` : `<p class="note" style="margin:12px 16px;">Nenhuma atividade cadastrada nesta matéria ainda.</p>`}
+    `;
+    panel.appendChild(card);
+  });
+  // Flashcards não entram aqui de propósito: só aparecem na visão diária.
+}
+
+function rowHtml(t, firstCol){
+  const status = lsGet('status_'+t.id, 'Pendente');
+  const isQ = t.type==='Questões';
+  const acertos = isQ ? lsGet('acertos_'+t.id,'') : '';
+  const typeClass = t.type==='Leitura' ? 'leitura' : (t.type==='Questões' ? 'questoes' : 'flashcards');
+  const rowClass = (timerTaskId===t.id) ? 'timing' : '';
+  const linkHtml = t.link ? ` <a href="${t.link}" target="_blank" rel="noopener" class="qc-link" title="Abrir filtro no QConcursos">QConcursos ↗</a>` : '';
+  const fileHtml = t.file ? ` <a href="${fileUri(t.file)}" class="file-link" title="Abrir o PDF direto no Okular">Abrir arquivo ↗</a>` : '';
+  const topicsHtml = isQ ? `<textarea class="topicsedit" data-id="${t.id}" rows="1" placeholder="Assuntos abordados pelo filtro">${escapeHtml(effectiveTopics(t))}</textarea>` : '';
+  const descHtml = `${t.desc}${linkHtml}${fileHtml}${topicsHtml}`;
+  const amt = effectiveAmount(t);
+  const qtdHtml = isQ
+    ? `<input type="number" min="1" class="qtdedit" data-id="${t.id}" value="${amt}" title="Ajuste conforme a quantidade real de questões no filtro"> ${t.unit}`
+    : (t.amount!=null ? `${t.amount} ${t.unit}` : '<span class="dash">-</span>');
+  const studyMin = lsGet('min_'+t.id, '');
+  const timeCell = `<td data-label="Tempo total (min)" class="time-cell"><input type="number" min="0" step="1" class="studymin" data-id="${t.id}" value="${studyMin}" placeholder="min"></td>`;
+  const firstCell = firstCol==='date'
+    ? `<td data-label="Data"><span class="badge-subj">${shortLabel(effectiveDate(t))}</span></td>`
+    : `<td data-label="Matéria"><span class="badge-subj">${t.subj}</span></td>`;
+  return `
+    <tr data-id="${t.id}" class="${rowClass}">
+      ${firstCell}
+      <td data-label="Atividade"><span class="badge-type ${typeClass}">${t.type}</span></td>
+      <td data-label="Descrição" class="desc-cell">${descHtml}</td>
+      <td data-label="Qtd">${qtdHtml}</td>
+      <td data-label="Status">
+        <select class="status" data-id="${t.id}">
+          <option value="Pendente" ${status==='Pendente'?'selected':''}>Pendente</option>
+          <option value="Concluído" ${status==='Concluído'?'selected':''}>Concluído</option>
+        </select>
+      </td>
+      ${timeCell}
+      <td data-label="Acertos">${isQ ? `<input type="number" min="0" max="${amt}" class="acertos" data-id="${t.id}" value="${acertos}">` : '<span class="dash">-</span>'}</td>
+      <td data-label="Erros" class="erros" id="erros-${t.id}">${isQ ? calcErros(acertos,amt) : '<span class="dash">-</span>'}</td>
+      <td data-label="% Acerto" class="pct-cell" id="pctcell-${t.id}">${isQ ? pctHtml(acertos,amt) : '<span class="dash">-</span>'}</td>
+      <td data-label="Mover">
+        <select class="moveto" data-id="${t.id}">
+          ${DATE_ORDER.map(d=>`<option value="${d}" ${effectiveDate(t)===d?'selected':''}>${shortLabel(d)}</option>`).join('')}
+        </select>
+      </td>
+    </tr>
+  `;
+}
+
+function taskMinutes(t){
+  const v = lsGet('min_'+t.id,'');
+  return v==='' ? 0 : Number(v);
+}
+function calcErros(acertos, total){
+  if(acertos==='' || acertos===undefined) return '-';
+  const a = Math.min(Number(acertos), total);
+  return total - a;
+}
+function pctHtml(acertos, total){
+  if(acertos==='' || acertos===undefined) return '-';
+  const a = Math.min(Number(acertos), total);
+  const pct = total ? (a/total*100) : 0;
+  const cls = pct>=70?'good':pct>=50?'mid':'bad';
+  return `<span class="pct ${cls}">${pct.toFixed(1)}%</span>`;
+}
+
+function styleStatus(sel){
+  sel.classList.remove('done');
+  if(sel.value==='Concluído') sel.classList.add('done');
+}
+
+function attachRowEvents(){
+  document.querySelectorAll('select.status').forEach(sel=>{
+    styleStatus(sel);
+    sel.addEventListener('change', ()=>{
+      lsSet('status_'+sel.dataset.id, sel.value);
+      styleStatus(sel);
+      updateProgress();
+      populateTaskSelect();
+    });
+  });
+  document.querySelectorAll('input.studymin').forEach(inp=>{
+    inp.addEventListener('change', ()=>{
+      const id = inp.dataset.id;
+      lsSet('min_'+id, inp.value);
+      renderAll();
+    });
+  });
+  document.querySelectorAll('input.qtdedit').forEach(inp=>{
+    inp.addEventListener('change', ()=>{
+      const id = inp.dataset.id;
+      lsSet('qtd_'+id, inp.value);
+      renderAll();
+      refreshDesempenhoIfVisible();
+    });
+  });
+  document.querySelectorAll('textarea.topicsedit').forEach(ta=>{
+    autoGrow(ta);
+    ta.addEventListener('input', ()=>{ autoGrow(ta); });
+    ta.addEventListener('change', ()=>{
+      lsSet('topics_'+ta.dataset.id, ta.value);
+    });
+  });
+  document.querySelectorAll('input.acertos').forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      const id = inp.dataset.id;
+      const t = tasks.find(x=>x.id===id);
+      const amt = effectiveAmount(t);
+      lsSet('acertos_'+id, inp.value);
+      document.getElementById('erros-'+id).innerHTML = calcErros(inp.value, amt);
+      document.getElementById('pctcell-'+id).innerHTML = pctHtml(inp.value, amt);
+      updateProgress();
+      refreshDesempenhoIfVisible();
+    });
+  });
+  document.querySelectorAll('select.moveto').forEach(sel=>{
+    sel.addEventListener('change', ()=>{
+      const id = sel.dataset.id;
+      const t = tasks.find(x=>x.id===id);
+      lsSet('moveto_'+id, sel.value === t.date ? '' : sel.value);
+      renderAll();
+    });
+  });
+}
+
+function updateProgress(){
+  const total = tasks.length;
+  const done = tasks.filter(t=>lsGet('status_'+t.id,'Pendente')==='Concluído').length;
+  const pct = total ? Math.round(done/total*100) : 0;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressLabel').textContent = pct+'% ('+done+'/'+total+' atividades)';
+
+  let totQ=0, totA=0, answered=0;
+  tasks.filter(t=>t.type==='Questões').forEach(t=>{
+    const amt = effectiveAmount(t);
+    totQ += amt;
+    const v = lsGet('acertos_'+t.id,'');
+    if(v!==''){ totA += Math.min(Number(v), amt); answered += amt; }
+  });
+  document.getElementById('statQ').textContent = answered+'/'+totQ;
+  document.getElementById('statPct').textContent = answered ? (totA/answered*100).toFixed(1)+'%' : '-';
+
+  let totMin = 0;
+  tasks.forEach(t=>{ totMin += taskMinutes(t); });
+  document.getElementById('statTime').textContent = fmtMin(totMin);
+}
+
+// ---------- Cronômetro ----------
+let timerTaskId = null, timerElapsed = 0, timerRunning = false, timerStartTs = 0, timerInterval = null;
+
+function loadTimerState(){
+  timerTaskId = lsGet('timer_taskId','') || null;
+  timerElapsed = Number(lsGet('timer_elapsed','0'));
+  timerRunning = lsGet('timer_running','0')==='1';
+  timerStartTs = Number(lsGet('timer_startTs','0'));
+  if(timerRunning && timerStartTs){
+    timerElapsed += Math.floor((Date.now()-timerStartTs)/1000);
+    timerStartTs = Date.now();
+    startInterval();
+  }
+  updateSwDisplay();
+}
+function saveTimerState(){
+  lsSet('timer_taskId', timerTaskId||'');
+  lsSet('timer_elapsed', String(timerElapsed));
+  lsSet('timer_running', timerRunning?'1':'0');
+  lsSet('timer_startTs', timerRunning?String(timerStartTs):'');
+}
+function currentElapsedSec(){
+  return timerElapsed + (timerRunning ? Math.floor((Date.now()-timerStartTs)/1000) : 0);
+}
+function updateSwDisplay(){
+  const s = currentElapsedSec();
+  const hh = pad(Math.floor(s/3600)), mm = pad(Math.floor((s%3600)/60)), ss = pad(s%60);
+  document.getElementById('swTime').textContent = hh+':'+mm+':'+ss;
+  const t = tasks.find(x=>x.id===timerTaskId);
+  document.getElementById('swTag').textContent = t ? (t.subj+' · '+t.desc) : 'nenhuma atividade selecionada';
+  const toggleBtn = document.getElementById('swToggle');
+  if(timerRunning){
+    toggleBtn.innerHTML = '&#10074;&#10074;';
+    toggleBtn.title = 'Pausar';
+    toggleBtn.classList.add('running');
+  } else {
+    toggleBtn.innerHTML = '&#9654;';
+    toggleBtn.title = 'Iniciar / retomar';
+    toggleBtn.classList.remove('running');
+  }
+}
+function startInterval(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(updateSwDisplay, 1000);
+}
+function populateTaskSelect(){
+  const sel = document.getElementById('swTaskSelect');
+  const prev = sel.value;
+  const options = tasks.filter(t=>t.type!=='Flashcards' && lsGet('status_'+t.id,'Pendente')!=='Concluído');
+  sel.innerHTML = '<option value="">Selecione a atividade...</option>' +
+    options.map(t=>`<option value="${t.id}">${t.date} · ${t.subj} · ${t.desc.length>32?t.desc.slice(0,32)+'…':t.desc}</option>`).join('');
+  sel.value = timerTaskId || prev || '';
+}
+
+document.getElementById('swToggle').addEventListener('click', ()=>{
+  if(timerRunning){
+    timerElapsed = currentElapsedSec();
+    timerRunning = false;
+    if(timerInterval) clearInterval(timerInterval);
+    saveTimerState();
+    updateSwDisplay();
+  } else {
+    const sel = document.getElementById('swTaskSelect');
+    if(sel.value){ timerTaskId = sel.value; }
+    timerRunning = true;
+    timerStartTs = Date.now();
+    startInterval();
+    saveTimerState();
+    updateSwDisplay();
+    renderAll();
+  }
+});
+document.getElementById('swReset').addEventListener('click', ()=>{
+  timerElapsed = 0; timerRunning = false;
+  if(timerInterval) clearInterval(timerInterval);
+  saveTimerState();
+  updateSwDisplay();
+});
+document.getElementById('swTaskSelect').addEventListener('change', (e)=>{
+  timerTaskId = e.target.value || null;
+  saveTimerState();
+  updateSwDisplay();
+  renderAll();
+});
+document.getElementById('swApply').addEventListener('click', ()=>{
+  const id = document.getElementById('swTaskSelect').value;
+  if(!id){ alert('Selecione uma atividade no cronômetro antes de salvar.'); return; }
+  const totalSec = currentElapsedSec();
+  if(totalSec < 1){ alert('O cronômetro ainda está zerado.'); return; }
+  const mins = Math.max(1, Math.round(totalSec/60));
+  const prev = Number(lsGet('min_'+id,'0')) || 0;
+  lsSet('min_'+id, String(prev + mins));
+  timerElapsed = 0; timerRunning = false;
+  if(timerInterval) clearInterval(timerInterval);
+  timerTaskId = null;
+  saveTimerState();
+  updateSwDisplay();
+  renderAll();
+});
+
+// ---------- Desempenho por matéria ----------
+const SUBJECTS = ['DA','DCO','DCI','DPC','DPT','DT'];
+const SUBJECT_NAMES = {DA:'Direito Administrativo', DCO:'Direito Constitucional', DCI:'Direito Civil', DPC:'Direito Processual Civil', DPT:'Direito Processual do Trabalho', DT:'Direito do Trabalho'};
+let subjectCharts = {};
+
+function subjectStats(subj){
+  let totQ=0, totA=0, answered=0;
+  tasks.filter(t=>t.type==='Questões' && t.subj===subj).forEach(t=>{
+    const amt = effectiveAmount(t);
+    totQ += amt;
+    const v = lsGet('acertos_'+t.id,'');
+    if(v!==''){ totA += Math.min(Number(v), amt); answered += amt; }
+  });
+  return { totQ, totA, answered, pct: answered ? (totA/answered*100) : null };
+}
+
+function renderDesempenho(){
+  const grid = document.getElementById('chartsGrid');
+  grid.innerHTML = '';
+  Object.values(subjectCharts).forEach(c=>c.destroy());
+  subjectCharts = {};
+
+  const anyAnswered = SUBJECTS.some(s=>subjectStats(s).answered>0);
+  if(!anyAnswered){
+    grid.innerHTML = '<div class="chart-empty">Ainda não há acertos registrados. Preencha os acertos nas atividades de questões do cronograma para ver os gráficos aqui.</div>';
+    return;
+  }
+
+  SUBJECTS.forEach(subj=>{
+    const st = subjectStats(subj);
+    const subtitle = st.answered
+      ? `${st.totA} acertos de ${st.answered} questões respondidas (${st.pct.toFixed(1)}%) · ${st.totQ} questões no cronograma`
+      : `Nenhum acerto registrado ainda · ${st.totQ} questões no cronograma`;
+    const card = document.createElement('div');
+    card.className = 'chart-card';
+    card.innerHTML = `
+      <h3>${subj} · ${SUBJECT_NAMES[subj]}</h3>
+      <div class="chart-sub">${subtitle}</div>
+      ${st.answered ? `<canvas id="chart-${subj}"></canvas>` : '<div class="chart-empty" style="padding:14px 0;">Sem acertos registrados ainda</div>'}
+    `;
+    grid.appendChild(card);
+    if(!st.answered) return;
+    const acertosVal = st.totA;
+    const errosVal = st.answered - st.totA;
+    const ctx = document.getElementById('chart-'+subj);
+    subjectCharts[subj] = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Acertos', 'Erros'],
+        datasets: [{ data: [acertosVal, errosVal], backgroundColor: ['#2E7D32', '#C0392B'] }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } } }
+      }
+    });
+  });
+}
+
+function refreshDesempenhoIfVisible(){
+  if(document.getElementById('view-desempenho').style.display !== 'none'){
+    renderDesempenho();
+  }
+}
+
+// ---------- Abas ----------
+document.getElementById('tabBtnCronograma').addEventListener('click', ()=>{
+  document.getElementById('tabBtnCronograma').classList.add('active');
+  document.getElementById('tabBtnDesempenho').classList.remove('active');
+  document.getElementById('view-cronograma').style.display = '';
+  document.getElementById('view-desempenho').style.display = 'none';
+});
+document.getElementById('subtabDiaria').addEventListener('click', ()=>{
+  lsSet('activeSubview','diaria');
+  renderActiveSubview();
+});
+document.getElementById('subtabMateria').addEventListener('click', ()=>{
+  lsSet('activeSubview','materia');
+  renderActiveSubview();
+});
+document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>{
+  document.getElementById('tabBtnDesempenho').classList.add('active');
+  document.getElementById('tabBtnCronograma').classList.remove('active');
+  document.getElementById('view-cronograma').style.display = 'none';
+  document.getElementById('view-desempenho').style.display = '';
+  renderDesempenho();
+});
+
+// ---------- Init ----------
+boot();
+</script>
+</body>
+</html>
