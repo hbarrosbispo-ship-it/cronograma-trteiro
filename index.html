@@ -420,8 +420,8 @@ function shortLabel(date){ const info=DAY_INFO[date]; return date.slice(0,5)+' �
 // ---------- Storage helpers ----------
 // Substitui o antigo localStorage: STORE é um cache em memória hidratado uma vez no
 // boot (fetch ?action=data) e todo lsSet grava local na hora (render continua síncrono)
-// e dispara, em paralelo, um POST para persistir na aba "Dados Cronograma" da planilha.
-const WEBAPP_URL = 'COLE_AQUI_A_URL_DO_APP_DA_WEB_PUBLICADO';
+// e dispara, em paralelo, um POST para persistir no backend (Apps Script + PropertiesService).
+const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwrbaghAE1EsQzcvOCsTLn-B6lYzT29bXtrA_hPVM5A0qMlxBl_dfJ4P-zFi6VjdXuVqA/exec';
 let STORE = {};
 function lsGet(key, fallback){ const v = STORE[key]; return (v===undefined) ? fallback : v; }
 function lsSet(key, val){
