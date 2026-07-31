@@ -505,10 +505,14 @@ function fileUri(winPath){
   return 'cronfile:///' + drive + '/' + rest.join('/');
 }
 function fileUriChrome(winPath){
+  // Não dá pra usar file:/// direto: o Chrome bloqueia silenciosamente
+  // navegação para file:// a partir de uma página https://. Por isso usa o
+  // mesmo esquema do link do Okular (protocolo customizado registrado no
+  // Windows), só que apontando pro Chrome em vez do Okular.
   const parts = winPath.split('\\');
   const drive = parts[0];
   const rest = parts.slice(1).map(p=>encodeURIComponent(p));
-  return 'file:///' + drive + '/' + rest.join('/');
+  return 'cronfilechrome:///' + drive + '/' + rest.join('/');
 }
 function escapeHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
