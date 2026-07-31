@@ -145,6 +145,8 @@
   textarea.topicsedit:hover,textarea.topicsedit:focus{border-color:var(--border);background:#fff;font-style:normal;}
   .file-link{font-size:10.5px;color:#B9770E;text-decoration:none;font-weight:bold;white-space:nowrap;margin-left:4px;}
   .file-link:hover{text-decoration:underline;}
+  .file-link-chrome{font-size:10.5px;color:#1F618D;text-decoration:none;font-weight:bold;white-space:nowrap;margin-left:4px;}
+  .file-link-chrome:hover{text-decoration:underline;}
 
   select.status{padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:12px;font-family:inherit;}
   select.status.done{background:#D5F5E3;color:var(--green);font-weight:bold;}
@@ -502,6 +504,12 @@ function fileUri(winPath){
   const rest = parts.slice(1).map(p=>encodeURIComponent(p));
   return 'cronfile:///' + drive + '/' + rest.join('/');
 }
+function fileUriChrome(winPath){
+  const parts = winPath.split('\\');
+  const drive = parts[0];
+  const rest = parts.slice(1).map(p=>encodeURIComponent(p));
+  return 'file:///' + drive + '/' + rest.join('/');
+}
 function escapeHtml(s){
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
@@ -736,7 +744,7 @@ function rowHtml(t, firstCol){
   const typeClass = t.type==='Leitura' ? 'leitura' : (t.type==='Questões' ? 'questoes' : 'flashcards');
   const rowClass = (timerTaskId===t.id) ? 'timing' : '';
   const linkHtml = t.link ? ` <a href="${t.link}" target="_blank" rel="noopener" class="qc-link" title="Abrir filtro no QConcursos">QConcursos ↗</a>` : '';
-  const fileHtml = t.file ? ` <a href="${fileUri(t.file)}" class="file-link" title="Abrir o PDF direto no Okular">Abrir arquivo ↗</a>` : '';
+  const fileHtml = t.file ? ` <a href="${fileUri(t.file)}" class="file-link" title="Abrir o PDF direto no Okular">Abrir arquivo ↗</a> <a href="${fileUriChrome(t.file)}" target="_blank" rel="noopener" class="file-link-chrome" title="Abrir o PDF no Google Chrome (só funciona neste computador)">Chrome ↗</a>` : '';
   const topicsHtml = isQ ? `<textarea class="topicsedit" data-id="${t.id}" rows="1" placeholder="Assuntos abordados pelo filtro">${escapeHtml(effectiveTopics(t))}</textarea>` : '';
   const descHtml = `${t.desc}${linkHtml}${fileHtml}${topicsHtml}`;
   const amt = effectiveAmount(t);
