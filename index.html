@@ -150,7 +150,10 @@
   select.status.done{background:#D5F5E3;color:var(--green);font-weight:bold;}
   .time-cell{white-space:nowrap;}
   input[type=number].acertos{width:52px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:13px;text-align:center;}
-  input[type=number].qtdedit{width:52px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:13px;text-align:center;}
+  input[type=number].qtdedit,input[type=number].flashqtd{width:52px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:13px;text-align:center;}
+  .acertos-pair{display:flex;gap:4px;align-items:center;}
+  .acertos-pair label{font-size:9.5px;color:var(--gray);display:block;text-align:center;margin-bottom:2px;}
+  input[type=number].acertosSeguros,input[type=number].acertosDuvida{width:48px;padding:5px 4px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:12.5px;text-align:center;}
   input[type=number].studymin{width:64px;padding:5px 6px;border-radius:6px;border:1px solid var(--border);background:var(--yellow);font-size:13px;text-align:center;}
   .pct{font-weight:bold;}
   .pct.good{color:var(--green);}
@@ -438,15 +441,30 @@ function seedTasksRemote(){
     headers: {'Content-Type': 'text/plain;charset=utf-8'},
     body: JSON.stringify({
       action: 'seedTasks',
-      tasks: tasks.map(t=>({id:t.id, date:t.date, subj:t.subj, type:t.type, desc:t.desc, amount:t.amount, unit:t.unit}))
+      tasks: tasks.map(t=>({id:t.id, date:effectiveDate(t), subj:t.subj, type:t.type, desc:t.desc, amount:effectiveAmount(t), unit:t.unit, topics:effectiveTopics(t)}))
     })
   }).catch(()=>{});
 }
+// Migração única: o antigo campo único "acertos_t{id}" vira "acertosSeguros_t{id}"
+// (tratado como acerto seguro por padrão) na primeira vez que a página carrega
+// depois da mudança para os dois campos (Seguros / Com dúvida).
+function migrateAcertosSplit(){
+  if(STORE['migratedAcertosSplit']==='1') return;
+  tasks.forEach(t=>{
+    const old = STORE['acertos_'+t.id];
+    if(old!==undefined && STORE['acertosSeguros_'+t.id]===undefined){
+      lsSet('acertosSeguros_'+t.id, old);
+    }
+  });
+  lsSet('migratedAcertosSplit', '1');
+}
+
 function boot(){
   fetch(WEBAPP_URL + '?action=data')
     .then(r=>r.json())
     .then(data=>{
       STORE = data;
+      migrateAcertosSplit();
       document.getElementById('bootOverlay').style.display = 'none';
       loadTimerState();
       renderAll();
@@ -701,10 +719,20 @@ function renderMateriaInto(panel){
   // Flashcards não entram aqui de propósito: só aparecem na visão diária.
 }
 
+function acertosSeguros(t){ return lsGet('acertosSeguros_'+t.id, ''); }
+function acertosDuvida(t){ return lsGet('acertosDuvida_'+t.id, ''); }
+function acertosTotalStr(t){
+  const s = acertosSeguros(t), d = acertosDuvida(t);
+  if(s==='' && d==='') return '';
+  return String((s===''?0:Number(s)) + (d===''?0:Number(d)));
+}
+function flashcardsQtd(t){ return lsGet('flashqtd_'+t.id, ''); }
+
 function rowHtml(t, firstCol){
   const status = lsGet('status_'+t.id, 'Pendente');
   const isQ = t.type==='Questões';
-  const acertos = isQ ? lsGet('acertos_'+t.id,'') : '';
+  const isFlash = t.type==='Flashcards';
+  const acertos = isQ ? acertosTotalStr(t) : '';
   const typeClass = t.type==='Leitura' ? 'leitura' : (t.type==='Questões' ? 'questoes' : 'flashcards');
   const rowClass = (timerTaskId===t.id) ? 'timing' : '';
   const linkHtml = t.link ? ` <a href="${t.link}" target="_blank" rel="noopener" class="qc-link" title="Abrir filtro no QConcursos">QConcursos ↗</a>` : '';
@@ -714,12 +742,20 @@ function rowHtml(t, firstCol){
   const amt = effectiveAmount(t);
   const qtdHtml = isQ
     ? `<input type="number" min="1" class="qtdedit" data-id="${t.id}" value="${amt}" title="Ajuste conforme a quantidade real de questões no filtro"> ${t.unit}`
+    : isFlash
+    ? `<input type="number" min="0" class="flashqtd" data-id="${t.id}" value="${flashcardsQtd(t)}" title="Quantidade de flashcards feitos" placeholder="qtd">`
     : (t.amount!=null ? `${t.amount} ${t.unit}` : '<span class="dash">-</span>');
   const studyMin = lsGet('min_'+t.id, '');
   const timeCell = `<td data-label="Tempo total (min)" class="time-cell"><input type="number" min="0" step="1" class="studymin" data-id="${t.id}" value="${studyMin}" placeholder="min"></td>`;
   const firstCell = firstCol==='date'
     ? `<td data-label="Data"><span class="badge-subj">${shortLabel(effectiveDate(t))}</span></td>`
     : `<td data-label="Matéria"><span class="badge-subj">${t.subj}</span></td>`;
+  const acertosCellHtml = isQ ? `
+    <div class="acertos-pair">
+      <span><label>Seguros</label><input type="number" min="0" max="${amt}" class="acertosSeguros" data-id="${t.id}" value="${acertosSeguros(t)}"></span>
+      <span><label>C/ dúvida</label><input type="number" min="0" max="${amt}" class="acertosDuvida" data-id="${t.id}" value="${acertosDuvida(t)}"></span>
+    </div>
+  ` : '<span class="dash">-</span>';
   return `
     <tr data-id="${t.id}" class="${rowClass}">
       ${firstCell}
@@ -733,7 +769,7 @@ function rowHtml(t, firstCol){
         </select>
       </td>
       ${timeCell}
-      <td data-label="Acertos">${isQ ? `<input type="number" min="0" max="${amt}" class="acertos" data-id="${t.id}" value="${acertos}">` : '<span class="dash">-</span>'}</td>
+      <td data-label="Acertos">${acertosCellHtml}</td>
       <td data-label="Erros" class="erros" id="erros-${t.id}">${isQ ? calcErros(acertos,amt) : '<span class="dash">-</span>'}</td>
       <td data-label="% Acerto" class="pct-cell" id="pctcell-${t.id}">${isQ ? pctHtml(acertos,amt) : '<span class="dash">-</span>'}</td>
       <td data-label="Mover">
@@ -799,16 +835,27 @@ function attachRowEvents(){
       lsSet('topics_'+ta.dataset.id, ta.value);
     });
   });
-  document.querySelectorAll('input.acertos').forEach(inp=>{
-    inp.addEventListener('input', ()=>{
-      const id = inp.dataset.id;
-      const t = tasks.find(x=>x.id===id);
-      const amt = effectiveAmount(t);
-      lsSet('acertos_'+id, inp.value);
-      document.getElementById('erros-'+id).innerHTML = calcErros(inp.value, amt);
-      document.getElementById('pctcell-'+id).innerHTML = pctHtml(inp.value, amt);
-      updateProgress();
-      refreshDesempenhoIfVisible();
+  function bindAcertosInput(selector, storeKeyPrefix){
+    document.querySelectorAll(selector).forEach(inp=>{
+      inp.addEventListener('input', ()=>{
+        const id = inp.dataset.id;
+        const t = tasks.find(x=>x.id===id);
+        const amt = effectiveAmount(t);
+        lsSet(storeKeyPrefix+id, inp.value);
+        const total = acertosTotalStr(t);
+        document.getElementById('erros-'+id).innerHTML = calcErros(total, amt);
+        document.getElementById('pctcell-'+id).innerHTML = pctHtml(total, amt);
+        updateProgress();
+        refreshDesempenhoIfVisible();
+      });
+    });
+  }
+  bindAcertosInput('input.acertosSeguros', 'acertosSeguros_');
+  bindAcertosInput('input.acertosDuvida', 'acertosDuvida_');
+  document.querySelectorAll('input.flashqtd').forEach(inp=>{
+    inp.addEventListener('change', ()=>{
+      lsSet('flashqtd_'+inp.dataset.id, inp.value);
+      renderAll();
     });
   });
   document.querySelectorAll('select.moveto').forEach(sel=>{
@@ -832,7 +879,7 @@ function updateProgress(){
   tasks.filter(t=>t.type==='Questões').forEach(t=>{
     const amt = effectiveAmount(t);
     totQ += amt;
-    const v = lsGet('acertos_'+t.id,'');
+    const v = acertosTotalStr(t);
     if(v!==''){ totA += Math.min(Number(v), amt); answered += amt; }
   });
   document.getElementById('statQ').textContent = answered+'/'+totQ;
@@ -953,7 +1000,7 @@ function subjectStats(subj){
   tasks.filter(t=>t.type==='Questões' && t.subj===subj).forEach(t=>{
     const amt = effectiveAmount(t);
     totQ += amt;
-    const v = lsGet('acertos_'+t.id,'');
+    const v = acertosTotalStr(t);
     if(v!==''){ totA += Math.min(Number(v), amt); answered += amt; }
   });
   return { totQ, totA, answered, pct: answered ? (totA/answered*100) : null };
