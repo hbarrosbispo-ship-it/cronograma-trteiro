@@ -104,6 +104,26 @@
     .stopwatch{position:static;width:auto;margin:14px 16px 0;}
   }
 
+  .save-indicator{
+    position:fixed;
+    left:16px;
+    bottom:16px;
+    z-index:60;
+    padding:7px 14px;
+    border-radius:20px;
+    font-size:12.5px;
+    font-weight:bold;
+    box-shadow:0 2px 8px rgba(0,0,0,.18);
+    display:none;
+    align-items:center;
+    gap:6px;
+    font-family:Arial,Helvetica,sans-serif;
+  }
+  .save-indicator.saving{display:flex;background:#FFF3CD;color:#8A6D00;}
+  .save-indicator.saved{display:flex;background:#D4EDDA;color:#1E7E34;}
+  .save-indicator.error{display:flex;background:#F8D7DA;color:#A71D2A;cursor:pointer;}
+  .save-indicator .dot{width:8px;height:8px;border-radius:50%;background:currentColor;flex:none;}
+
   .progress-card{
     background:#fff;
     border-radius:10px;
@@ -209,6 +229,8 @@
 <body>
 
 <div id="bootOverlay" style="position:fixed;inset:0;background:#F5F7FA;z-index:999;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;color:#305496;font-size:15px;">Carregando cronograma…</div>
+
+<div id="saveIndicator" class="save-indicator" title="Clique pra tentar salvar de novo agora"><span class="dot"></span><span id="saveIndicatorText"></span></div>
 
 <header>
   <div class="wrap">
@@ -424,18 +446,102 @@ function shortLabel(date){ const info=DAY_INFO[date]; return date.slice(0,5)+' �
 
 // ---------- Storage helpers ----------
 // Substitui o antigo localStorage: STORE é um cache em memória hidratado uma vez no
-// boot (fetch ?action=data) e todo lsSet grava local na hora (render continua síncrono)
-// e dispara, em paralelo, um POST para persistir no backend (Apps Script + PropertiesService).
+// boot (fetch ?action=data) e todo lsSet grava local na hora (render continua síncrono).
+//
+// Os POSTs pro backend são ENFILEIRADOS e enviados um de cada vez (nunca em paralelo).
+// Antes, cada lsSet disparava seu próprio fetch imediatamente e sem esperar os outros -
+// digitar/marcar vários campos rápido (ex.: preencher acertos de 2-3 blocos seguidos)
+// disparava vários POSTs simultâneos disputando o mesmo lock do backend
+// (LockService.waitLock(10000) no Code.gs). Quando esse lock estourava o tempo pra
+// algum deles, o POST falhava e o .catch(()=>{}) engolia o erro em silêncio - o valor
+// ficava "salvo" só na tela (STORE em memória), mas nunca chegava no servidor, e
+// sumia/ficava incompleto no próximo carregamento. Agora só existe 1 requisição em
+// voo por vez, com retry automático (3 tentativas) e um indicador visível (canto
+// inferior esquerdo) que mostra "Salvando…" / "Salvo" / "Erro ao salvar - clique pra
+// tentar de novo" em vez de falhar sem avisar.
 const WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbwrbaghAE1EsQzcvOCsTLn-B6lYzT29bXtrA_hPVM5A0qMlxBl_dfJ4P-zFi6VjdXuVqA/exec';
 let STORE = {};
 function lsGet(key, fallback){ const v = STORE[key]; return (v===undefined) ? fallback : v; }
-function lsSet(key, val){
-  STORE[key] = String(val);
-  fetch(WEBAPP_URL, {
+
+const saveDirtyKeys = new Set();
+const saveFailedKeys = new Set();
+let saveWorkerRunning = false;
+let saveIndicatorHideTimer = null;
+
+function updateSaveIndicator(){
+  const el = document.getElementById('saveIndicator');
+  const txt = document.getElementById('saveIndicatorText');
+  if(!el || !txt) return;
+  clearTimeout(saveIndicatorHideTimer);
+  if(saveFailedKeys.size > 0){
+    el.className = 'save-indicator error';
+    txt.textContent = 'Erro ao salvar (' + saveFailedKeys.size + ') - clique pra tentar de novo';
+  } else if(saveDirtyKeys.size > 0 || saveWorkerRunning){
+    el.className = 'save-indicator saving';
+    txt.textContent = 'Salvando…';
+  } else {
+    el.className = 'save-indicator saved';
+    txt.textContent = 'Salvo';
+    saveIndicatorHideTimer = setTimeout(()=>{ el.style.display='none'; }, 2000);
+  }
+}
+
+function postToServer(body){
+  return fetch(WEBAPP_URL, {
     method: 'POST',
     headers: {'Content-Type': 'text/plain;charset=utf-8'}, // evita preflight CORS
-    body: JSON.stringify({ key, value: String(val) })
-  }).catch(()=>{ console.warn('Não foi possível salvar "'+key+'" no servidor — verifique a conexão.'); });
+    body: JSON.stringify(body)
+  }).then(r=>{
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  }).then(json=>{
+    if(!json || json.ok!==true) throw new Error('Resposta inesperada do servidor');
+  });
+}
+
+async function postWithRetry(body, tentativas){
+  tentativas = tentativas===undefined ? 3 : tentativas;
+  for(let i=0;i<tentativas;i++){
+    try{ await postToServer(body); return true; }
+    catch(err){
+      if(i===tentativas-1) return false;
+      await new Promise(r=>setTimeout(r, 800*(i+1))); // espera crescente entre tentativas
+    }
+  }
+  return false;
+}
+
+// Processa a fila de salvamentos UM DE CADA VEZ - nunca dispara o próximo POST antes
+// do anterior terminar, o que elimina a disputa pelo lock do backend.
+async function processSaveQueue(){
+  if(saveWorkerRunning) return;
+  saveWorkerRunning = true;
+  updateSaveIndicator();
+  while(saveDirtyKeys.size > 0){
+    const key = saveDirtyKeys.values().next().value;
+    saveDirtyKeys.delete(key);
+    const value = STORE[key]; // pega o valor mais recente na hora de enviar (se o
+                               // campo mudou de novo enquanto esperava na fila, manda
+                               // só o valor final, não cada valor intermediário)
+    const ok = await postWithRetry({ key, value });
+    if(ok){
+      saveFailedKeys.delete(key);
+    } else {
+      saveFailedKeys.add(key);
+      console.warn('Não foi possível salvar "'+key+'" no servidor depois de 3 tentativas.');
+    }
+    updateSaveIndicator();
+  }
+  saveWorkerRunning = false;
+  updateSaveIndicator();
+}
+
+function lsSet(key, val){
+  STORE[key] = String(val);
+  saveDirtyKeys.add(key);
+  saveFailedKeys.delete(key); // uma mudança nova nesse campo merece nova tentativa
+  updateSaveIndicator();
+  processSaveQueue();
 }
 function seedTasksRemote(){
   fetch(WEBAPP_URL, {
@@ -1089,6 +1195,14 @@ document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>{
   document.getElementById('view-cronograma').style.display = 'none';
   document.getElementById('view-desempenho').style.display = '';
   renderDesempenho();
+});
+
+document.getElementById('saveIndicator').addEventListener('click', ()=>{
+  if(saveFailedKeys.size === 0) return;
+  saveFailedKeys.forEach(k=>saveDirtyKeys.add(k));
+  saveFailedKeys.clear();
+  updateSaveIndicator();
+  processSaveQueue();
 });
 
 // ---------- Init ----------
