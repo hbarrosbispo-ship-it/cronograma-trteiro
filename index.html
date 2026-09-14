@@ -151,12 +151,17 @@
   tbody td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle;}
   tbody tr:last-child td{border-bottom:none;}
   tbody tr.timing{background:#FFF9E6;}
+  tr[draggable="true"]{cursor:grab;}
+  tr[draggable="true"]:active{cursor:grabbing;}
+  tr.dragging{opacity:.35;}
+  .day-card.drop-hover{outline:2px dashed var(--blue);outline-offset:-3px;}
 
   .badge-subj{display:inline-block;background:#e3e9f5;color:var(--blue-dark);font-weight:bold;font-size:11px;padding:2px 7px;border-radius:5px;}
   .badge-type{display:inline-block;font-size:11px;padding:2px 7px;border-radius:5px;font-weight:bold;}
   .badge-type.leitura{background:#FDEBD0;color:#B9770E;}
   .badge-type.questoes{background:#D6EAF8;color:#1F618D;}
   .badge-type.flashcards{background:#E8DAEF;color:#6C3483;}
+  .badge-type.estudocaso{background:#D4E6F1;color:#21618C;}
   .desc-cell{max-width:340px;}
   .qc-link{font-size:10.5px;color:var(--blue-dark);text-decoration:none;font-weight:bold;white-space:nowrap;margin-left:4px;}
   .qc-link:hover{text-decoration:underline;}
@@ -235,7 +240,7 @@
 <header>
   <div class="wrap">
     <h1>Cronograma de Estudos - TRTeiros</h1>
-    <p>14/07 a 14/09/2026 &middot; organizado por matéria &middot; páginas conforme os PDFs da pasta &middot; distribuição balanceada por esforço &middot; leitura, questões e desempenho em um só lugar</p>
+    <p>14/07 a 20/09/2026 &middot; organizado por matéria &middot; páginas conforme os PDFs da pasta &middot; distribuição balanceada por esforço &middot; leitura, questões, desempenho e estatísticas em um só lugar</p>
   </div>
 </header>
 
@@ -270,10 +275,11 @@
   <div class="tab-bar">
     <button class="tab-btn active" id="tabBtnCronograma">Cronograma</button>
     <button class="tab-btn" id="tabBtnDesempenho">Desempenho</button>
+    <button class="tab-btn" id="tabBtnEstatisticas">Estatísticas</button>
   </div>
 
   <div id="view-cronograma">
-    <p class="note">A visão diária é a principal (com a revisão de flashcards de cada dia). A visão por matéria agrupa as mesmas atividades por Direito Administrativo, Constitucional, Civil, Processual Civil, Processual do Trabalho e do Trabalho, sem os flashcards (que só aparecem na visão diária). Cada semana da visão diária pode ser minimizada ou maximizada clicando na sua barra de título. Preencha status, o tempo total estudado (em minutos) e (para blocos de questões) os acertos. O campo "Qtd" e o campo de assuntos dos blocos de questões são editáveis. Tudo é calculado e salvo automaticamente neste navegador. Use o cronômetro para cronometrar uma atividade e somar o tempo direto na linha. Use "Mover" para remanejar uma atividade para outra data, se precisar. O link "Abrir arquivo" abre o PDF da leitura direto no Okular, sem depender do aplicativo padrão de PDF do Windows, desde que a configuração de abrir_arquivo.ps1 e registrar_protocolo.reg tenha sido feita uma vez (veja as instruções que acompanham este arquivo).</p>
+    <p class="note">A visão diária é a principal (com a revisão de flashcards de cada dia). A visão por matéria agrupa as mesmas atividades por Direito Administrativo, Constitucional, Civil, Processual Civil, Processual do Trabalho e do Trabalho, sem os flashcards (que só aparecem na visão diária). Cada semana da visão diária pode ser minimizada ou maximizada clicando na sua barra de título. Preencha status, o tempo total estudado (em minutos) e (para blocos de questões) os acertos. O campo "Qtd" e o campo de assuntos dos blocos de questões são editáveis. Tudo é calculado e salvo automaticamente neste navegador. Use o cronômetro para cronometrar uma atividade e somar o tempo direto na linha. Use "Mover" para remanejar uma atividade para outra data, se precisar, ou simplesmente arraste e solte a atividade em outro dia (na visão diária). A partir da Semana 10 o domingo também aparece no cronograma, disponível para receber atividades se você quiser estudar nesse dia. O link "Abrir arquivo" abre o PDF da leitura direto no Okular, sem depender do aplicativo padrão de PDF do Windows, desde que a configuração de abrir_arquivo.ps1 e registrar_protocolo.reg tenha sido feita uma vez (veja as instruções que acompanham este arquivo).</p>
 
     <div class="week-summary" id="weekSummary"></div>
 
@@ -288,6 +294,12 @@
   <div id="view-desempenho" style="display:none;">
     <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
     <div class="charts-grid" id="chartsGrid"></div>
+  </div>
+
+  <div id="view-estatisticas" style="display:none;">
+    <p class="note">Horas efetivamente estudadas (campo "Tempo total" preenchido em cada atividade), por matéria, semana, mês e dia da semana. Só entram nas contas as atividades com tempo registrado.</p>
+    <div class="week-summary" id="statsSummaryCards"></div>
+    <div class="charts-grid" id="statsChartsGrid"></div>
   </div>
 </div>
 
@@ -489,8 +501,13 @@ const tasks = [
   // ---- Semana 10 (14/09/2026) ----
   {date:'14/09/2026', subj:'DCI', type:'Questões', desc:'Filtro 49A', amount:24, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?discipline_ids%5B%5D=8&examining_board_ids%5B%5D=1&exclude_nullified=true&exclude_outdated=true&institute_ids%5B%5D=8&institute_ids%5B%5D=11&institute_ids%5B%5D=13&institute_ids%5B%5D=39&institute_ids%5B%5D=42&institute_ids%5B%5D=79&institute_ids%5B%5D=80&institute_ids%5B%5D=86&institute_ids%5B%5D=88&institute_ids%5B%5D=89&institute_ids%5B%5D=90&institute_ids%5B%5D=91&institute_ids%5B%5D=92&job_ids%5B%5D=43&job_ids%5B%5D=44&job_ids%5B%5D=45&job_ids%5B%5D=132&job_ids%5B%5D=133&job_ids%5B%5D=271&job_ids%5B%5D=540&job_ids%5B%5D=560&job_ids%5B%5D=767&job_ids%5B%5D=797&job_ids%5B%5D=798&job_ids%5B%5D=834&job_ids%5B%5D=845&job_ids%5B%5D=888&job_ids%5B%5D=2311&job_ids%5B%5D=3756&job_ids%5B%5D=4311&job_ids%5B%5D=5134&job_ids%5B%5D=6644&job_ids%5B%5D=6687&job_ids%5B%5D=6764&job_ids%5B%5D=6814&job_ids%5B%5D=6815&job_ids%5B%5D=6935&job_ids%5B%5D=6936&job_ids%5B%5D=7463&job_ids%5B%5D=7483&job_ids%5B%5D=7519&job_ids%5B%5D=7620&job_ids%5B%5D=7622&job_ids%5B%5D=7627&job_ids%5B%5D=7901&job_ids%5B%5D=8511&job_ids%5B%5D=8838&job_ids%5B%5D=8862&job_ids%5B%5D=9241&per_page=20&publication_year%5B%5D=2013&publication_year%5B%5D=2014&publication_year%5B%5D=2015&publication_year%5B%5D=2016&publication_year%5B%5D=2017&publication_year%5B%5D=2018&publication_year%5B%5D=2022&publication_year%5B%5D=2023&publication_year%5B%5D=2024&publication_year%5B%5D=2025&publication_year%5B%5D=2026&sort=newest&subject_ids%5B%5D=12351&subject_ids%5B%5D=12364&subject_ids%5B%5D=12365&subject_ids%5B%5D=12404&subject_ids%5B%5D=12616&subject_ids%5B%5D=13287&subject_ids%5B%5D=14042&subject_ids%5B%5D=14358&subject_ids%5B%5D=16108&subject_ids%5B%5D=16264&subject_ids%5B%5D=16313&subject_ids%5B%5D=16314', topics:'Obrigações (Títulos III e IV); Direitos reais e garantias; Contratos em geral; Contratos em espécie (compra e venda, estimatório e doação; locação, empreitada, prestação de serviços, depósito, mandato, transporte e comissão)'},
   {date:'14/09/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
+  {date:'07/09/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de caso — resolução da questão', amount:null, unit:''},
+  {date:'07/09/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de caso — assistir aula', amount:null, unit:''},
+  {date:'14/09/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de caso — resolução da questão', amount:null, unit:''},
+  {date:'14/09/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de caso — assistir aula', amount:null, unit:''},
+  {date:'20/09/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:''},
 ];
-tasks.forEach((t,i)=>{ t.id='t'+i; t.effort = t.type==='Leitura' ? t.amount*6 : (t.type==='Questões' ? t.amount*3 : 20); });
+tasks.forEach((t,i)=>{ t.id='t'+i; t.effort = t.type==='Leitura' ? t.amount*6 : (t.type==='Questões' ? t.amount*3 : (t.type==='Estudo de Caso' ? 45 : 20)); });
 
 // ---------- Dias do cronograma (fixo até 24/07 - data da mentoria) ----------
 const DATE_ORDER = ['14/07/2026','15/07/2026','16/07/2026','17/07/2026','20/07/2026','21/07/2026','22/07/2026','23/07/2026','24/07/2026',
@@ -501,7 +518,7 @@ const DATE_ORDER = ['14/07/2026','15/07/2026','16/07/2026','17/07/2026','20/07/2
   '24/08/2026','25/08/2026','26/08/2026','27/08/2026','28/08/2026','29/08/2026',
   '31/08/2026','01/09/2026','02/09/2026','03/09/2026','04/09/2026','05/09/2026',
   '07/09/2026','08/09/2026','09/09/2026','10/09/2026','11/09/2026','12/09/2026',
-  '14/09/2026'];
+  '14/09/2026', '20/09/2026'];
 const DAY_INFO = {
   '14/07/2026':{day:'Terça-feira', week:'Semana 1'},
   '15/07/2026':{day:'Quarta-feira', week:'Semana 1'},
@@ -555,6 +572,7 @@ const DAY_INFO = {
   '11/09/2026':{day:'Sexta-feira', week:'Semana 9'},
   '12/09/2026':{day:'Sábado', week:'Semana 9'},
   '14/09/2026':{day:'Segunda-feira', week:'Semana 10'},
+  '20/09/2026':{day:'Domingo', week:'Semana 10'},
 };
 function shortLabel(date){ const info=DAY_INFO[date]; return date.slice(0,5)+' · '+info.day.replace('-feira',''); }
 
@@ -744,11 +762,12 @@ function autoGrow(el){
 function effectiveEffort(t){
   if(t.type==='Leitura') return effectiveAmount(t)*6;
   if(t.type==='Questões') return effectiveAmount(t)*3;
+  if(t.type==='Estudo de Caso') return 45;
   return 20;
 }
 function groupByDate(list){
   const map = {};
-  const TYPE_RANK = {Leitura:0, 'Questões':1, Flashcards:2};
+  const TYPE_RANK = {Leitura:0, 'Questões':1, 'Estudo de Caso':1.5, Flashcards:2};
   DATE_ORDER.forEach(d=>{ map[d]=[]; });
   list.forEach(item=>{ const d=effectiveDate(item); if(!map[d]) map[d]=[]; map[d].push(item); });
   // ordem fixa dentro do dia: leituras, depois questões, depois flashcards por último
@@ -763,7 +782,7 @@ function groupBySubject(list){
   const map = {};
   SUBJECTS.forEach(s=>{ map[s]=[]; });
   map['-'] = [];
-  const TYPE_RANK = {Leitura:0, 'Questões':1, Flashcards:2};
+  const TYPE_RANK = {Leitura:0, 'Questões':1, 'Estudo de Caso':1.5, Flashcards:2};
   list.forEach(item=>{
     const s = map.hasOwnProperty(item.subj) ? item.subj : '-';
     map[s].push(item);
@@ -836,6 +855,7 @@ function renderWeekSummary(groups){
 function renderAll(){
   renderWeekSummary(groupByDate(tasks));
   renderActiveSubview();
+  refreshEstatisticasIfVisible();
 }
 
 // Alterna entre a visão diária (principal, com flashcards) e a visão por matéria (sem flashcards).
@@ -894,6 +914,7 @@ function renderDiariaInto(panel){
         const dayStudied = items.reduce((s,t)=>s+taskMinutes(t),0);
         const card = document.createElement('div');
         card.className='day-card';
+        card.dataset.date = date;
         card.innerHTML = `
           <div class="day-head">
             <div class="d-left">
@@ -909,8 +930,8 @@ function renderDiariaInto(panel){
               <th>Status</th><th>Tempo total (min)</th>
               <th>Acertos</th><th>Erros</th><th>% Acerto</th><th>Mover</th>
             </tr></thead>
-            <tbody>${items.map(t=>rowHtml(t,'subj')).join('')}</tbody>
-          </table>` : `<p class="note" style="margin:12px 16px;">Nenhuma atividade neste dia. Mova alguma atividade para cá, se necessário.</p>`}
+            <tbody>${items.map(t=>rowHtml(t,'subj',true)).join('')}</tbody>
+          </table>` : `<p class="note" style="margin:12px 16px;">Nenhuma atividade neste dia. Arraste uma atividade pra cá ou use o campo "Mover" pra trazer algo de outro dia.</p>`}
         `;
         section.appendChild(card);
       });
@@ -943,7 +964,7 @@ function renderMateriaInto(panel){
           <th>Status</th><th>Tempo total (min)</th>
           <th>Acertos</th><th>Erros</th><th>% Acerto</th><th>Mover</th>
         </tr></thead>
-        <tbody>${items.map(t=>rowHtml(t,'date')).join('')}</tbody>
+        <tbody>${items.map(t=>rowHtml(t,'date',false)).join('')}</tbody>
       </table>` : `<p class="note" style="margin:12px 16px;">Nenhuma atividade cadastrada nesta matéria ainda.</p>`}
     `;
     panel.appendChild(card);
@@ -960,12 +981,12 @@ function acertosTotalStr(t){
 }
 function flashcardsQtd(t){ return lsGet('flashqtd_'+t.id, ''); }
 
-function rowHtml(t, firstCol){
+function rowHtml(t, firstCol, draggableRow){
   const status = lsGet('status_'+t.id, 'Pendente');
   const isQ = t.type==='Questões';
   const isFlash = t.type==='Flashcards';
   const acertos = isQ ? acertosTotalStr(t) : '';
-  const typeClass = t.type==='Leitura' ? 'leitura' : (t.type==='Questões' ? 'questoes' : 'flashcards');
+  const typeClass = t.type==='Leitura' ? 'leitura' : (t.type==='Questões' ? 'questoes' : (t.type==='Estudo de Caso' ? 'estudocaso' : 'flashcards'));
   const rowClass = (timerTaskId===t.id) ? 'timing' : '';
   const linkHtml = t.link ? ` <a href="${t.link}" target="_blank" rel="noopener" class="qc-link" title="Abrir filtro no QConcursos">QConcursos ↗</a>` : '';
   const fileHtml = t.file ? ` <a href="${fileUri(t.file)}" class="file-link" title="Abrir o PDF direto no Okular">Abrir arquivo ↗</a> <a href="${fileUriChrome(t.file)}" class="file-link-chrome" title="Abrir o PDF no Google Chrome (só funciona neste computador)">Chrome ↗</a>` : '';
@@ -989,7 +1010,7 @@ function rowHtml(t, firstCol){
     </div>
   ` : '<span class="dash">-</span>';
   return `
-    <tr data-id="${t.id}" class="${rowClass}">
+    <tr data-id="${t.id}" class="${rowClass}" ${draggableRow ? 'draggable="true"' : ''}>
       ${firstCell}
       <td data-label="Atividade"><span class="badge-type ${typeClass}">${t.type}</span></td>
       <td data-label="Descrição" class="desc-cell">${descHtml}</td>
@@ -1033,6 +1054,13 @@ function pctHtml(acertos, total){
 function styleStatus(sel){
   sel.classList.remove('done');
   if(sel.value==='Concluído') sel.classList.add('done');
+}
+
+function moveTaskTo(id, date){
+  const t = tasks.find(x=>x.id===id);
+  if(!t || !DAY_INFO[date]) return;
+  lsSet('moveto_'+id, date === t.date ? '' : date);
+  renderAll();
 }
 
 function attachRowEvents(){
@@ -1092,11 +1120,49 @@ function attachRowEvents(){
   });
   document.querySelectorAll('select.moveto').forEach(sel=>{
     sel.addEventListener('change', ()=>{
-      const id = sel.dataset.id;
-      const t = tasks.find(x=>x.id===id);
-      lsSet('moveto_'+id, sel.value === t.date ? '' : sel.value);
-      renderAll();
+      moveTaskTo(sel.dataset.id, sel.value);
     });
+  });
+}
+
+// ---------- Arrastar e soltar (mover atividade entre dias, na visão diária) ----------
+let dragTaskId = null;
+function initDragAndDrop(){
+  const panel = document.getElementById('panel-cronograma');
+  if(!panel) return;
+  panel.addEventListener('dragstart', (e)=>{
+    const tr = e.target.closest('tr[draggable="true"]');
+    if(!tr) return;
+    dragTaskId = tr.dataset.id;
+    if(e.dataTransfer){
+      e.dataTransfer.effectAllowed = 'move';
+      try{ e.dataTransfer.setData('text/plain', dragTaskId); }catch(err){}
+    }
+    tr.classList.add('dragging');
+  });
+  panel.addEventListener('dragend', ()=>{
+    document.querySelectorAll('tr.dragging').forEach(tr=>tr.classList.remove('dragging'));
+    document.querySelectorAll('.day-card.drop-hover').forEach(c=>c.classList.remove('drop-hover'));
+    dragTaskId = null;
+  });
+  panel.addEventListener('dragover', (e)=>{
+    if(!dragTaskId) return;
+    const card = e.target.closest('.day-card[data-date]');
+    if(!card) return;
+    e.preventDefault();
+    card.classList.add('drop-hover');
+  });
+  panel.addEventListener('dragleave', (e)=>{
+    const card = e.target.closest('.day-card[data-date]');
+    if(card) card.classList.remove('drop-hover');
+  });
+  panel.addEventListener('drop', (e)=>{
+    const card = e.target.closest('.day-card[data-date]');
+    if(!card || !dragTaskId) return;
+    e.preventDefault();
+    card.classList.remove('drop-hover');
+    moveTaskTo(dragTaskId, card.dataset.date);
+    dragTaskId = null;
   });
 }
 
@@ -1288,13 +1354,173 @@ function refreshDesempenhoIfVisible(){
   }
 }
 
+// ---------- Estatísticas ----------
+const WEEKDAY_ORDER = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
+const MONTH_NAMES = {'01':'Janeiro','02':'Fevereiro','03':'Março','04':'Abril','05':'Maio','06':'Junho','07':'Julho','08':'Agosto','09':'Setembro','10':'Outubro','11':'Novembro','12':'Dezembro'};
+const SUBJ_COLORS = {DA:'#305496', DCO:'#2E86AB', DCI:'#6C63FF', DPC:'#E67E22', DPT:'#16A085', DT:'#C0392B', Outros:'#95A5A6'};
+let statsCharts = {};
+
+function fmtHours(min){
+  const h = min/60;
+  return h.toFixed(1).replace('.', ',')+'h';
+}
+function monthsInOrder(){
+  const seen = [];
+  DATE_ORDER.forEach(d=>{ const key = d.slice(3); if(seen.indexOf(key)===-1) seen.push(key); });
+  return seen;
+}
+function monthLabel(key){
+  const parts = key.split('/');
+  return (MONTH_NAMES[parts[0]]||parts[0])+'/'+parts[1];
+}
+function statsBuildBase(){
+  const bySubj = {}; SUBJECTS.forEach(s=>bySubj[s]=0); bySubj['Outros']=0;
+  const byWeek = {}; const byWeekday = {}; const byMonth = {};
+  const byMonthSubj = {}; const byWeekSubj = {};
+  let totalMin = 0;
+  const activeDays = new Set(); const activeWeeks = new Set();
+  tasks.forEach(t=>{
+    const min = taskMinutes(t);
+    if(min<=0) return;
+    const date = effectiveDate(t);
+    const info = DAY_INFO[date];
+    if(!info) return;
+    const subj = bySubj.hasOwnProperty(t.subj) ? t.subj : 'Outros';
+    const monthKey = date.slice(3);
+    totalMin += min;
+    bySubj[subj] += min;
+    byWeek[info.week] = (byWeek[info.week]||0) + min;
+    byWeekday[info.day] = (byWeekday[info.day]||0) + min;
+    byMonth[monthKey] = (byMonth[monthKey]||0) + min;
+    if(!byMonthSubj[monthKey]) byMonthSubj[monthKey] = {};
+    byMonthSubj[monthKey][subj] = (byMonthSubj[monthKey][subj]||0) + min;
+    if(!byWeekSubj[info.week]) byWeekSubj[info.week] = {};
+    byWeekSubj[info.week][subj] = (byWeekSubj[info.week][subj]||0) + min;
+    activeDays.add(date);
+    activeWeeks.add(info.week);
+  });
+  return {bySubj, byWeek, byWeekday, byMonth, byMonthSubj, byWeekSubj, totalMin, activeDays, activeWeeks};
+}
+function statsMakeChart(canvasId, config){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  statsCharts[canvasId] = new Chart(ctx, config);
+}
+function statsSubjDatasets(byGroupSubj, groupKeys){
+  const subjKeys = SUBJECTS.concat(['Outros']);
+  return subjKeys.map(subj=>({
+    label: subj,
+    data: groupKeys.map(g=> +(((byGroupSubj[g]&&byGroupSubj[g][subj])||0)/60).toFixed(2)),
+    backgroundColor: SUBJ_COLORS[subj],
+    stack: 'total'
+  }));
+}
+function statsAddCard(grid, id, title, sub){
+  const card = document.createElement('div');
+  card.className = 'chart-card';
+  card.innerHTML = `<h3>${title}</h3><div class="chart-sub">${sub}</div><canvas id="${id}"></canvas>`;
+  grid.appendChild(card);
+}
+function renderEstatisticas(){
+  const cardsBox = document.getElementById('statsSummaryCards');
+  const grid = document.getElementById('statsChartsGrid');
+  if(!cardsBox || !grid) return;
+  Object.values(statsCharts).forEach(c=>c.destroy());
+  statsCharts = {};
+
+  const base = statsBuildBase();
+  const avgWeek = base.activeWeeks.size ? base.totalMin/base.activeWeeks.size : 0;
+  const avgDay = base.activeDays.size ? base.totalMin/base.activeDays.size : 0;
+
+  cardsBox.innerHTML = `
+    <div class="week-card">
+      <div class="w-title">Total Geral</div>
+      <div class="w-time">${fmtHours(base.totalMin)}</div>
+      <div class="w-sub">estudados em todo o cronograma</div>
+    </div>
+    <div class="week-card">
+      <div class="w-title">Média / Semana</div>
+      <div class="w-time">${fmtHours(avgWeek)}</div>
+      <div class="w-sub">${base.activeWeeks.size} semana${base.activeWeeks.size!==1?'s':''} com registro</div>
+    </div>
+    <div class="week-card">
+      <div class="w-title">Média / Dia</div>
+      <div class="w-time">${fmtHours(avgDay)}</div>
+      <div class="w-sub">${base.activeDays.size} dia${base.activeDays.size!==1?'s':''} com registro</div>
+    </div>
+  `;
+
+  grid.innerHTML = '';
+  if(base.totalMin<=0){
+    grid.innerHTML = '<div class="chart-empty">Ainda não há tempo estudado registrado. Preencha o "Tempo total (min)" nas atividades do cronograma para ver os gráficos aqui.</div>';
+    return;
+  }
+
+  const subjKeys = SUBJECTS.concat(['Outros']);
+  const allWeekKeys = weekNamesInOrder();
+  const allMonthKeys = monthsInOrder();
+
+  statsAddCard(grid, 'chart-horasMateria', 'Horas Estudadas por Matéria', 'Total de horas registradas em cada matéria (flashcards e estudo de caso entram em "Outros")');
+  statsMakeChart('chart-horasMateria', {
+    type:'bar',
+    data:{ labels: subjKeys, datasets:[{ label:'Horas', data: subjKeys.map(s=>+(base.bySubj[s]/60).toFixed(2)), backgroundColor: subjKeys.map(s=>SUBJ_COLORS[s]) }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+  });
+
+  statsAddCard(grid, 'chart-horasSemana', 'Horas por Semana', 'Total de horas estudadas em cada semana do cronograma');
+  statsMakeChart('chart-horasSemana', {
+    type:'bar',
+    data:{ labels: allWeekKeys, datasets:[{ label:'Horas', data: allWeekKeys.map(w=>+((base.byWeek[w]||0)/60).toFixed(2)), backgroundColor:'#305496' }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+  });
+
+  statsAddCard(grid, 'chart-mesMateria', 'Distribuição por Mês e Matéria', 'Horas estudadas por mês, divididas por matéria');
+  statsMakeChart('chart-mesMateria', {
+    type:'bar',
+    data:{ labels: allMonthKeys.map(monthLabel), datasets: statsSubjDatasets(base.byMonthSubj, allMonthKeys) },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true} }, plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:10}}}} }
+  });
+
+  statsAddCard(grid, 'chart-semanaMateria', 'Distribuição por Semana e Matéria', 'Horas estudadas por semana, divididas por matéria');
+  statsMakeChart('chart-semanaMateria', {
+    type:'bar',
+    data:{ labels: allWeekKeys, datasets: statsSubjDatasets(base.byWeekSubj, allWeekKeys) },
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ x:{stacked:true}, y:{stacked:true} }, plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:10}}}} }
+  });
+
+  statsAddCard(grid, 'chart-diaSemana', 'Horas por Dia da Semana', 'Soma de todas as horas estudadas que caíram em cada dia da semana, em todo o cronograma');
+  statsMakeChart('chart-diaSemana', {
+    type:'bar',
+    data:{ labels: WEEKDAY_ORDER.map(w=>w.replace('-feira','')), datasets:[{ label:'Horas', data: WEEKDAY_ORDER.map(w=>+((base.byWeekday[w]||0)/60).toFixed(2)), backgroundColor:'#6C63FF' }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+  });
+
+  statsAddCard(grid, 'chart-distMateria', 'Distribuição por Matéria', 'Participação percentual de cada matéria no total de horas estudadas');
+  statsMakeChart('chart-distMateria', {
+    type:'doughnut',
+    data:{ labels: subjKeys, datasets:[{ data: subjKeys.map(s=>+(base.bySubj[s]/60).toFixed(2)), backgroundColor: subjKeys.map(s=>SUBJ_COLORS[s]) }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:10}}}} }
+  });
+}
+function refreshEstatisticasIfVisible(){
+  const el = document.getElementById('view-estatisticas');
+  if(el && el.style.display !== 'none'){
+    renderEstatisticas();
+  }
+}
+
 // ---------- Abas ----------
-document.getElementById('tabBtnCronograma').addEventListener('click', ()=>{
-  document.getElementById('tabBtnCronograma').classList.add('active');
-  document.getElementById('tabBtnDesempenho').classList.remove('active');
-  document.getElementById('view-cronograma').style.display = '';
-  document.getElementById('view-desempenho').style.display = 'none';
-});
+function activateTab(name){
+  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas' };
+  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', estatisticas:'tabBtnEstatisticas' };
+  Object.keys(viewMap).forEach(k=>{
+    document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
+    document.getElementById(btnMap[k]).classList.toggle('active', k===name);
+  });
+  if(name==='desempenho') renderDesempenho();
+  if(name==='estatisticas') renderEstatisticas();
+}
+document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
 document.getElementById('subtabDiaria').addEventListener('click', ()=>{
   lsSet('activeSubview','diaria');
   renderActiveSubview();
@@ -1303,13 +1529,8 @@ document.getElementById('subtabMateria').addEventListener('click', ()=>{
   lsSet('activeSubview','materia');
   renderActiveSubview();
 });
-document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>{
-  document.getElementById('tabBtnDesempenho').classList.add('active');
-  document.getElementById('tabBtnCronograma').classList.remove('active');
-  document.getElementById('view-cronograma').style.display = 'none';
-  document.getElementById('view-desempenho').style.display = '';
-  renderDesempenho();
-});
+document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
+document.getElementById('tabBtnEstatisticas').addEventListener('click', ()=>activateTab('estatisticas'));
 
 document.getElementById('saveIndicator').addEventListener('click', ()=>{
   if(saveFailedKeys.size === 0) return;
@@ -1320,6 +1541,7 @@ document.getElementById('saveIndicator').addEventListener('click', ()=>{
 });
 
 // ---------- Init ----------
+initDragAndDrop();
 boot();
 </script>
 </body>
