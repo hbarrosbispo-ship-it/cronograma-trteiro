@@ -224,12 +224,15 @@
   .week-toggle-title{font-weight:bold;color:var(--blue-dark);font-size:13.5px;white-space:nowrap;}
   .week-toggle-sub{font-size:11.5px;color:var(--gray);}
 
-  .charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:12px;}
-  .chart-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:16px;}
-  .chart-card h3{margin:0 0 4px;font-size:14px;color:var(--blue-dark);}
+  .charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:20px;margin-top:12px;}
+  .chart-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:18px;}
+  .chart-card h3{margin:0 0 4px;font-size:15px;color:var(--blue-dark);}
   .chart-card .chart-sub{font-size:11.5px;color:var(--gray);margin-bottom:10px;}
-  .chart-card canvas{max-height:180px;}
+  .chart-card canvas{max-height:340px;}
   .chart-empty{grid-column:1/-1;text-align:center;color:var(--gray);font-size:13px;padding:30px 0;}
+
+  .bloco-charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px;}
+  @media(max-width:900px){.bloco-charts-grid{grid-template-columns:1fr;}}
 
   .note{font-size:12px;color:var(--gray);margin:10px 0 4px;font-style:italic;}
 
@@ -363,6 +366,7 @@
   <div id="view-desempenho" style="display:none;">
     <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
     <div class="charts-grid" id="chartsGrid"></div>
+    <div class="bloco-charts-grid" id="blocoChartsGrid"></div>
   </div>
 
   <div id="view-estatisticas" style="display:none;">
@@ -1576,7 +1580,9 @@ document.getElementById('swApply').addEventListener('click', ()=>{
 });
 
 // ---------- Desempenho por matéria ----------
-const SUBJECTS = ['DA','DCO','DCI','DPC','DPT','DT'];
+// Ordem alinhada com a numeração dos filtros (DCO 1-10, DA 11-24, DT 25-35, DPT 36-43, DCI 44-53,
+// DPC 54-63) - usada em toda a UI que lista matérias (visão por matéria, por filtro, gráficos).
+const SUBJECTS = ['DCO','DA','DT','DPT','DCI','DPC'];
 const SUBJECT_NAMES = {DA:'Direito Administrativo', DCO:'Direito Constitucional', DCI:'Direito Civil', DPC:'Direito Processual Civil', DPT:'Direito Processual do Trabalho', DT:'Direito do Trabalho'};
 let subjectCharts = {};
 
@@ -1649,7 +1655,9 @@ function subjectBlocoStats(subj, bloco){
 
 function renderDesempenho(){
   const grid = document.getElementById('chartsGrid');
+  const blocoGrid = document.getElementById('blocoChartsGrid');
   grid.innerHTML = '';
+  blocoGrid.innerHTML = '';
   Object.values(subjectCharts).forEach(c=>c.destroy());
   subjectCharts = {};
 
@@ -1690,12 +1698,16 @@ function renderDesempenho(){
     });
   });
 
-  // Gráficos por bloco de dificuldade (A = mais fácil ... C = mais difícil), um par por bloco:
-  // evolução do % de aproveitamento por matéria, e a distribuição (seguros/dúvida/erros) em barras
-  // empilhadas até 100%, no mesmo estilo dos relatórios do Cálculo Jurídico.
-  BLOCOS.forEach(bloco=>{
-    const stats = SUBJECTS.map(s=>subjectBlocoStats(s, bloco));
+  // Gráficos por bloco de dificuldade (A = mais fácil ... C = mais difícil): coluna 1 = Bloco A,
+  // coluna 2 = Bloco B, coluna 3 = Bloco C (grid de 3 colunas fixas em #blocoChartsGrid), cada
+  // coluna com "Evolução de Aproveitamento" em cima e "Distribuição de Acertos e Erros" embaixo -
+  // por isso o loop roda em duas passadas (todas as evoluções primeiro, depois todas as
+  // distribuições), pra ordem no HTML bater com o encaixe nas colunas do grid.
+  const blocoStats = {};
+  BLOCOS.forEach(bloco=>{ blocoStats[bloco] = SUBJECTS.map(s=>subjectBlocoStats(s, bloco)); });
 
+  BLOCOS.forEach(bloco=>{
+    const stats = blocoStats[bloco];
     const evolCard = document.createElement('div');
     evolCard.className = 'chart-card';
     evolCard.innerHTML = `
@@ -1703,7 +1715,7 @@ function renderDesempenho(){
       <div class="chart-sub">% de acertos (seguros + com dúvida) sobre as questões respondidas do filtro ${bloco}, por matéria</div>
       <canvas id="chart-bloco-evol-${bloco}"></canvas>
     `;
-    grid.appendChild(evolCard);
+    blocoGrid.appendChild(evolCard);
     subjectCharts['bloco-evol-'+bloco] = new Chart(document.getElementById('chart-bloco-evol-'+bloco), {
       type: 'bar',
       data: {
@@ -1716,7 +1728,10 @@ function renderDesempenho(){
         plugins: { legend: { display:false } }
       }
     });
+  });
 
+  BLOCOS.forEach(bloco=>{
+    const stats = blocoStats[bloco];
     const distCard = document.createElement('div');
     distCard.className = 'chart-card';
     distCard.innerHTML = `
@@ -1724,7 +1739,7 @@ function renderDesempenho(){
       <div class="chart-sub">Percentual de acertos com segurança, com dúvida e erros, por matéria (filtro ${bloco})</div>
       <canvas id="chart-bloco-dist-${bloco}"></canvas>
     `;
-    grid.appendChild(distCard);
+    blocoGrid.appendChild(distCard);
     subjectCharts['bloco-dist-'+bloco] = new Chart(document.getElementById('chart-bloco-dist-'+bloco), {
       type: 'bar',
       data: {
