@@ -145,6 +145,8 @@
   .day-head .d-name{font-size:12px;color:#c9d7ec;}
   .day-head .d-badge{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:12px;font-size:12px;}
   .day-head .d-badge-studied{background:#2E7D32;font-weight:bold;}
+  .btn-day-del{background:rgba(192,57,43,.25);border:1px solid rgba(255,255,255,.4);color:#fff;font-size:12px;line-height:1;cursor:pointer;padding:5px 10px;border-radius:12px;font-weight:bold;}
+  .btn-day-del:hover{background:var(--red);border-color:var(--red);}
 
   table{width:100%;border-collapse:collapse;font-size:12.5px;}
   thead th{background:#eef1f7;color:var(--blue-dark);text-align:left;padding:7px 8px;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap;}
@@ -1051,7 +1053,38 @@ function weekNamesInOrder(){
   return seen;
 }
 function weekDates(weekName){
-  return DATE_ORDER.filter(d=>DAY_INFO[d].week===weekName);
+  const deleted = loadDeletedDays();
+  return DATE_ORDER.filter(d=>DAY_INFO[d].week===weekName && !deleted.has(d));
+}
+// ---------- Exclusão de dias vazios (mesmo esquema de "esconder" usado pra tarefas) ----------
+// Um dia só pode ser excluído se não tiver nenhuma atividade nele (considerando também
+// tarefas movidas manualmente pra ele via effectiveDate). A lista de dias excluídos fica
+// salva no backend (STORE), igual deletedTasks - o array DATE_ORDER original nunca é alterado.
+function loadDeletedDays(){
+  try {
+    const list = JSON.parse(lsGet('deletedDays','[]'));
+    return new Set(Array.isArray(list) ? list : []);
+  } catch(e){ return new Set(); }
+}
+function saveDeletedDays(set){
+  lsSet('deletedDays', JSON.stringify(Array.from(set)));
+}
+// Datas ainda "visíveis" (não excluídas) - usada para popular os seletores de data
+// (Mover / nova tarefa), pra não deixar mandar nada pra um dia já excluído.
+function visibleDates(){
+  const deleted = loadDeletedDays();
+  return DATE_ORDER.filter(d=>!deleted.has(d));
+}
+function deleteDay(date){
+  const hasActivity = tasks.some(t=>effectiveDate(t)===date);
+  if(hasActivity){
+    alert('Só é possível excluir um dia sem nenhuma atividade. Mova ou exclua as atividades desse dia primeiro.');
+    return;
+  }
+  const deleted = loadDeletedDays();
+  deleted.add(date);
+  saveDeletedDays(deleted);
+  renderAll();
 }
 // Por padrão, uma semana já totalmente no passado começa minimizada; a semana atual e as futuras
 // começam maximizadas. Se o usuário clicar e minimizar/maximizar manualmente, essa escolha fica
@@ -1179,6 +1212,7 @@ function renderDiariaInto(panel){
             </div>
             <span class="d-badge">${items.length} atividade${items.length!==1?'s':''} &middot; ~${fmtMin(dayEffort)} estimados</span>
             <span class="d-badge d-badge-studied">${fmtMin(dayStudied)} estudados hoje</span>
+            ${items.length===0 ? `<button type="button" class="btn-day-del" data-date="${date}" title="Excluir este dia do cronograma (só é permitido quando não há nenhuma atividade nele)">Excluir dia ✕</button>` : ''}
           </div>
           ${items.length ? `<table>
             <thead><tr>
@@ -1364,7 +1398,7 @@ function rowHtml(t, firstCol, draggableRow){
       <td data-label="% Acerto" class="pct-cell" id="pctcell-${t.id}">${isQ ? pctHtml(acertos,amt) : '<span class="dash">-</span>'}</td>
       <td data-label="Mover">
         <select class="moveto" data-id="${t.id}">
-          ${DATE_ORDER.map(d=>`<option value="${d}" ${effectiveDate(t)===d?'selected':''}>${shortLabel(d)}</option>`).join('')}
+          ${visibleDates().map(d=>`<option value="${d}" ${effectiveDate(t)===d?'selected':''}>${shortLabel(d)}</option>`).join('')}
         </select>
       </td>
       <td data-label="Excluir"><button type="button" class="btn-del" data-id="${t.id}" title="Excluir esta atividade">✕</button></td>
@@ -1467,6 +1501,14 @@ function attachRowEvents(){
       const label = t ? (t.subj+' · '+t.type+' · '+t.desc) : 'esta atividade';
       if(confirm('Excluir "'+label+'"? Isso só esconde a atividade (dá pra restaurar mudando o código depois, se precisar), não apaga o progresso já registrado nela.')){
         deleteTask(btn.dataset.id);
+      }
+    });
+  });
+  document.querySelectorAll('button.btn-day-del').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const date = btn.dataset.date;
+      if(confirm('Excluir o dia '+date+' do cronograma? Só é permitido porque não há nenhuma atividade nele. Isso só esconde o dia (dá pra restaurar mudando o código depois, se precisar).')){
+        deleteDay(date);
       }
     });
   });
@@ -2070,7 +2112,7 @@ document.getElementById('saveIndicator').addEventListener('click', ()=>{
 // ---------- Formulário de nova tarefa ----------
 function populateTaskForm(){
   const dateSel = document.getElementById('tfDate');
-  dateSel.innerHTML = DATE_ORDER.map(d=>`<option value="${d}">${shortLabel(d)}</option>`).join('');
+  dateSel.innerHTML = visibleDates().map(d=>`<option value="${d}">${shortLabel(d)}</option>`).join('');
   const subjSel = document.getElementById('tfSubj');
   subjSel.innerHTML = SUBJECTS.map(s=>`<option value="${s}">${s} - ${SUBJECT_NAMES[s]}</option>`).join('') + `<option value="-">- (sem matéria específica)</option>`;
 }
