@@ -218,6 +218,7 @@
   .subtab-btn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:bold;cursor:pointer;font-family:inherit;}
   .subtab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
   .subtab-btn:hover{border-color:var(--blue);}
+  .section-title{margin:28px 0 4px;font-size:16px;color:var(--blue-dark);border-top:1px solid var(--border);padding-top:20px;}
   .erros-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px;}
   .erros-table th,.erros-table td{padding:6px 10px;border-bottom:1px solid var(--border);text-align:left;}
   .erros-table th{color:var(--gray);font-size:11.5px;text-transform:uppercase;}
@@ -303,7 +304,6 @@
     <button class="tab-btn active" id="tabBtnCronograma">Cronograma</button>
     <button class="tab-btn" id="tabBtnDesempenho">Desempenho</button>
     <button class="tab-btn" id="tabBtnEstatisticas">Estatísticas</button>
-    <button class="tab-btn" id="tabBtnErros">Erros</button>
   </div>
 
   <div id="view-cronograma">
@@ -374,19 +374,18 @@
     <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
     <div class="charts-grid" id="chartsGrid"></div>
     <div class="bloco-charts-grid" id="blocoChartsGrid"></div>
+
+    <h3 class="section-title">Registro de Erros</h3>
+    <p class="note">Erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
+    <div class="week-summary" id="errosSummaryCards"></div>
+    <div class="charts-grid" id="errosChartsGrid"></div>
+    <div id="errosGroupedTable"></div>
   </div>
 
   <div id="view-estatisticas" style="display:none;">
     <p class="note">Horas efetivamente estudadas (campo "Tempo total" preenchido em cada atividade), por matéria, semana, mês e dia da semana. Só entram nas contas as atividades com tempo registrado.</p>
     <div class="week-summary" id="statsSummaryCards"></div>
     <div class="charts-grid" id="statsChartsGrid"></div>
-  </div>
-
-  <div id="view-erros" style="display:none;">
-    <p class="note">Registro dos erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
-    <div class="week-summary" id="errosSummaryCards"></div>
-    <div class="charts-grid" id="errosChartsGrid"></div>
-    <div id="errosGroupedTable"></div>
   </div>
 </div>
 
@@ -1926,7 +1925,8 @@ function refreshDesempenhoIfVisible(){
 // ---------- Estatísticas ----------
 const WEEKDAY_ORDER = ['Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado','Domingo'];
 const MONTH_NAMES = {'01':'Janeiro','02':'Fevereiro','03':'Março','04':'Abril','05':'Maio','06':'Junho','07':'Julho','08':'Agosto','09':'Setembro','10':'Outubro','11':'Novembro','12':'Dezembro'};
-const SUBJ_COLORS = {DA:'#305496', DCO:'#2E86AB', DCI:'#6C63FF', DPC:'#E67E22', DPT:'#16A085', DT:'#C0392B', Outros:'#95A5A6'};
+const SUBJ_COLORS = {DA:'#305496', DCO:'#2E86AB', DCI:'#6C63FF', DPC:'#E67E22', DPT:'#16A085', DT:'#C0392B', Flashcards:'#8E44AD', 'Estudo de Caso':'#F39C12', Outros:'#95A5A6'};
+const STATS_EXTRA_KEYS = ['Flashcards', 'Estudo de Caso'];
 let statsCharts = {};
 
 function fmtHours(min){
@@ -1943,7 +1943,7 @@ function monthLabel(key){
   return (MONTH_NAMES[parts[0]]||parts[0])+'/'+parts[1];
 }
 function statsBuildBase(){
-  const bySubj = {}; SUBJECTS.forEach(s=>bySubj[s]=0); bySubj['Outros']=0;
+  const bySubj = {}; SUBJECTS.forEach(s=>bySubj[s]=0); STATS_EXTRA_KEYS.forEach(s=>bySubj[s]=0); bySubj['Outros']=0;
   const byWeek = {}; const byWeekday = {}; const byMonth = {};
   const byMonthSubj = {}; const byWeekSubj = {};
   let totalMin = 0;
@@ -1954,7 +1954,7 @@ function statsBuildBase(){
     const date = effectiveDate(t);
     const info = DAY_INFO[date];
     if(!info) return;
-    const subj = bySubj.hasOwnProperty(t.subj) ? t.subj : 'Outros';
+    const subj = bySubj.hasOwnProperty(t.subj) ? t.subj : (bySubj.hasOwnProperty(t.type) ? t.type : 'Outros');
     const monthKey = date.slice(3);
     totalMin += min;
     bySubj[subj] += min;
@@ -1976,7 +1976,7 @@ function statsMakeChart(canvasId, config){
   statsCharts[canvasId] = new Chart(ctx, config);
 }
 function statsSubjDatasets(byGroupSubj, groupKeys){
-  const subjKeys = SUBJECTS.concat(['Outros']);
+  const subjKeys = SUBJECTS.concat(STATS_EXTRA_KEYS);
   return subjKeys.map(subj=>({
     label: subj,
     data: groupKeys.map(g=> +(((byGroupSubj[g]&&byGroupSubj[g][subj])||0)/60).toFixed(2)),
@@ -2025,11 +2025,11 @@ function renderEstatisticas(){
     return;
   }
 
-  const subjKeys = SUBJECTS.concat(['Outros']);
+  const subjKeys = SUBJECTS.concat(STATS_EXTRA_KEYS);
   const allWeekKeys = weekNamesInOrder();
   const allMonthKeys = monthsInOrder();
 
-  statsAddCard(grid, 'chart-horasMateria', 'Horas Estudadas por Matéria', 'Total de horas registradas em cada matéria (flashcards e estudo de caso entram em "Outros")');
+  statsAddCard(grid, 'chart-horasMateria', 'Horas Estudadas por Matéria', 'Total de horas registradas em cada matéria, mais Flashcards e Estudo de Caso separados');
   statsMakeChart('chart-horasMateria', {
     type:'bar',
     data:{ labels: subjKeys, datasets:[{ label:'Horas', data: subjKeys.map(s=>+(base.bySubj[s]/60).toFixed(2)), backgroundColor: subjKeys.map(s=>SUBJ_COLORS[s]) }] },
@@ -2185,24 +2185,17 @@ function renderErros(){
   });
   tableBox.innerHTML = html;
 }
-function refreshErrosIfVisible(){
-  const el = document.getElementById('view-erros');
-  if(el && el.style.display !== 'none'){
-    renderErros();
-  }
-}
 
 // ---------- Abas ----------
 function activateTab(name){
-  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas', erros:'view-erros' };
-  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', estatisticas:'tabBtnEstatisticas', erros:'tabBtnErros' };
+  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas' };
+  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', estatisticas:'tabBtnEstatisticas' };
   Object.keys(viewMap).forEach(k=>{
     document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
     document.getElementById(btnMap[k]).classList.toggle('active', k===name);
   });
-  if(name==='desempenho') renderDesempenho();
+  if(name==='desempenho'){ renderDesempenho(); renderErros(); }
   if(name==='estatisticas') renderEstatisticas();
-  if(name==='erros') renderErros();
 }
 document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
 document.getElementById('subtabDiaria').addEventListener('click', ()=>{
@@ -2227,7 +2220,6 @@ document.getElementById('materiaOrderCapitulo').addEventListener('click', ()=>{
 });
 document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
 document.getElementById('tabBtnEstatisticas').addEventListener('click', ()=>activateTab('estatisticas'));
-document.getElementById('tabBtnErros').addEventListener('click', ()=>activateTab('erros'));
 
 document.getElementById('saveIndicator').addEventListener('click', ()=>{
   if(saveFailedKeys.size === 0) return;
