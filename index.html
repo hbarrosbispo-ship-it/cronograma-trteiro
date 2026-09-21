@@ -218,6 +218,10 @@
   .subtab-btn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:12.5px;font-weight:bold;cursor:pointer;font-family:inherit;}
   .subtab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
   .subtab-btn:hover{border-color:var(--blue);}
+  .erros-table{width:100%;border-collapse:collapse;margin-top:8px;font-size:12.5px;}
+  .erros-table th,.erros-table td{padding:6px 10px;border-bottom:1px solid var(--border);text-align:left;}
+  .erros-table th{color:var(--gray);font-size:11.5px;text-transform:uppercase;}
+  .erros-table td:not(:first-child){text-align:center;}
 
   .week-section{margin:20px 0 0;}
   .week-toggle{display:flex;align-items:baseline;gap:10px;background:#eef1f7;border:1px solid var(--border);border-radius:10px;padding:10px 14px;cursor:pointer;user-select:none;flex-wrap:wrap;}
@@ -299,6 +303,7 @@
     <button class="tab-btn active" id="tabBtnCronograma">Cronograma</button>
     <button class="tab-btn" id="tabBtnDesempenho">Desempenho</button>
     <button class="tab-btn" id="tabBtnEstatisticas">Estatísticas</button>
+    <button class="tab-btn" id="tabBtnErros">Erros</button>
   </div>
 
   <div id="view-cronograma">
@@ -375,6 +380,13 @@
     <p class="note">Horas efetivamente estudadas (campo "Tempo total" preenchido em cada atividade), por matéria, semana, mês e dia da semana. Só entram nas contas as atividades com tempo registrado.</p>
     <div class="week-summary" id="statsSummaryCards"></div>
     <div class="charts-grid" id="statsChartsGrid"></div>
+  </div>
+
+  <div id="view-erros" style="display:none;">
+    <p class="note">Registro dos erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
+    <div class="week-summary" id="errosSummaryCards"></div>
+    <div class="charts-grid" id="errosChartsGrid"></div>
+    <div id="errosGroupedTable"></div>
   </div>
 </div>
 
@@ -2066,16 +2078,131 @@ function refreshEstatisticasIfVisible(){
   }
 }
 
+// ---------- Registro de Erros (alimentado pela skill caderno-de-erros-anki) ----------
+const TIPO_COLORS = {'Lei Seca':'#305496', 'Doutrina':'#6C63FF', 'Jurisprudência':'#C0392B'};
+let errosCharts = {};
+
+function getErroRegistry(){
+  try{
+    const raw = lsGet('erroRegistry', '[]');
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  }catch(e){
+    console.warn('erroRegistry inválido no STORE:', e);
+    return [];
+  }
+}
+
+function errosMakeChart(canvasId, config){
+  const ctx = document.getElementById(canvasId);
+  if(!ctx) return;
+  errosCharts[canvasId] = new Chart(ctx, config);
+}
+
+function renderErros(){
+  const cardsBox = document.getElementById('errosSummaryCards');
+  const grid = document.getElementById('errosChartsGrid');
+  const tableBox = document.getElementById('errosGroupedTable');
+  if(!cardsBox || !grid || !tableBox) return;
+  Object.values(errosCharts).forEach(c=>c.destroy());
+  errosCharts = {};
+
+  const registro = getErroRegistry();
+
+  const porTipo = {};
+  const porMateria = {};
+  const porMateriaAssunto = {}; // materia -> assunto -> tipo -> count
+  registro.forEach(r=>{
+    const materia = r.materia || 'Outros';
+    const assunto = r.assunto || '(assunto não identificado)';
+    const tipo = r.tipo || 'Doutrina';
+    porTipo[tipo] = (porTipo[tipo]||0) + 1;
+    porMateria[materia] = (porMateria[materia]||0) + 1;
+    if(!porMateriaAssunto[materia]) porMateriaAssunto[materia] = {};
+    if(!porMateriaAssunto[materia][assunto]) porMateriaAssunto[materia][assunto] = {};
+    porMateriaAssunto[materia][assunto][tipo] = (porMateriaAssunto[materia][assunto][tipo]||0) + 1;
+  });
+
+  const materiaKeys = Object.keys(porMateria).sort((a,b)=>porMateria[b]-porMateria[a]);
+  const tipoKeys = Object.keys(TIPO_COLORS).filter(t=>porTipo[t]);
+
+  cardsBox.innerHTML = `
+    <div class="week-card">
+      <div class="w-title">Total de Erros Registrados</div>
+      <div class="w-time">${registro.length}</div>
+      <div class="w-sub">cards no Caderno de Erros já classificados</div>
+    </div>
+    <div class="week-card">
+      <div class="w-title">Matéria com Mais Erros</div>
+      <div class="w-time">${materiaKeys[0]||'-'}</div>
+      <div class="w-sub">${materiaKeys[0]?porMateria[materiaKeys[0]]+' erro(s)':'sem dados ainda'}</div>
+    </div>
+    <div class="week-card">
+      <div class="w-title">Base Predominante</div>
+      <div class="w-time">${tipoKeys.length?tipoKeys.reduce((a,b)=>porTipo[a]>porTipo[b]?a:b):'-'}</div>
+      <div class="w-sub">Lei Seca / Doutrina / Jurisprudência</div>
+    </div>
+  `;
+
+  grid.innerHTML = '';
+  tableBox.innerHTML = '';
+  if(registro.length===0){
+    grid.innerHTML = '<div class="chart-empty">Ainda não há erros registrados. Eles são adicionados automaticamente pela skill caderno-de-erros-anki ao final de cada sessão de questões.</div>';
+    return;
+  }
+
+  statsAddCard(grid, 'chart-errosMateria', 'Erros por Matéria', 'Quantidade de erros registrados em cada matéria');
+  errosMakeChart('chart-errosMateria', {
+    type:'bar',
+    data:{ labels: materiaKeys, datasets:[{ label:'Erros', data: materiaKeys.map(m=>porMateria[m]), backgroundColor: materiaKeys.map(m=>SUBJ_COLORS[m]||'#95A5A6') }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
+  });
+
+  statsAddCard(grid, 'chart-errosTipo', 'Distribuição por Base', 'Proporção de erros de Lei Seca, Doutrina e Jurisprudência');
+  errosMakeChart('chart-errosTipo', {
+    type:'doughnut',
+    data:{ labels: tipoKeys, datasets:[{ data: tipoKeys.map(t=>porTipo[t]), backgroundColor: tipoKeys.map(t=>TIPO_COLORS[t]) }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:10}}}} }
+  });
+
+  // Tabela agrupada: Matéria > Assunto > contagem por tipo
+  let html = '';
+  materiaKeys.forEach(materia=>{
+    const assuntos = porMateriaAssunto[materia];
+    const assuntoKeys = Object.keys(assuntos).sort((a,b)=>{
+      const totalA = Object.values(assuntos[a]).reduce((x,y)=>x+y,0);
+      const totalB = Object.values(assuntos[b]).reduce((x,y)=>x+y,0);
+      return totalB-totalA;
+    });
+    html += `<div class="week-card" style="margin-bottom:16px;text-align:left;">
+      <div class="w-title">${materia} <span class="w-sub">(${porMateria[materia]} erro${porMateria[materia]!==1?'s':''})</span></div>
+      <table class="erros-table"><thead><tr><th>Assunto</th><th>Lei Seca</th><th>Doutrina</th><th>Jurisprudência</th></tr></thead><tbody>`;
+    assuntoKeys.forEach(assunto=>{
+      const t = assuntos[assunto];
+      html += `<tr><td>${assunto}</td><td>${t['Lei Seca']||0}</td><td>${t['Doutrina']||0}</td><td>${t['Jurisprudência']||0}</td></tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  tableBox.innerHTML = html;
+}
+function refreshErrosIfVisible(){
+  const el = document.getElementById('view-erros');
+  if(el && el.style.display !== 'none'){
+    renderErros();
+  }
+}
+
 // ---------- Abas ----------
 function activateTab(name){
-  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas' };
-  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', estatisticas:'tabBtnEstatisticas' };
+  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas', erros:'view-erros' };
+  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', estatisticas:'tabBtnEstatisticas', erros:'tabBtnErros' };
   Object.keys(viewMap).forEach(k=>{
     document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
     document.getElementById(btnMap[k]).classList.toggle('active', k===name);
   });
   if(name==='desempenho') renderDesempenho();
   if(name==='estatisticas') renderEstatisticas();
+  if(name==='erros') renderErros();
 }
 document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
 document.getElementById('subtabDiaria').addEventListener('click', ()=>{
@@ -2100,6 +2227,7 @@ document.getElementById('materiaOrderCapitulo').addEventListener('click', ()=>{
 });
 document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
 document.getElementById('tabBtnEstatisticas').addEventListener('click', ()=>activateTab('estatisticas'));
+document.getElementById('tabBtnErros').addEventListener('click', ()=>activateTab('erros'));
 
 document.getElementById('saveIndicator').addEventListener('click', ()=>{
   if(saveFailedKeys.size === 0) return;
