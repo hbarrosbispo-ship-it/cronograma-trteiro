@@ -307,19 +307,13 @@
   </div>
 
   <div id="view-cronograma">
-    <p class="note">A visão diária é a principal (com a revisão de flashcards de cada dia). A visão por matéria agrupa as mesmas atividades por Direito Administrativo, Constitucional, Civil, Processual Civil, Processual do Trabalho e do Trabalho, sem os flashcards (que só aparecem na visão diária); nela dá pra escolher "Ordenar por capítulo" para ver as leituras na ordem 01, 02, 03... em vez de por data. A visão "Por filtro" mostra só as Questões de cada matéria, ordenadas pelo número do filtro (1A, 2A... até o último). Cada semana da visão diária pode ser minimizada ou maximizada clicando na sua barra de título. Preencha status, o tempo total estudado (em minutos) e (para blocos de questões) os acertos. O campo "Qtd" e o campo de assuntos dos blocos de questões são editáveis. Tudo é calculado e salvo automaticamente neste navegador. Use o cronômetro para cronometrar uma atividade e somar o tempo direto na linha. Use "Mover" para remanejar uma atividade para outra data, se precisar, ou simplesmente arraste e solte a atividade em outro dia (na visão diária). A partir da Semana 10 o domingo também aparece no cronograma, disponível para receber atividades se você quiser estudar nesse dia. O link "Abrir arquivo" abre o PDF da leitura direto no Okular, sem depender do aplicativo padrão de PDF do Windows, desde que a configuração de abrir_arquivo.ps1 e registrar_protocolo.reg tenha sido feita uma vez (veja as instruções que acompanham este arquivo).</p>
+    <p class="note">A visão diária é a principal (com a revisão de flashcards de cada dia). A visão por matéria agrupa as mesmas atividades por Direito Administrativo, Constitucional, Civil, Processual Civil, Processual do Trabalho e do Trabalho, sem os flashcards (que só aparecem na visão diária), com as leituras sempre na ordem dos capítulos (01, 02, 03...). Cada semana da visão diária pode ser minimizada ou maximizada clicando na sua barra de título. Preencha status, o tempo total estudado (em minutos) e (para blocos de questões) os acertos. O campo "Qtd" e o campo de assuntos dos blocos de questões são editáveis. Tudo é calculado e salvo automaticamente neste navegador. Use o cronômetro para cronometrar uma atividade e somar o tempo direto na linha. Use "Mover" para remanejar uma atividade para outra data, se precisar, ou simplesmente arraste e solte a atividade em outro dia (na visão diária). A partir da Semana 10 o domingo também aparece no cronograma, disponível para receber atividades se você quiser estudar nesse dia. O link "Abrir arquivo" abre o PDF da leitura direto no Okular, sem depender do aplicativo padrão de PDF do Windows, desde que a configuração de abrir_arquivo.ps1 e registrar_protocolo.reg tenha sido feita uma vez (veja as instruções que acompanham este arquivo).</p>
 
     <div class="week-summary" id="weekSummary"></div>
 
     <div class="subtab-bar">
       <button class="subtab-btn" id="subtabDiaria">Visão diária</button>
       <button class="subtab-btn" id="subtabMateria">Visão por matéria</button>
-      <button class="subtab-btn" id="subtabFiltro">Por filtro</button>
-    </div>
-
-    <div class="subtab-bar" id="materiaOrderToggle" style="display:none;">
-      <button class="subtab-btn" id="materiaOrderData">Ordenar por data</button>
-      <button class="subtab-btn" id="materiaOrderCapitulo">Ordenar por capítulo</button>
     </div>
 
     <button type="button" class="btn-add-task" id="btnAddTask">+ Adicionar tarefa</button>
@@ -371,15 +365,23 @@
   </div>
 
   <div id="view-desempenho" style="display:none;">
-    <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
-    <div class="charts-grid" id="chartsGrid"></div>
-    <div class="bloco-charts-grid" id="blocoChartsGrid"></div>
+    <div class="subtab-bar">
+      <button class="subtab-btn" id="desSubDesempenho">Desempenho</button>
+      <button class="subtab-btn" id="desSubErros">Erros</button>
+    </div>
 
-    <h3 class="section-title">Registro de Erros</h3>
-    <p class="note">Erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
-    <div class="week-summary" id="errosSummaryCards"></div>
-    <div class="charts-grid" id="errosChartsGrid"></div>
-    <div id="errosGroupedTable"></div>
+    <div id="desempenho-content">
+      <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
+      <div class="charts-grid" id="chartsGrid"></div>
+      <div class="bloco-charts-grid" id="blocoChartsGrid"></div>
+    </div>
+
+    <div id="desempenho-erros-content" style="display:none;">
+      <p class="note">Erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
+      <div class="week-summary" id="errosSummaryCards"></div>
+      <div class="charts-grid" id="errosChartsGrid"></div>
+      <div id="errosGroupedTable"></div>
+    </div>
   </div>
 
   <div id="view-estatisticas" style="display:none;">
@@ -668,7 +670,8 @@ const BUILTIN_TASKS = [
   {date:'05/10/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de caso — resolução da questão', amount:null, unit:''},
   {date:'05/10/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de caso — assistir aula', amount:null, unit:''},
 ];
-BUILTIN_TASKS.forEach((t,i)=>{ t.id='t'+i; t.effort = t.type==='Leitura' ? t.amount*6 : (t.type==='Questões' ? t.amount*3 : (t.type==='Estudo de Caso' ? 45 : 20)); });
+function estudoCasoEffort(desc){ return /assistir aula/i.test(desc||'') ? 120 : 60; }
+BUILTIN_TASKS.forEach((t,i)=>{ t.id='t'+i; t.effort = t.type==='Leitura' ? t.amount*6 : (t.type==='Questões' ? t.amount*3 : (t.type==='Estudo de Caso' ? estudoCasoEffort(t.desc) : 20)); });
 
 // ---------- Tarefas customizadas (criadas/excluídas pelo próprio usuário) ----------
 // Ficam à parte do array fixo acima, guardadas no backend (STORE) como JSON, já que o
@@ -682,7 +685,7 @@ let customIdCounter = 0;
 function computeEffort(t){
   if(t.type==='Leitura') return (t.amount||0)*6;
   if(t.type==='Questões') return (t.amount||0)*3;
-  if(t.type==='Estudo de Caso') return 45;
+  if(t.type==='Estudo de Caso') return estudoCasoEffort(t.desc);
   return 20;
 }
 function loadCustomTasks(){
@@ -1008,7 +1011,7 @@ function autoGrow(el){
 function effectiveEffort(t){
   if(t.type==='Leitura') return effectiveAmount(t)*6;
   if(t.type==='Questões') return effectiveAmount(t)*3;
-  if(t.type==='Estudo de Caso') return 45;
+  if(t.type==='Estudo de Caso') return estudoCasoEffort(t.desc);
   return 20;
 }
 const TYPE_RANK = {Leitura:0, 'Questões':1, 'Estudo de Caso':1.5, Flashcards:2};
@@ -1153,23 +1156,11 @@ function renderActiveSubview(){
   const subview = lsGet('activeSubview','diaria');
   const btnDiaria = document.getElementById('subtabDiaria');
   const btnMateria = document.getElementById('subtabMateria');
-  const btnFiltro = document.getElementById('subtabFiltro');
   if(btnDiaria) btnDiaria.classList.toggle('active', subview==='diaria');
   if(btnMateria) btnMateria.classList.toggle('active', subview==='materia');
-  if(btnFiltro) btnFiltro.classList.toggle('active', subview==='filtro');
-
-  const orderToggle = document.getElementById('materiaOrderToggle');
-  if(orderToggle) orderToggle.style.display = (subview==='materia') ? '' : 'none';
-  const materiaOrder = lsGet('materiaOrder','data');
-  const btnOrderData = document.getElementById('materiaOrderData');
-  const btnOrderCapitulo = document.getElementById('materiaOrderCapitulo');
-  if(btnOrderData) btnOrderData.classList.toggle('active', materiaOrder!=='capitulo');
-  if(btnOrderCapitulo) btnOrderCapitulo.classList.toggle('active', materiaOrder==='capitulo');
 
   if(subview==='materia'){
     renderMateriaInto(panel);
-  } else if(subview==='filtro'){
-    renderFiltroInto(panel);
   } else {
     renderDiariaInto(panel);
   }
@@ -1271,30 +1262,13 @@ function filtroKeyFromDesc(desc){
   if(!m) return null;
   return { num: Number(m[1]), letter: (m[2]||'').toUpperCase() };
 }
-// Ordena questões pelo número do filtro (1A, 2A, ... 50A); as que não seguem esse padrão vão
-// para o fim, por data.
-function sortByFiltro(items){
-  return items.slice().sort((a,b)=>{
-    const fa = filtroKeyFromDesc(a.desc), fb = filtroKeyFromDesc(b.desc);
-    if(fa && fb){
-      if(fa.num!==fb.num) return fa.num-fb.num;
-      return fa.letter.localeCompare(fb.letter);
-    }
-    if(fa && !fb) return -1;
-    if(!fa && fb) return 1;
-    const da = effectiveDate(a), db = effectiveDate(b);
-    return DATE_ORDER.indexOf(da)-DATE_ORDER.indexOf(db);
-  });
-}
-
-// Visão secundária: por matéria, sem os cards de Flashcards (esses só aparecem na visão diária).
-// A ordenação (por data ou por capítulo) é controlada pelo toggle acima da lista (materiaOrder).
+// Visão secundária: por matéria, sem os cards de Flashcards (esses só aparecem na visão diária),
+// sempre ordenada pelo número do capítulo (sortByCapitulo).
 function renderMateriaInto(panel){
-  const order = lsGet('materiaOrder','data');
   const subjGroups = groupBySubject(tasks);
   SUBJECTS.forEach(subj=>{
     let items = subjGroups[subj] || [];
-    if(order==='capitulo') items = sortByCapitulo(items);
+    items = sortByCapitulo(items);
     const subjEffort = items.reduce((s,t)=>s+effectiveEffort(t),0);
     const subjStudied = items.reduce((s,t)=>s+taskMinutes(t),0);
     const card = document.createElement('div');
@@ -1320,38 +1294,6 @@ function renderMateriaInto(panel){
     panel.appendChild(card);
   });
   // Flashcards não entram aqui de propósito: só aparecem na visão diária.
-}
-
-// Visão por filtro: só as atividades de Questões, uma matéria por card, ordenadas pelo número
-// do filtro (1A, 2A, ... 50A), em vez de por data.
-function renderFiltroInto(panel){
-  const subjGroups = groupBySubject(tasks);
-  SUBJECTS.forEach(subj=>{
-    const items = sortByFiltro((subjGroups[subj]||[]).filter(t=>t.type==='Questões'));
-    const subjEffort = items.reduce((s,t)=>s+effectiveEffort(t),0);
-    const subjStudied = items.reduce((s,t)=>s+taskMinutes(t),0);
-    const card = document.createElement('div');
-    card.className='day-card';
-    card.innerHTML = `
-      <div class="day-head">
-        <div class="d-left">
-          <span class="d-date">${subj}</span>
-          <span class="d-name">${SUBJECT_NAMES[subj]||subj}</span>
-        </div>
-        <span class="d-badge">${items.length} filtro${items.length!==1?'s':''} &middot; ~${fmtMin(subjEffort)} estimados</span>
-        <span class="d-badge d-badge-studied">${fmtMin(subjStudied)} estudados</span>
-      </div>
-      ${items.length ? `<table>
-        <thead><tr>
-          <th>Data</th><th>Atividade</th><th>Descrição</th><th>Qtd</th>
-          <th>Status</th><th>Tempo total (min)</th>
-          <th>Acertos</th><th>Erros</th><th>% Acerto</th><th>Mover</th><th>Excluir</th>
-        </tr></thead>
-        <tbody>${items.map(t=>rowHtml(t,'date',false)).join('')}</tbody>
-      </table>` : `<p class="note" style="margin:12px 16px;">Nenhum filtro de questões cadastrado nesta matéria ainda.</p>`}
-    `;
-    panel.appendChild(card);
-  });
 }
 
 function acertosSeguros(t){ return lsGet('acertosSeguros_'+t.id, ''); }
@@ -2186,6 +2128,17 @@ function renderErros(){
   tableBox.innerHTML = html;
 }
 
+// Subaba dentro de Desempenho: alterna entre os gráficos de acerto ("desempenho") e o
+// Registro de Erros ("erros"), mesmo padrão de toggle clicável já usado alhures.
+function activateDesempenhoSub(sub){
+  lsSet('desempenhoSub', sub);
+  document.getElementById('desSubDesempenho').classList.toggle('active', sub!=='erros');
+  document.getElementById('desSubErros').classList.toggle('active', sub==='erros');
+  document.getElementById('desempenho-content').style.display = (sub==='erros') ? 'none' : '';
+  document.getElementById('desempenho-erros-content').style.display = (sub==='erros') ? '' : 'none';
+  if(sub==='erros') renderErros(); else renderDesempenho();
+}
+
 // ---------- Abas ----------
 function activateTab(name){
   const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas' };
@@ -2194,7 +2147,7 @@ function activateTab(name){
     document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
     document.getElementById(btnMap[k]).classList.toggle('active', k===name);
   });
-  if(name==='desempenho'){ renderDesempenho(); renderErros(); }
+  if(name==='desempenho') activateDesempenhoSub(lsGet('desempenhoSub','desempenho'));
   if(name==='estatisticas') renderEstatisticas();
 }
 document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
@@ -2206,20 +2159,10 @@ document.getElementById('subtabMateria').addEventListener('click', ()=>{
   lsSet('activeSubview','materia');
   renderActiveSubview();
 });
-document.getElementById('subtabFiltro').addEventListener('click', ()=>{
-  lsSet('activeSubview','filtro');
-  renderActiveSubview();
-});
-document.getElementById('materiaOrderData').addEventListener('click', ()=>{
-  lsSet('materiaOrder','data');
-  renderActiveSubview();
-});
-document.getElementById('materiaOrderCapitulo').addEventListener('click', ()=>{
-  lsSet('materiaOrder','capitulo');
-  renderActiveSubview();
-});
 document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
 document.getElementById('tabBtnEstatisticas').addEventListener('click', ()=>activateTab('estatisticas'));
+document.getElementById('desSubDesempenho').addEventListener('click', ()=>activateDesempenhoSub('desempenho'));
+document.getElementById('desSubErros').addEventListener('click', ()=>activateDesempenhoSub('erros'));
 
 document.getElementById('saveIndicator').addEventListener('click', ()=>{
   if(saveFailedKeys.size === 0) return;
