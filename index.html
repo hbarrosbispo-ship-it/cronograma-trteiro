@@ -1240,9 +1240,16 @@ function chapterNumFromFile(file){
   if(!m) return null;
   return Number(m[1]) + (m[2] ? Number(m[2])/10 : 0);
 }
+// Extrai número + letra do filtro a partir da descrição (ex.: "Filtro 57A" -> {num:57, letter:'A'}).
+function filtroKeyFromDesc(desc){
+  const m = (desc||'').match(/Filtro\s*(\d+)\s*([A-Za-z]*)/i);
+  if(!m) return null;
+  return { num: Number(m[1]), letter: (m[2]||'').toUpperCase() };
+}
 // Ordena os itens de uma matéria colocando as leituras com capítulo identificado em ordem
-// crescente de capítulo primeiro; o resto (leituras sem capítulo no nome, questões, flashcards,
-// estudo de caso) vem depois, na ordem de tipo/data de sempre.
+// crescente de capítulo primeiro, depois as Questões em ordem crescente de número de filtro
+// (1, 2, 3...); o resto (leituras sem capítulo no nome, flashcards, estudo de caso) vem por
+// último, na ordem de tipo/data de sempre.
 function sortByCapitulo(items){
   const RANK = {Leitura:0, 'Questões':1, 'Estudo de Caso':1.5, Flashcards:2};
   return items.slice().sort((a,b)=>{
@@ -1252,15 +1259,16 @@ function sortByCapitulo(items){
     if(ra!==rb) return ra-rb;
     if(ra===0 && ca!==cb) return ca-cb;
     if(a.type!==b.type) return (RANK[a.type]??9)-(RANK[b.type]??9);
+    if(a.type==='Questões'){
+      const fa = filtroKeyFromDesc(a.desc), fb = filtroKeyFromDesc(b.desc);
+      if(fa && fb && fa.num!==fb.num) return fa.num-fb.num;
+      if(fa && fb) return fa.letter.localeCompare(fb.letter);
+      if(fa && !fb) return -1;
+      if(!fa && fb) return 1;
+    }
     const da = effectiveDate(a), db = effectiveDate(b);
     return DATE_ORDER.indexOf(da)-DATE_ORDER.indexOf(db);
   });
-}
-// Extrai número + letra do filtro a partir da descrição (ex.: "Filtro 57A" -> {num:57, letter:'A'}).
-function filtroKeyFromDesc(desc){
-  const m = (desc||'').match(/Filtro\s*(\d+)\s*([A-Za-z]*)/i);
-  if(!m) return null;
-  return { num: Number(m[1]), letter: (m[2]||'').toUpperCase() };
 }
 // Visão secundária: por matéria, sem os cards de Flashcards (esses só aparecem na visão diária),
 // sempre ordenada pelo número do capítulo (sortByCapitulo).
