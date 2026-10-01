@@ -260,6 +260,16 @@
 </style>
 </head>
 <body>
+<style>
+.sitenav{background:#1F4E78;display:flex;gap:4px;align-items:center;padding:0 16px;height:40px;font-family:Arial,Helvetica,sans-serif;position:relative;z-index:60}
+.sitenav a{color:#dbe4f5;text-decoration:none;font-size:13.5px;font-weight:bold;padding:9px 14px;border-radius:6px;cursor:pointer}
+.sitenav a:hover{background:rgba(255,255,255,.12)}.sitenav a.on{background:rgba(255,255,255,.2);color:#fff}
+.sitenav .logo{color:#fff;font-weight:bold;margin-right:10px;letter-spacing:.4px;font-size:13.5px}
+.stopwatch{top:56px!important}
+body > .wrap > .tab-bar{display:none}
+</style>
+<nav class="sitenav"><span class="logo">TRTeiros</span><a id="sn-cronograma" data-tab="cronograma" class="on" href="index.html#cronograma">Cronograma</a><a id="sn-desempenho" data-tab="desempenho" href="index.html#desempenho">Desempenho</a><a id="sn-estatisticas" data-tab="estatisticas" href="index.html#estatisticas">Estatísticas</a><a href="compilado/index.html">Compilado de Revisão</a></nav>
+
 
 <div id="bootOverlay" style="position:fixed;inset:0;background:#F5F7FA;z-index:999;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;color:#305496;font-size:15px;">Carregando cronograma…</div>
 
@@ -377,6 +387,7 @@
     </div>
 
     <div id="desempenho-erros-content" style="display:none;">
+      <p class="note">Para ver estes erros por artigo e por lei (e onde mais erro), abra o <a href="compilado/index.html#err">Compilado de Revisão</a>.</p>
       <p class="note">Erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
       <div class="week-summary" id="errosSummaryCards"></div>
       <div class="charts-grid" id="errosChartsGrid"></div>
@@ -2294,6 +2305,18 @@ document.getElementById('tfSubmit').addEventListener('click', ()=>{
 // ---------- Init ----------
 initDragAndDrop();
 boot();
+</script>
+<script>
+(function(){
+  var orig = window.activateTab, ids = {cronograma:'sn-cronograma', desempenho:'sn-desempenho', estatisticas:'sn-estatisticas'};
+  function marca(n){ Object.keys(ids).forEach(function(k){ var a=document.getElementById(ids[k]); if(a) a.classList.toggle('on', k===n); }); }
+  window.activateTab = function(n){ orig(n); marca(n); try{ history.replaceState(null,'','#'+n); }catch(e){} };
+  [].slice.call(document.querySelectorAll('.sitenav a[data-tab]')).forEach(function(a){
+    a.addEventListener('click', function(e){ e.preventDefault(); window.activateTab(a.dataset.tab); });
+  });
+  var h=(location.hash||'').slice(1);
+  if(ids[h]){ var t=setInterval(function(){ var o=document.getElementById('bootOverlay'); if(!o || o.style.display==='none'){ clearInterval(t); window.activateTab(h); } },200); }
+})();
 </script>
 </body>
 </html>
