@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cronograma de Estudos - TRTeiros</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
   :root{
     --blue:#305496;
@@ -920,17 +920,44 @@ function lsSet(key, val){
   STORE[key] = String(val);
   saveDirtyKeys.add(key);
   saveFailedKeys.delete(key); // uma mudança nova nesse campo merece nova tentativa
+  scheduleStoreCache();
   updateSaveIndicator();
   processSaveQueue();
 }
+
+// Cache local do STORE: a página abre na hora com o último estado conhecido e o
+// servidor (Apps Script, ~2s de latência) só confirma/atualiza em segundo plano.
+const STORE_CACHE_KEY = 'cronogramaStoreCacheV1';
+let storeCacheTimer = null;
+function writeStoreCache(){
+  try{ localStorage.setItem(STORE_CACHE_KEY, JSON.stringify(STORE)); }catch(e){}
+}
+function scheduleStoreCache(){
+  clearTimeout(storeCacheTimer);
+  storeCacheTimer = setTimeout(writeStoreCache, 300);
+}
+function readStoreCache(){
+  try{
+    const c = JSON.parse(localStorage.getItem(STORE_CACHE_KEY));
+    return (c && typeof c==='object' && !Array.isArray(c)) ? c : null;
+  }catch(e){ return null; }
+}
 function seedTasksRemote(){
+  // Só reenvia quando a lista efetiva mudou (antes mandava as ~240 tarefas a cada carga).
+  const payload = JSON.stringify({
+    action: 'seedTasks',
+    tasks: tasks.map(t=>({id:t.id, date:effectiveDate(t), subj:t.subj, type:t.type, desc:t.desc, amount:effectiveAmount(t), unit:t.unit, topics:effectiveTopics(t)}))
+  });
+  let h = 0;
+  for(let i=0;i<payload.length;i++){ h = (Math.imul(31,h) + payload.charCodeAt(i)) | 0; }
+  const hash = h + ':' + payload.length;
+  try{ if(localStorage.getItem('seedTasksHash')===hash) return; }catch(e){}
   fetch(WEBAPP_URL, {
     method: 'POST',
     headers: {'Content-Type': 'text/plain;charset=utf-8'},
-    body: JSON.stringify({
-      action: 'seedTasks',
-      tasks: tasks.map(t=>({id:t.id, date:effectiveDate(t), subj:t.subj, type:t.type, desc:t.desc, amount:effectiveAmount(t), unit:t.unit, topics:effectiveTopics(t)}))
-    })
+    body: payload
+  }).then(r=>r.json()).then(json=>{
+    if(json && json.ok===true){ try{ localStorage.setItem('seedTasksHash', hash); }catch(e){} }
   }).catch(()=>{});
 }
 // Migração única: o antigo campo único "acertos_t{id}" vira "acertosSeguros_t{id}"
@@ -947,21 +974,50 @@ function migrateAcertosSplit(){
   lsSet('migratedAcertosSplit', '1');
 }
 
+function initFromStore(){
+  rebuildTasks();
+  migrateAcertosSplit();
+  document.getElementById('bootOverlay').style.display = 'none';
+  loadTimerState();
+  renderAll();
+  seedTasksRemote();
+}
+
+// Stale-while-revalidate: se há cache local, renderiza imediatamente e busca o servidor
+// em segundo plano; sem cache (primeiro acesso), espera o servidor como antes.
 function boot(){
+  const cached = readStoreCache();
+  let booted = false;
+  let snapshot = '';
+  if(cached){
+    STORE = cached;
+    snapshot = JSON.stringify(cached);
+    initFromStore();
+    booted = true;
+  }
   fetch(WEBAPP_URL + '?action=data')
     .then(r=>r.json())
     .then(data=>{
+      // não atropela o que o usuário editou enquanto a resposta vinha
+      saveDirtyKeys.forEach(k=>{ data[k] = STORE[k]; });
+      const fresh = JSON.stringify(data);
+      const changed = fresh !== snapshot;
       STORE = data;
-      rebuildTasks();
-      migrateAcertosSplit();
-      document.getElementById('bootOverlay').style.display = 'none';
-      loadTimerState();
-      renderAll();
-      seedTasksRemote();
+      writeStoreCache();
+      if(!booted){
+        initFromStore();
+        booted = true;
+      } else if(changed){
+        const ae = document.activeElement;
+        const typing = ae && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+        if(!typing){ rebuildTasks(); renderAll(); }
+      }
     })
     .catch(err=>{
       console.error(err);
-      document.getElementById('bootOverlay').textContent = 'Não foi possível carregar os dados salvos. Verifique sua conexão e recarregue a página.';
+      if(!booted){
+        document.getElementById('bootOverlay').textContent = 'Não foi possível carregar os dados salvos. Verifique sua conexão e recarregue a página.';
+      }
     });
 }
 
