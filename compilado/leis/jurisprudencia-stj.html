@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compilado Jurisprudência: STJ</title><style>:root{--blue:#305496;--blue-dark:#1F4E78;--yellow:#FFF2CC;--gray:#666;--light:#F5F7FA;--border:#D9D9D9;--green:#2E7D32;--red:#C0392B;
+--f1:#FFD966;--f2:#7ED957;--f3:#5271FF;--f4:#F45B8F;--f5:#FF3131}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--light);color:#222;margin:0;padding:0 0 60px;font-size:16px}
+header{background:var(--blue);color:#fff;padding:22px 20px 18px}
+header h1{margin:0 0 4px;font-size:23px}header p{margin:0;font-size:14px;color:#dbe4f5}
+header a{color:#dbe4f5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header .wrap{padding:0}
+.progress-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-top:-14px;padding:16px 18px}
+.summary-stats{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--gray)}
+.summary-stats b{color:var(--blue-dark);font-size:16px}
+.legenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--gray);align-items:center}
+.legenda strong{color:var(--blue-dark)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px;background:var(--f1)}
+.dot.f1{background:var(--f1)}.dot.f2{background:var(--f2)}.dot.f3{background:var(--f3)}.dot.f4{background:var(--f4)}.dot.f5{background:var(--f5)}
+.tab-bar{display:flex;gap:8px;margin-top:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab-btn{background:none;border:none;padding:10px 16px;font-size:14px;font-weight:bold;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}
+.tab-btn.active{color:var(--blue-dark);border-bottom-color:var(--blue)}.tab-btn:hover{color:var(--blue-dark)}
+.panel{display:none}.panel.active{display:block}
+.subtab-bar{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap;align-items:center}
+.subtab-btn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:13.5px;font-weight:bold;cursor:pointer;font-family:inherit}
+.subtab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}.subtab-btn:hover{border-color:var(--blue)}
+.subtab-bar input[type=search]{flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px}
+.small{font-size:12.5px;color:var(--gray)}.note{font-size:13px;color:var(--gray);margin:10px 0 4px;font-style:italic}
+.norma-h{background:#eef1f7;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:22px 0 0;font-weight:bold;color:var(--blue-dark);font-size:15px}
+.titulo-h{margin:18px 0 0;font-weight:bold;color:var(--blue-dark);font-size:14px;text-transform:uppercase;letter-spacing:.3px;padding-left:2px}
+.day-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:10px 0;overflow:hidden}
+.day-head{background:var(--blue-dark);color:#fff;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.day-head .d-date{font-size:15.5px;font-weight:bold}.day-head .d-badge{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:12px;font-size:13px}
+.secao-h{background:#eef1f7;color:var(--blue-dark);font-size:12.5px;font-weight:bold;padding:6px 16px;border-top:1px solid var(--border);text-transform:uppercase;letter-spacing:.3px}
+td.secao-h{border-top:1px solid var(--border)}
+details.art{border-top:1px solid var(--border)}
+.day-head+details.art{border-top:none}
+details.art>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:14px;flex-wrap:wrap}
+details.art>summary::-webkit-details-marker{display:none}
+details.art>summary::before{content:"▸";font-size:11px;color:var(--blue-dark);width:10px}
+details.art[open]>summary::before{content:"▾"}
+details.art>summary:hover{background:#f7f9fc}
+.ref{font-weight:bold;color:var(--blue-dark);white-space:nowrap}
+.inc{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:bold;border-radius:12px;padding:2px 9px 2px 7px;white-space:nowrap;color:#222;background:#f0f0f0}
+.inc .dot{margin:0}
+.inc.f1{background:#FFF3CC}.inc.f2{background:#E3F6DA}.inc.f3{background:#DDE3FF}.inc.f4{background:#FDDCE8}.inc.f5{background:#FFD9D9}
+.tit{flex:1;min-width:200px}.ctx{font-size:12px;color:var(--gray);font-style:italic}
+.dm{margin-left:auto;font-size:12.5px;color:var(--gray);white-space:nowrap}
+details.art.dom{opacity:.5}
+.body{padding:2px 18px 14px 36px;font-size:14px;line-height:1.5}
+.body h4{margin:12px 0 4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray)}
+.body ul{margin:2px 0 2px 18px;padding:0}.body li{margin:3px 0}
+.body ul.armadilha li::marker{content:"⚠ "}
+.body p{margin:4px 0}
+.cmp{overflow-x:auto}.cmp table{font-size:13px}
+.lei-txt{border-left:3px solid var(--blue);background:#f7f9fc;padding:6px 14px;border-radius:0 8px 8px 0}
+.lei-txt p{margin:7px 0}.lei-txt .d1{margin-left:22px}.lei-txt .d2{margin-left:44px}.lei-txt .d3{margin-left:66px}
+.qs a,.links a{display:inline-block;margin:0 4px 4px 0;padding:1px 8px;border:1px solid var(--border);border-radius:6px;text-decoration:none;font-size:13px;color:var(--blue-dark);background:#fff}
+.qs a.erro{background:#FADBD8;color:var(--red);border-color:#f0b3ad}.qs a.duvida{background:var(--yellow);color:#B9770E;border-color:#ecd9a0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+thead th{background:#eef1f7;color:var(--blue-dark);text-align:left;padding:7px 8px;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+.tbl-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:14px 0;overflow:hidden}
+.b{display:inline-block;border-radius:5px;padding:1px 7px;font-size:12px;font-weight:bold;margin-right:3px}
+.b.e{background:#FADBD8;color:var(--red)}.b.d{background:var(--yellow);color:#B9770E}
+.lac{background:#FFF9E6;border:1px dashed #d9b95b;border-radius:10px;padding:10px 18px;margin-top:16px}
+a{color:var(--blue-dark)}
+@media(max-width:640px){.dm{margin-left:0}.body{padding-left:18px}}
+@media print{.tab-bar,.subtab-bar{display:none}.panel{display:block!important}details.art:not([open])>*:not(summary){display:block}}
+/* ---- edição (ocultar, editar, anotações) ---- */
+.ed-b{display:none;margin-left:6px;white-space:nowrap}
+body.edicao .ed-b{display:inline}
+.ed-b button{border:0;background:#eef1f7;border-radius:4px;cursor:pointer;font-size:13px;margin-left:3px;padding:0 6px;color:var(--blue-dark);font-family:inherit}
+.ed-b button:hover{background:#dbe4f5}
+.oculto{display:none!important}
+body.ver-ocultos .oculto{display:list-item!important;opacity:.45;text-decoration:line-through}
+body.ver-ocultos p.it.oculto{display:block!important}
+.ed-t[contenteditable=true]{outline:2px solid var(--blue);padding:1px 4px;background:#fff;border-radius:4px}
+.nota-txt{min-height:36px;border:1px dashed var(--border);border-radius:8px;padding:7px 11px;background:#fffdf5;white-space:pre-wrap;color:#444}
+.nota-txt:empty::before{content:"(sem anotações)";color:#aaa}
+.nota-txt{cursor:text}
+.nota-txt:focus{outline:2px solid var(--blue);border-style:solid;border-color:var(--blue);background:#fff}
+.edit-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.edit-bar .msg{font-size:12.5px;color:var(--green)}
+body.edicao .edit-bar .subtab-btn#btn-edicao{background:var(--blue);color:#fff;border-color:var(--blue)}
+body.ver-ocultos .edit-bar .subtab-btn#btn-ocultos{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* ---- estrutura da lei: título, capítulo, botões de expandir ---- */
+.tit-wrap{margin-top:6px}
+.titulo-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.mini{border:1px solid var(--border);background:#fff;color:var(--blue-dark);border-radius:6px;font-size:12.5px;padding:2px 9px;cursor:pointer;font-family:inherit;text-transform:none;letter-spacing:0;font-weight:bold}
+.mini:hover{border-color:var(--blue)}
+.day-head .mini{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4)}
+.day-head .d-act{display:flex;gap:8px;align-items:center}
+select.sel,select.cap-sel{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px;background:#fff;color:#444;max-width:100%}
+
+/* ---- transcrição ---- */
+.lei-txt .extra{display:none;color:#8a8a8a}
+.lei-txt.completo .extra{display:block}
+.lei-txt .nota-extra{margin:6px 0 2px;font-size:12.5px}
+.lei-txt .nota-extra button{border:0;background:none;color:var(--blue-dark);cursor:pointer;font-weight:bold;font-family:inherit;font-size:12.5px;padding:0;text-decoration:underline}
+.resumo li{margin:4px 0}
+
+/* ---- possíveis omissões ---- */
+.omissao{background:#FFF9E6;border:1px dashed #d9b95b;border-radius:8px;padding:6px 14px;margin:4px 0}
+.omissao p{margin:6px 0}
+
+/* ---- barra do site (modo site) ---- */
+.sitenav{background:#1F4E78;display:flex;gap:4px;align-items:center;padding:0 16px;height:40px;font-family:Arial,Helvetica,sans-serif}
+.sitenav a{color:#dbe4f5;text-decoration:none;font-size:13.5px;font-weight:bold;padding:9px 14px;border-radius:6px}
+.sitenav a:hover{background:rgba(255,255,255,.12)}
+.sitenav a.on{background:rgba(255,255,255,.2);color:#fff}
+.sitenav .logo{color:#fff;margin-right:10px;letter-spacing:.4px}
+
+/* ---- cartões de resumo (página de Erros) ---- */
+.week-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 16px;flex:1;min-width:220px}
+.w-title{font-size:12px;color:var(--gray);font-weight:bold;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.w-time{font-size:21px;font-weight:bold;color:var(--blue-dark)}.w-sub{font-size:12.5px;color:var(--gray);margin-top:2px}
+</style></head>
+<body><nav class="sitenav"><span class="logo" style="color:#fff;font-weight:bold;margin-right:10px">TRTeiros</span><a href="../../index.html#cronograma">Cronograma</a><a href="../../index.html#desempenho">Desempenho</a><a href="../../index.html#estatisticas">Estatísticas</a><a href="../index.html" class=on>Compilado de Revisão</a></nav><header><div class="wrap"><h1>Jurisprudência: STJ</h1><p><a href="../index.html">Biblioteca</a> › Jurisprudência: STJ</p></div></header>
+<div class="wrap"><div class="progress-card"><div class="summary-stats"><span><b>3</b> Dispositivos cobrados</span><span><b>3</b> Citações</span><span><b>1</b> Filtros</span></div><div class="legenda"><strong>Legenda (vezes cobrado):</strong><span><i class="dot f1"></i>1 vez</span><span><i class="dot f2"></i>2 vezes</span><span><i class="dot f3"></i>3 vezes</span><span><i class="dot f4"></i>4 vezes</span><span><i class="dot f5"></i>5 ou mais vezes</span></div><div class="small" style="margin-top:8px">Filtros que cobraram esta norma: <a href="../Direito Processual Civil/2026-10-02_62a.html">62A</a></div></div><div class="tab-bar"><button class="tab-btn active" data-tab="lei">Na ordem da lei</button><button class="tab-btn" data-tab="inc">Por incidência</button><button class="tab-btn" data-tab="err">Meus erros e dúvidas</button></div><div class="subtab-bar"><input id="busca" type="search" placeholder="Buscar artigo, tema, palavra (funciona sem acento)"><button class="subtab-btn active" data-fx="*">Todas</button><button class="subtab-btn" data-fx="1"><i class="dot f1"></i>1×</button><label class="small"><input type="checkbox" id="ocultar"> ocultar dominados</label></div><div class="edit-bar"><button class="subtab-btn" id="btn-edicao" type="button">Modo edição</button><button class="subtab-btn" id="btn-ocultos" type="button">Mostrar ocultos</button><button class="subtab-btn" id="btn-salvar" type="button">Salvar edições</button><span class="msg" id="ed-msg"></span></div><section class="panel active" id="lei"><p class="note">Todos os filtros somados, na ordem da lei (artigos em ordem crescente). O número ao lado de cada artigo é o total de questões que o cobraram em todos os filtros.</p><div class="day-card" id="cap-súmulas"><div class="day-head"><span class="d-date">Súmulas</span><span class="d-act"><span class="d-badge">2 dispositivos · 2 questões</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-stj-sumula-375" data-f="1"><summary><span class="ref">Súmula 375 (STJ)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="stj-sumula:375|titulo|7fd10e57" data-raw="Fraude à execução e registro da penhora"><span class="ed-t">Fraude à execução e registro da penhora</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><span class="b e" title="Erros anteriores no cronograma">reincidente (1)</span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>Enunciado (texto integral dos trechos cobrados)</h4><div class="lei-txt"><p class="it" data-ek="stj-sumula:375|lei|152e33fe" data-raw="Súmula 375 (STJ). O reconhecimento da fraude à execução depende do registro da penhora do bem alienado ou da prova de má-fé do terceiro adquirente."><span class="ed-t">Súmula 375 (STJ). O reconhecimento da fraude à execução depende do registro da penhora do bem alienado ou da prova de má-fé do terceiro adquirente.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p></div><h4>Erros anteriores registrados no cronograma (1)</h4><ul><li>02/10/2026 · FCC 2025 · CPC, art. 792, I; Súmula 375 do STJ</li></ul><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="stj-sumula:375"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro 62A:</span> <a href="../Direito Processual Civil/2026-10-02_62a.html#q3" class="erro">Q3</a></div><p class="small">Fontes: comentários da Q3445926 (qconcursos)</p></div></details><details class="art" id="a-stj-sumula-393" data-f="1"><summary><span class="ref">Súmula 393 (STJ)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="stj-sumula:393|titulo|05ff35c8" data-raw="Exceção de pré-executividade"><span class="ed-t">Exceção de pré-executividade</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>Enunciado (texto integral dos trechos cobrados)</h4><div class="lei-txt"><p class="it" data-ek="stj-sumula:393|lei|f5d078ce" data-raw="Súmula 393 (STJ). A exceção de pré-executividade é admissível na execução fiscal relativamente às matérias conhecíveis de ofício que não demandem dilação probatória."><span class="ed-t">Súmula 393 (STJ). A exceção de pré-executividade é admissível na execução fiscal relativamente às matérias conhecíveis de ofício que não demandem dilação probatória.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p></div><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="stj-sumula:393"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro 62A:</span> <a href="../Direito Processual Civil/2026-10-02_62a.html#q21" class="">Q21</a></div><p class="small">Fontes: comentários da Q2109320 (qconcursos)</p></div></details></div><div class="day-card" id="cap-temas"><div class="day-head"><span class="d-date">Temas</span><span class="d-act"><span class="d-badge">1 dispositivo · 1 questão</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-stj-tema-1" data-f="1"><summary><span class="ref">Tema 1 (STJ)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="stj-tema:1|titulo|ce036b52" data-raw="Cessão de crédito e substituição no polo ativo da execução"><span class="ed-t">Cessão de crédito e substituição no polo ativo da execução</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>Enunciado (texto integral dos trechos cobrados)</h4><div class="lei-txt"><p class="it" data-ek="stj-tema:1|lei|0f59dfe0" data-raw="Tema 1 (STJ). A substituição processual, no polo ativo da execução, do exequente originário pelo cessionário dispensa a autorização ou o consentimento do devedor."><span class="ed-t">Tema 1 (STJ). A substituição processual, no polo ativo da execução, do exequente originário pelo cessionário dispensa a autorização ou o consentimento do devedor.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p></div><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="stj-tema:1"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro 62A:</span> <a href="../Direito Processual Civil/2026-10-02_62a.html#q16" class="">Q16</a></div><p class="small">Fontes: comentários da Q1968297 (qconcursos)</p></div></details></div></section><section class="panel" id="inc"><div class="day-card"><div class="day-head"><span class="d-date"><i class="dot f1"></i>Cobrados 1 vez</span><span class="d-badge">3 dispositivo(s)</span></div><details class="art" data-f="1" data-src="a-stj-sumula-375"><summary><span class="ref">Súmula 375 (STJ)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Fraude à execução e registro da penhora <span class="ctx">· Jurisprudência: STJ › Súmulas</span></span></summary><div class="body"></div></details><details class="art" data-f="1" data-src="a-stj-sumula-393"><summary><span class="ref">Súmula 393 (STJ)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Exceção de pré-executividade <span class="ctx">· Jurisprudência: STJ › Súmulas</span></span></summary><div class="body"></div></details><details class="art" data-f="1" data-src="a-stj-tema-1"><summary><span class="ref">Tema 1 (STJ)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Cessão de crédito e substituição no polo ativo da execução <span class="ctx">· Jurisprudência: STJ › Temas</span></span></summary><div class="body"></div></details></div></section><section class="panel" id="err"><p class="note">Conta só a partir da data de corte configurada. </p><div class="tbl-card"><table><thead><tr><th>Dispositivo</th><th>Incidência</th><th>Tópico</th><th>Onde</th><th>Histórico no cronograma</th></tr></thead><tbody><tr><td><a href="#a-stj-sumula-375"><b>Súmula 375 (STJ)</b></a></td><td><span class="inc f1"><i class="dot f1"></i>1×</span></td><td>Fraude à execução e registro da penhora</td><td><span class="b e">erro Q3 (62A)</span></td><td class="small">reincidente: 1 erro(s) antes, último em 02/10/2026</td></tr></tbody></table></div></section></div><script>window.__ED={"ocultar": [], "editar": {}, "notas": {}};</script><script>(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var N = function (x) { return (x || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase(); };
+  var st = function (k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var rich = function (t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+
+  /* ---------- abas ---------- */
+  function tab(id) {
+    $$('.tab-btn').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === id); });
+    $$('.panel').forEach(function (p) { p.classList.toggle('active', p.id === id); });
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  }
+  $$('.tab-btn').forEach(function (t) { t.onclick = function () { tab(t.dataset.tab); }; });
+
+  /* ---------- cartões ---------- */
+  var law = $$('#lei details.art'), lite = $$('#inc details.art');
+  var dom = function (c) { return c.id || c.dataset.src; };
+  law.forEach(function (c) {
+    var k = $('input.dm-i', c);
+    if (st('dom:' + c.id) === '1') { c.classList.add('dom'); if (k) k.checked = true; }
+    if (k) {
+      k.onclick = function (e) { e.stopPropagation(); };
+      k.onchange = function () {
+        c.classList.toggle('dom', k.checked); st('dom:' + c.id, k.checked ? '1' : '0');
+        lite.forEach(function (l) { if (l.dataset.src === c.id) l.classList.toggle('dom', k.checked); });
+      };
+    }
+  });
+  lite.forEach(function (l) {
+    if (st('dom:' + l.dataset.src) === '1') l.classList.add('dom');
+    l.addEventListener('toggle', function () {
+      var b = $('.body', l);
+      if (l.open && b && !b.innerHTML.trim()) { var s = document.getElementById(l.dataset.src); if (s) b.innerHTML = $('.body', s).innerHTML; }
+    });
+  });
+
+  /* ---------- filtros e busca (sem acento) ---------- */
+  var f = { fx: '*', q: '', ocultar: false };
+  function apply() {
+    var qs = N(f.q);
+    law.concat(lite).forEach(function (c) {
+      var t = c.dataset.src ? document.getElementById(c.dataset.src).textContent : c.textContent;
+      var ok = (f.fx === '*' || c.dataset.f === f.fx) && (!qs || N(t).indexOf(qs) > -1) && !(f.ocultar && c.classList.contains('dom'));
+      c.style.display = ok ? '' : 'none';
+    });
+    $$('.day-card').forEach(function (c) {
+      if (!$('details.art', c)) return;
+      c.style.display = $$('details.art', c).some(function (d) { return d.style.display !== 'none'; }) ? '' : 'none';
+    });
+    $$('.tit-wrap').forEach(function (w) {
+      w.style.display = $$('.day-card', w).some(function (d) { return d.style.display !== 'none'; }) ? '' : 'none';
+    });
+    $$('div.secao-h').forEach(function (h) {
+      var n = h.nextElementSibling, any = false;
+      while (n && !n.classList.contains('secao-h')) { if (n.matches('details.art') && n.style.display !== 'none') any = true; n = n.nextElementSibling; }
+      h.style.display = any ? '' : 'none';
+    });
+  }
+  $$('[data-fx]').forEach(function (b) {
+    b.onclick = function () { f.fx = b.dataset.fx; $$('[data-fx]').forEach(function (x) { x.classList.toggle('active', x.dataset.fx === f.fx); }); apply(); };
+  });
+  var s = $('#busca'); if (s) s.oninput = function () { f.q = s.value; apply(); };
+  var oc = $('#ocultar'); if (oc) oc.onchange = function () { f.ocultar = oc.checked; apply(); };
+
+  /* ---------- expandir / recolher partes da lei (botão de cada título e de cada capítulo) ---------- */
+  function setOpen(list, open) { list.forEach(function (d) { d.open = open; }); }
+  $$('[data-expand]').forEach(function (b) {
+    b.onclick = function (e) {
+      e.stopPropagation();
+      var box = b.closest(b.dataset.expand === 'tit' ? '.tit-wrap' : '.day-card');
+      var ds = $$('details.art', box);
+      var open = !ds.every(function (d) { return d.open; });
+      setOpen(ds, open);
+      b.textContent = open ? 'recolher' : 'expandir artigos';
+    };
+  });
+
+  /* ---------- edição: ocultar, editar texto, anotações ---------- */
+  var BASE = window.__ED || { ocultar: [], editar: {}, notas: {} };
+  var LOC = { ocultar: {}, editar: {}, notas: {} };
+  try { var raw = JSON.parse(st('cr:ed:v1') || 'null'); if (raw) LOC = raw; } catch (e) {}
+  LOC.ocultar = LOC.ocultar || {}; LOC.editar = LOC.editar || {}; LOC.notas = LOC.notas || {};
+  function persist() { st('cr:ed:v1', JSON.stringify(LOC)); }
+  function setText(el, raw) { el.dataset.raw = raw; var t = $('.ed-t', el); if (t) t.innerHTML = rich(raw); }
+  $$('[data-ek]').forEach(function (el) {
+    var k = el.dataset.ek;
+    if (k in LOC.ocultar) el.classList.toggle('oculto', !!LOC.ocultar[k]);
+    if (k in LOC.editar) setText(el, LOC.editar[k]);
+  });
+  $$('.nota-txt').forEach(function (n) { var k = n.dataset.nota; if (k in LOC.notas) n.textContent = LOC.notas[k]; });
+
+  function msg(t) { var m = $('#ed-msg'); if (m) { m.textContent = t; setTimeout(function () { m.textContent = ''; }, 6000); } }
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.classList.contains('ed-del')) {
+      e.preventDefault(); e.stopPropagation();
+      var el = t.closest('[data-ek]'), k = el.dataset.ek, now = el.classList.contains('oculto');
+      LOC.ocultar[k] = !now; el.classList.toggle('oculto', !now); persist();
+      msg(now ? 'Item restaurado.' : 'Item ocultado (use "Mostrar ocultos" para restaurar).');
+    } else if (t.classList.contains('ed-edit')) {
+      e.preventDefault(); e.stopPropagation();
+      var li = t.closest('[data-ek]'), sp = $('.ed-t', li), antes = li.dataset.raw;
+      sp.textContent = antes; sp.contentEditable = 'true'; sp.focus();
+      var fim = function (salvar) {
+        sp.contentEditable = 'false';
+        if (salvar) { var novo = sp.innerText.replace(/\s+/g, ' ').trim(); if (novo && novo !== antes) { LOC.editar[li.dataset.ek] = novo; persist(); setText(li, novo); msg('Texto editado.'); return; } }
+        setText(li, antes);
+      };
+      sp.onkeydown = function (ev) { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); sp.onblur = null; fim(true); } else if (ev.key === 'Escape') { sp.onblur = null; fim(false); } };
+      sp.onblur = function () { fim(true); };
+    }
+  }, true);
+
+  function editMode(on) { document.body.classList.toggle('edicao', on); }
+  var be = $('#btn-edicao'); if (be) be.onclick = function () { editMode(!document.body.classList.contains('edicao')); };
+  var bo = $('#btn-ocultos'); if (bo) bo.onclick = function () { document.body.classList.toggle('ver-ocultos'); };
+  document.addEventListener('input', function (e) {
+    var n = e.target.closest && e.target.closest('.nota-txt');
+    if (n) { LOC.notas[n.dataset.nota] = n.innerText; persist(); }
+  });
+  function merged() {
+    var o = BASE.ocultar.filter(function (k) { return !(k in LOC.ocultar) || LOC.ocultar[k]; });
+    Object.keys(LOC.ocultar).forEach(function (k) { if (LOC.ocultar[k] && o.indexOf(k) < 0) o.push(k); });
+    return { ocultar: o, editar: Object.assign({}, BASE.editar, LOC.editar), notas: Object.assign({}, BASE.notas, LOC.notas) };
+  }
+  function baixar(txt) {
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' }));
+    a.download = 'compilado-edicoes.json'; document.body.appendChild(a); a.click(); a.remove();
+    msg('Arquivo "compilado-edicoes.json" baixado. Ele é importado sozinho na próxima geração do compilado.');
+  }
+  var bs = $('#btn-salvar');
+  if (bs) bs.onclick = function () {
+    var txt = JSON.stringify(merged(), null, 1);
+    if (window.showSaveFilePicker) {
+      window.showSaveFilePicker({ suggestedName: 'edicoes.json', types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] })
+        .then(function (h) { return h.createWritable().then(function (w) { return w.write(txt).then(function () { return w.close(); }); }); })
+        .then(function () { msg('Edições salvas no arquivo escolhido.'); })
+        .catch(function (e) { if (!e || e.name !== 'AbortError') baixar(txt); });
+    } else baixar(txt);
+  };
+
+  /* ---------- links entre abas/páginas ---------- */
+  $$('a[href^="#a-"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); tab('lei');
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if (c) { c.style.display = ''; c.open = true; setTimeout(function () { c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); }
+    });
+  });
+  $$('a[href^="#q"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); tab('idx');
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if (c) setTimeout(function () { c.scrollIntoView({ block: 'center' }); }, 30);
+    });
+  });
+  $$('.lei-txt').forEach(function (b) {
+    var btn = $('.ver-completo', b);
+    if (btn) btn.onclick = function () { b.classList.toggle('completo'); btn.textContent = b.classList.contains('completo') ? 'mostrar só os trechos cobrados' : 'ver o artigo completo'; };
+  });
+
+  var h = (location.hash || '').slice(1);
+  if (h && $('#' + h + '.panel')) tab(h);
+  if (h.indexOf('a-') === 0) { var c0 = document.getElementById(h); if (c0) { tab('lei'); c0.open = true; setTimeout(function () { c0.scrollIntoView(); }, 50); } }
+  if (/^q\d+$/.test(h)) { tab('idx'); var q0 = document.getElementById(h); if (q0) setTimeout(function () { q0.scrollIntoView({ block: 'center' }); }, 50); }
+  apply();
+})();
+</script></body></html>

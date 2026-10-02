@@ -2053,13 +2053,6 @@ function renderEstatisticas(){
     options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
   });
 
-  statsAddCard(grid, 'chart-horasSemana', 'Horas por Semana', 'Total de horas estudadas em cada semana do cronograma');
-  statsMakeChart('chart-horasSemana', {
-    type:'bar',
-    data:{ labels: allWeekKeys, datasets:[{ label:'Horas', data: allWeekKeys.map(w=>+((base.byWeek[w]||0)/60).toFixed(2)), backgroundColor:'#305496' }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
-  });
-
   statsAddCard(grid, 'chart-mesMateria', 'Distribuição por Mês e Matéria', 'Horas estudadas por mês, divididas por matéria');
   statsMakeChart('chart-mesMateria', {
     type:'bar',
