@@ -192,6 +192,15 @@
   select.moveto{padding:4px 5px;border-radius:6px;border:1px solid var(--border);background:#fff;font-size:11px;font-family:inherit;max-width:110px;}
   .btn-del{background:none;border:1px solid transparent;color:var(--red);font-size:15px;line-height:1;cursor:pointer;padding:4px 7px;border-radius:6px;font-weight:bold;}
   .btn-del:hover{background:#fdecea;border-color:#f3c6c1;}
+  .add-wrap{position:relative;display:inline-block;}
+  .add-menu{position:absolute;top:100%;left:0;margin-top:4px;background:#fff;border:1px solid var(--border);border-radius:8px;box-shadow:0 6px 18px rgba(0,0,0,.18);z-index:70;min-width:230px;overflow:hidden;}
+  .add-menu button{display:block;width:100%;text-align:left;background:#fff;border:none;padding:10px 14px;font-size:13px;font-family:inherit;cursor:pointer;color:var(--blue-dark);}
+  .add-menu button:hover{background:#e8f0fb;}
+  .add-menu button + button{border-top:1px solid var(--border);}
+  #dupList{width:100%;font-size:12px;}
+  .dup-hint{font-size:11px;color:var(--gray);margin-top:4px;line-height:1.4;}
+  .pgedit{cursor:text;border-bottom:1px dotted #aaa;}
+  .pgedit:hover{background:#fff8d6;}
   .btn-add-task{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:bold;cursor:pointer;font-family:inherit;margin:14px 0 0;}
   .btn-add-task:hover{background:var(--blue-dark);}
   .task-form-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:80;display:flex;align-items:center;justify-content:center;}
@@ -203,9 +212,9 @@
   .task-form .tf-row > div{flex:1;}
   .task-form .tf-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:18px;}
   .task-form .tf-actions button{padding:8px 16px;border-radius:8px;border:none;font-size:12.5px;font-weight:bold;cursor:pointer;font-family:inherit;}
-  .task-form #tfCancel{background:#eee;color:var(--gray);}
-  .task-form #tfSubmit{background:var(--blue);color:#fff;}
-  .task-form #tfSubmit:hover{background:var(--blue-dark);}
+  .task-form #tfCancel,.task-form #dupCancel{background:#eee;color:var(--gray);}
+  .task-form #tfSubmit,.task-form #dupSubmit{background:var(--blue);color:#fff;}
+  .task-form #tfSubmit:hover,.task-form #dupSubmit:hover{background:var(--blue-dark);}
   tr.drop-before{box-shadow:inset 0 3px 0 0 var(--blue);}
   tr.drop-after{box-shadow:inset 0 -3px 0 0 var(--blue);}
 
@@ -326,9 +335,36 @@ body > .wrap > .tab-bar{display:none}
       <button class="subtab-btn" id="subtabMateria">Visão por matéria</button>
     </div>
 
-    <button type="button" class="btn-add-task" id="btnAddTask">+ Adicionar tarefa</button>
+    <span class="add-wrap">
+      <button type="button" class="btn-add-task" id="btnAddTask">+ Adicionar tarefa ▾</button>
+      <div class="add-menu" id="addMenu" style="display:none;">
+        <button type="button" id="addMenuNew">Nova tarefa</button>
+        <button type="button" id="addMenuDup">Duplicar tarefa existente</button>
+      </div>
+    </span>
 
     <div id="panel-cronograma"></div>
+
+    <div class="task-form-overlay" id="dupOverlay" style="display:none;">
+      <div class="task-form">
+        <h3>Duplicar tarefa</h3>
+        <label for="dupFilter">Buscar</label>
+        <input type="text" id="dupFilter" placeholder="Digite parte da matéria, data ou descrição">
+        <label for="dupList">Tarefa a duplicar</label>
+        <select id="dupList" size="9"></select>
+        <label for="dupDate">Data da cópia</label>
+        <select id="dupDate"></select>
+        <div id="dupPagesBox" style="display:none;">
+          <label for="dupPages">Páginas para a cópia</label>
+          <input type="number" min="1" id="dupPages">
+          <div class="dup-hint" id="dupPagesHint"></div>
+        </div>
+        <div class="tf-actions">
+          <button type="button" id="dupCancel">Cancelar</button>
+          <button type="button" id="dupSubmit">Duplicar</button>
+        </div>
+      </div>
+    </div>
 
     <div class="task-form-overlay" id="taskFormOverlay" style="display:none;">
       <div class="task-form">
@@ -742,6 +778,81 @@ function addCustomTask(t){
   return t.id;
 }
 
+// Duplica uma atividade (vira tarefa customizada). copyPages só vale para Leitura: menos que o
+// total divide o PDF (a cópia fica com copyPages e o original com o restante); igual ao total é
+// só uma cópia. copyDate escolhe o dia da cópia (padrão: o mesmo dia). Status, tempo e acertos
+// não são copiados.
+function duplicateTask(id, copyPages, copyDate){
+  const t = tasks.find(x=>x.id===id);
+  if(!t) return;
+  const amt = effectiveAmount(t);
+  const copy = {date: (copyDate && DAY_INFO[copyDate]) ? copyDate : effectiveDate(t), subj: t.subj, type: t.type, desc: t.desc, amount: amt, unit: t.unit};
+  if(t.link) copy.link = t.link;
+  if(t.file) copy.file = t.file;
+  const tp = effectiveTopics(t);
+  if(tp) copy.topics = tp;
+  let originalNew = null;
+  if(t.type==='Leitura' && amt!=null && amt>1 && copyPages>=1 && copyPages<amt){
+    copy.amount = Math.round(copyPages);
+    originalNew = amt - copy.amount;
+    copy.desc = /^Continuação:/i.test(t.desc) ? t.desc : 'Continuação: '+t.desc;
+  } else {
+    copy.desc = t.desc+' (cópia)';
+  }
+  addCustomTask(copy);
+  if(originalNew!==null){
+    lsSet('qtd_'+id, String(originalNew));
+    renderAll();
+  }
+}
+
+// ---------- Menu "Adicionar tarefa": nova tarefa ou duplicar uma existente ----------
+function dupNorm(s){ return String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(); }
+function dupTasksSorted(){
+  const order = {};
+  DATE_ORDER.forEach((d,i)=>{ order[d]=i; });
+  return tasks.filter(t=>t.type!=='Flashcards').slice().sort((a,b)=>(order[effectiveDate(a)]??9999)-(order[effectiveDate(b)]??9999));
+}
+function dupLabel(t){
+  const amt = effectiveAmount(t);
+  return effectiveDate(t).slice(0,5)+' · '+t.subj+' · '+t.type+' · '+t.desc+(amt!=null ? ' ('+amt+' '+(t.unit||'')+')' : '');
+}
+function dupRenderList(){
+  const q = dupNorm(document.getElementById('dupFilter').value);
+  const sel = document.getElementById('dupList');
+  const prev = sel.value;
+  const items = dupTasksSorted().filter(t=>!q || dupNorm(dupLabel(t)).includes(q));
+  sel.innerHTML = items.map(t=>`<option value="${t.id}">${escapeHtml(dupLabel(t))}</option>`).join('');
+  if(items.some(t=>t.id===prev)) sel.value = prev;
+  else if(items.length) sel.selectedIndex = 0;
+  dupOnPick();
+}
+function dupOnPick(){
+  const id = document.getElementById('dupList').value;
+  const t = tasks.find(x=>x.id===id);
+  const dateSel = document.getElementById('dupDate');
+  dateSel.innerHTML = visibleDates().map(d=>`<option value="${d}">${shortLabel(d)}</option>`).join('');
+  const box = document.getElementById('dupPagesBox');
+  if(!t){ box.style.display='none'; return; }
+  dateSel.value = effectiveDate(t);
+  const amt = effectiveAmount(t);
+  if(t.type==='Leitura' && amt!=null && amt>1){
+    box.style.display = 'block';
+    document.getElementById('dupPages').value = Math.ceil(amt/2);
+    document.getElementById('dupPagesHint').textContent = 'Este PDF tem '+amt+' págs. Menos que '+amt+' divide o PDF (o original fica com o restante). Igual a '+amt+' só copia, sem mexer no original.';
+  } else {
+    box.style.display = 'none';
+  }
+}
+function openDupForm(){
+  document.getElementById('dupFilter').value = '';
+  dupRenderList();
+  document.getElementById('dupOverlay').style.display = 'flex';
+  document.getElementById('dupFilter').focus();
+}
+function closeDupForm(){ document.getElementById('dupOverlay').style.display = 'none'; }
+function closeAddMenu(){ document.getElementById('addMenu').style.display = 'none'; }
+
 // ---------- Dias do cronograma (fixo até 24/07 - data da mentoria) ----------
 const DATE_ORDER = ['14/07/2026','15/07/2026','16/07/2026','17/07/2026','20/07/2026','21/07/2026','22/07/2026','23/07/2026','24/07/2026',
   '27/07/2026','28/07/2026','29/07/2026','30/07/2026','31/07/2026','01/08/2026',
@@ -1044,7 +1155,9 @@ function effectiveDate(t){
   return moved && DAY_INFO[moved] ? moved : t.date;
 }
 function effectiveAmount(t){
-  if(t.type!=='Questões') return t.amount;
+  // Questões e Leitura aceitam ajuste manual (qtd_<id>): questões pelo campo numérico, leitura
+  // com duplo clique na quantidade de páginas (útil pra dividir um PDF em mais de um dia).
+  if(t.type!=='Questões' && t.type!=='Leitura') return t.amount;
   const v = lsGet('qtd_'+t.id, '');
   return v==='' ? t.amount : Math.max(1, Number(v));
 }
@@ -1396,6 +1509,8 @@ function rowHtml(t, firstCol, draggableRow){
     ? `<input type="number" min="1" class="qtdedit" data-id="${t.id}" value="${amt}" title="Ajuste conforme a quantidade real de questões no filtro"> ${t.unit}`
     : isFlash
     ? `<input type="number" min="0" class="flashqtd" data-id="${t.id}" value="${flashcardsQtd(t)}" title="Quantidade de flashcards feitos" placeholder="qtd">`
+    : t.type==='Leitura'
+    ? `<span class="pgedit" data-id="${t.id}" title="Clique duas vezes para alterar a quantidade de páginas${t.amount!=null && amt!==t.amount ? ' (original: '+t.amount+')' : ''}">${amt!=null ? `${amt} ${t.unit||'páginas'}` : '<span class="dash">-</span>'}</span>`
     : (t.amount!=null ? `${t.amount} ${t.unit}` : '<span class="dash">-</span>');
   const studyMin = lsGet('min_'+t.id, '');
   const timeCell = `<td data-label="Tempo total (min)" class="time-cell"><input type="number" min="0" step="1" class="studymin" data-id="${t.id}" value="${studyMin}" placeholder="min"></td>`;
@@ -1521,6 +1636,33 @@ function attachRowEvents(){
   document.querySelectorAll('select.moveto').forEach(sel=>{
     sel.addEventListener('change', ()=>{
       moveTaskTo(sel.dataset.id, sel.value);
+    });
+  });
+  document.querySelectorAll('span.pgedit').forEach(sp=>{
+    sp.addEventListener('dblclick', ()=>{
+      const id = sp.dataset.id;
+      const t = tasks.find(x=>x.id===id);
+      if(!t) return;
+      const cur = effectiveAmount(t);
+      const inp = document.createElement('input');
+      inp.type = 'number'; inp.min = '1'; inp.className = 'qtdedit';
+      inp.value = cur==null ? '' : cur;
+      inp.title = 'Enter confirma, Esc cancela. Vazio volta ao valor original.';
+      sp.replaceWith(inp);
+      inp.focus(); inp.select();
+      let done = false;
+      const commit = ()=>{
+        if(done) return; done = true;
+        const v = inp.value.trim();
+        const n = Math.max(1, Math.round(Number(v)));
+        lsSet('qtd_'+id, (v==='' || n===t.amount) ? '' : String(n));
+        renderAll();
+      };
+      inp.addEventListener('blur', commit);
+      inp.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter') commit();
+        else if(e.key==='Escape'){ done = true; renderAll(); }
+      });
     });
   });
   document.querySelectorAll('button.btn-del').forEach(btn=>{
@@ -2259,7 +2401,27 @@ function openTaskForm(){
 function closeTaskForm(){
   document.getElementById('taskFormOverlay').style.display = 'none';
 }
-document.getElementById('btnAddTask').addEventListener('click', openTaskForm);
+document.getElementById('btnAddTask').addEventListener('click', (e)=>{
+  e.stopPropagation();
+  const m = document.getElementById('addMenu');
+  m.style.display = m.style.display==='none' ? 'block' : 'none';
+});
+document.addEventListener('click', (e)=>{ if(!e.target.closest('.add-wrap')) closeAddMenu(); });
+document.getElementById('addMenuNew').addEventListener('click', ()=>{ closeAddMenu(); openTaskForm(); });
+document.getElementById('addMenuDup').addEventListener('click', ()=>{ closeAddMenu(); openDupForm(); });
+document.getElementById('dupFilter').addEventListener('input', dupRenderList);
+document.getElementById('dupList').addEventListener('change', dupOnPick);
+document.getElementById('dupCancel').addEventListener('click', closeDupForm);
+document.getElementById('dupOverlay').addEventListener('click', (e)=>{ if(e.target.id==='dupOverlay') closeDupForm(); });
+document.getElementById('dupSubmit').addEventListener('click', ()=>{
+  const id = document.getElementById('dupList').value;
+  if(!id){ alert('Escolha a tarefa que será duplicada.'); return; }
+  const box = document.getElementById('dupPagesBox');
+  const pages = box.style.display==='none' ? null : Number(document.getElementById('dupPages').value);
+  if(pages!==null && !(pages>=1)){ alert('Informe a quantidade de páginas da cópia.'); return; }
+  duplicateTask(id, pages, document.getElementById('dupDate').value);
+  closeDupForm();
+});
 document.getElementById('tfCancel').addEventListener('click', closeTaskForm);
 document.getElementById('taskFormOverlay').addEventListener('click', (e)=>{
   if(e.target.id==='taskFormOverlay') closeTaskForm();
