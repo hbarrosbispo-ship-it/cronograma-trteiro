@@ -411,25 +411,13 @@ body > .wrap > .tab-bar{display:none}
   </div>
 
   <div id="view-desempenho" style="display:none;">
-    <div class="subtab-bar">
-      <button class="subtab-btn" id="desSubDesempenho">Desempenho</button>
-      <button class="subtab-btn" id="desSubErros">Erros</button>
-    </div>
-
     <div id="desempenho-content">
       <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
       <div class="charts-grid" id="chartsGrid"></div>
       <div class="bloco-charts-grid" id="blocoChartsGrid"></div>
     </div>
 
-    <div id="desempenho-erros-content" style="display:none;">
-      <p class="note">Para ver estes erros por artigo e por lei (e onde mais erro), abra o <a href="compilado/index.html#err">Compilado de Revisão</a>.</p>
-      <p class="note">Erros de questões que viraram flashcard no Caderno de Erros do Anki (gerado automaticamente pela skill "caderno-de-erros-anki" ao final de cada sessão). Matéria, assunto e base (Lei Seca / Doutrina / Jurisprudência) são inferidos a partir da fundamentação de cada erro.</p>
-      <div class="week-summary" id="errosSummaryCards"></div>
-      <div class="charts-grid" id="errosChartsGrid"></div>
-      <div id="errosGroupedTable"></div>
-    </div>
-  </div>
+      </div>
 
   <div id="view-estatisticas" style="display:none;">
     <p class="note">Horas efetivamente estudadas (campo "Tempo total" preenchido em cada atividade), por matéria, semana, mês e dia da semana. Só entram nas contas as atividades com tempo registrado.</p>
@@ -2599,104 +2587,6 @@ function errosMakeChart(canvasId, config){
   errosCharts[canvasId] = new Chart(ctx, config);
 }
 
-function renderErros(){
-  const cardsBox = document.getElementById('errosSummaryCards');
-  const grid = document.getElementById('errosChartsGrid');
-  const tableBox = document.getElementById('errosGroupedTable');
-  if(!cardsBox || !grid || !tableBox) return;
-  Object.values(errosCharts).forEach(c=>c.destroy());
-  errosCharts = {};
-
-  const registro = getErroRegistry();
-
-  const porTipo = {};
-  const porMateria = {};
-  const porMateriaAssunto = {}; // materia -> assunto -> tipo -> count
-  registro.forEach(r=>{
-    const materia = r.materia || 'Outros';
-    const assunto = r.assunto || '(assunto não identificado)';
-    const tipo = r.tipo || 'Doutrina';
-    porTipo[tipo] = (porTipo[tipo]||0) + 1;
-    porMateria[materia] = (porMateria[materia]||0) + 1;
-    if(!porMateriaAssunto[materia]) porMateriaAssunto[materia] = {};
-    if(!porMateriaAssunto[materia][assunto]) porMateriaAssunto[materia][assunto] = {};
-    porMateriaAssunto[materia][assunto][tipo] = (porMateriaAssunto[materia][assunto][tipo]||0) + 1;
-  });
-
-  const materiaKeys = Object.keys(porMateria).sort((a,b)=>porMateria[b]-porMateria[a]);
-  const tipoKeys = Object.keys(TIPO_COLORS).filter(t=>porTipo[t]);
-
-  cardsBox.innerHTML = `
-    <div class="week-card">
-      <div class="w-title">Total de Erros Registrados</div>
-      <div class="w-time">${registro.length}</div>
-      <div class="w-sub">cards no Caderno de Erros já classificados</div>
-    </div>
-    <div class="week-card">
-      <div class="w-title">Matéria com Mais Erros</div>
-      <div class="w-time">${materiaKeys[0]||'-'}</div>
-      <div class="w-sub">${materiaKeys[0]?porMateria[materiaKeys[0]]+' erro(s)':'sem dados ainda'}</div>
-    </div>
-    <div class="week-card">
-      <div class="w-title">Base Predominante</div>
-      <div class="w-time">${tipoKeys.length?tipoKeys.reduce((a,b)=>porTipo[a]>porTipo[b]?a:b):'-'}</div>
-      <div class="w-sub">Lei Seca / Doutrina / Jurisprudência</div>
-    </div>
-  `;
-
-  grid.innerHTML = '';
-  tableBox.innerHTML = '';
-  if(registro.length===0){
-    grid.innerHTML = '<div class="chart-empty">Ainda não há erros registrados. Eles são adicionados automaticamente pela skill caderno-de-erros-anki ao final de cada sessão de questões.</div>';
-    return;
-  }
-
-  statsAddCard(grid, 'chart-errosMateria', 'Erros por Matéria', 'Quantidade de erros registrados em cada matéria');
-  errosMakeChart('chart-errosMateria', {
-    type:'bar',
-    data:{ labels: materiaKeys, datasets:[{ label:'Erros', data: materiaKeys.map(m=>porMateria[m]), backgroundColor: materiaKeys.map(m=>SUBJ_COLORS[m]||'#95A5A6') }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}} }
-  });
-
-  statsAddCard(grid, 'chart-errosTipo', 'Distribuição por Base', 'Proporção de erros de Lei Seca, Doutrina e Jurisprudência');
-  errosMakeChart('chart-errosTipo', {
-    type:'doughnut',
-    data:{ labels: tipoKeys, datasets:[{ data: tipoKeys.map(t=>porTipo[t]), backgroundColor: tipoKeys.map(t=>TIPO_COLORS[t]) }] },
-    options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom', labels:{boxWidth:11, font:{size:10}}}} }
-  });
-
-  // Tabela agrupada: Matéria > Assunto > contagem por tipo
-  let html = '';
-  materiaKeys.forEach(materia=>{
-    const assuntos = porMateriaAssunto[materia];
-    const assuntoKeys = Object.keys(assuntos).sort((a,b)=>{
-      const totalA = Object.values(assuntos[a]).reduce((x,y)=>x+y,0);
-      const totalB = Object.values(assuntos[b]).reduce((x,y)=>x+y,0);
-      return totalB-totalA;
-    });
-    html += `<div class="week-card" style="margin-bottom:16px;text-align:left;">
-      <div class="w-title">${materia} <span class="w-sub">(${porMateria[materia]} erro${porMateria[materia]!==1?'s':''})</span></div>
-      <table class="erros-table"><thead><tr><th>Assunto</th><th>Lei Seca</th><th>Doutrina</th><th>Jurisprudência</th></tr></thead><tbody>`;
-    assuntoKeys.forEach(assunto=>{
-      const t = assuntos[assunto];
-      html += `<tr><td>${assunto}</td><td>${t['Lei Seca']||0}</td><td>${t['Doutrina']||0}</td><td>${t['Jurisprudência']||0}</td></tr>`;
-    });
-    html += `</tbody></table></div>`;
-  });
-  tableBox.innerHTML = html;
-}
-
-// Subaba dentro de Desempenho: alterna entre os gráficos de acerto ("desempenho") e o
-// Registro de Erros ("erros"), mesmo padrão de toggle clicável já usado alhures.
-function activateDesempenhoSub(sub){
-  lsSet('desempenhoSub', sub);
-  document.getElementById('desSubDesempenho').classList.toggle('active', sub!=='erros');
-  document.getElementById('desSubErros').classList.toggle('active', sub==='erros');
-  document.getElementById('desempenho-content').style.display = (sub==='erros') ? 'none' : '';
-  document.getElementById('desempenho-erros-content').style.display = (sub==='erros') ? '' : 'none';
-  if(sub==='erros') renderErros(); else renderDesempenho();
-}
-
 // ---------- Abas ----------
 function activateTab(name){
   const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas' };
@@ -2705,7 +2595,7 @@ function activateTab(name){
     document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
     document.getElementById(btnMap[k]).classList.toggle('active', k===name);
   });
-  if(name==='desempenho') activateDesempenhoSub(lsGet('desempenhoSub','desempenho'));
+  if(name==='desempenho') renderDesempenho();
   if(name==='estatisticas') renderEstatisticas();
 }
 document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
@@ -2719,8 +2609,6 @@ document.getElementById('subtabMateria').addEventListener('click', ()=>{
 });
 document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
 document.getElementById('tabBtnEstatisticas').addEventListener('click', ()=>activateTab('estatisticas'));
-document.getElementById('desSubDesempenho').addEventListener('click', ()=>activateDesempenhoSub('desempenho'));
-document.getElementById('desSubErros').addEventListener('click', ()=>activateDesempenhoSub('erros'));
 
 document.getElementById('saveIndicator').addEventListener('click', ()=>{
   if(saveFailedKeys.size === 0) return;
