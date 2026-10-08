@@ -326,8 +326,8 @@ body > .wrap > .tab-bar{display:none}
   </div>
 
   <div id="view-cronograma">
-    <p class="note">A visão diária é a principal (com a revisão de flashcards de cada dia). A visão por matéria agrupa as mesmas atividades por Direito Administrativo, Constitucional, Civil, Processual Civil, Processual do Trabalho e do Trabalho, sem os flashcards (que só aparecem na visão diária), com as leituras sempre na ordem dos capítulos (01, 02, 03...). Cada semana da visão diária pode ser minimizada ou maximizada clicando na sua barra de título. Preencha status, o tempo total estudado (em minutos) e (para blocos de questões) os acertos. O campo "Qtd" e o campo de assuntos dos blocos de questões são editáveis. Tudo é calculado e salvo automaticamente neste navegador. Use o cronômetro para cronometrar uma atividade e somar o tempo direto na linha. Use "Mover" para remanejar uma atividade para outra data, se precisar, ou simplesmente arraste e solte a atividade em outro dia (na visão diária). A partir da Semana 10 o domingo também aparece no cronograma, disponível para receber atividades se você quiser estudar nesse dia. O link "Abrir arquivo" abre o PDF da leitura direto no Okular, sem depender do aplicativo padrão de PDF do Windows, desde que a configuração de abrir_arquivo.ps1 e registrar_protocolo.reg tenha sido feita uma vez (veja as instruções que acompanham este arquivo).</p>
 
+    <button type="button" id="weekSummaryToggle" onclick="toggleWeekSummary()" style="margin:10px 0 0;padding:6px 12px;border:1px solid var(--border,#d0d7e2);border-radius:6px;background:transparent;color:inherit;font-weight:bold;cursor:pointer;"></button>
     <div class="week-summary" id="weekSummary"></div>
 
     <div class="subtab-bar">
@@ -753,7 +753,6 @@ const BUILTIN_TASKS = [
   {date:'19/10/2026', subj:'RLM', type:'Questões', desc:'Questões 1 a 6', amount:6, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:37},
   {date:'19/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'20/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.2 Morfologia: Verbos e Conjunções', amount:31, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 2 - Morfologia - Verbos e Conjunções (31 páginas).pdf', mins:100},
-  {date:'20/10/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: Estudo de Caso nº 1 liberado (enviar até 27/10)', amount:null, unit:'', mins:0},
   {date:'20/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'21/10/2026', subj:'PORT', type:'Questões', desc:'Pt.5 Figuras de Linguagem', amount:13, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251229', mins:17},
   {date:'21/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.4 Reescritura de texto', amount:5, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 4 - Reescritura de texto (5 páginas).pdf', mins:16},
@@ -778,7 +777,6 @@ const BUILTIN_TASKS = [
   {date:'26/10/2026', subj:'DCT', type:'Leitura', desc:'Súmulas + OJs + IRR', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Coletivo do Trabalho\\DCT. Súmulas + OJs + IRR (10 pgs).pdf', mins:32},
   {date:'26/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'27/10/2026', subj:'RLM', type:'Questões', desc:'Questões 7 a 24', amount:18, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:111},
-  {date:'27/10/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: último dia para enviar o Estudo de Caso nº 1', amount:null, unit:'', mins:0},
   {date:'27/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'28/10/2026', subj:'DCT', type:'Questões', desc:'Direito coletivo do trabalho', amount:9, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251317', mins:12},
   {date:'28/10/2026', subj:'DCI', type:'Leitura', desc:'Cap. 09 Direito de família', amount:23, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 09 - Direito de família (23 pgs).pdf', mins:87},
@@ -800,7 +798,6 @@ const BUILTIN_TASKS = [
   {date:'03/11/2026', subj:'DPT', type:'Leitura', desc:'Seguro Garantia Judicial', amount:3, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Seguro Garantia Judicial (extra) (3 pgs).pdf', mins:7},
   {date:'03/11/2026', subj:'DT', type:'Leitura', desc:'Cap. 12 Comissão de Conciliação Prévia', amount:2, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 12 (extra) - Direito do trabalho (Comissão de Conciliação Prévia) (2 pgs).pdf', mins:5},
   {date:'03/11/2026', subj:'DT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 1/2)', amount:30, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT. Capítulo extra - Direito do Trabalho (Legislação aplicada - CLT) (60 pgs).pdf', mins:82},
-  {date:'03/11/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: Estudo de Caso nº 2 liberado (enviar até 10/11)', amount:null, unit:'', mins:0},
   {date:'03/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'04/11/2026', subj:'DT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 2/2)', amount:30, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT. Capítulo extra - Direito do Trabalho (Legislação aplicada - CLT) (60 pgs).pdf', mins:82},
   {date:'04/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -825,7 +822,6 @@ const BUILTIN_TASKS = [
   {date:'09/11/2026', subj:'DT', type:'Leitura', desc:'Jurisprudência: DT: Súmulas + OJs + IRR (parte 1/3)', amount:25, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\Direito do trabalho (Súmulas + OJs + IRR) (75 pgs).pdf', mins:81},
   {date:'09/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'10/11/2026', subj:'DT', type:'Leitura', desc:'Jurisprudência: DT: Súmulas + OJs + IRR (parte 2/3)', amount:25, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\Direito do trabalho (Súmulas + OJs + IRR) (75 pgs).pdf', mins:81},
-  {date:'10/11/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: último dia para enviar o Estudo de Caso nº 2', amount:null, unit:'', mins:0},
   {date:'10/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'11/11/2026', subj:'DT', type:'Leitura', desc:'Jurisprudência: DT: Súmulas + OJs + IRR (parte 3/3)', amount:25, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\Direito do trabalho (Súmulas + OJs + IRR) (75 pgs).pdf', mins:81},
   {date:'11/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -839,7 +835,6 @@ const BUILTIN_TASKS = [
   {date:'16/11/2026', subj:'DT', type:'Leitura', desc:'Jurisprudência: DT: Teses de IRR do TST (parte 3/3)', amount:30, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\Direito do Trabalho - Teses de IRR do TST por assunto (90 pgs).pdf', mins:97},
   {date:'16/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'17/11/2026', subj:'DPT', type:'Leitura', desc:'Jurisprudência: DPT: Jur. geral (Súm + OJ + IRR) (parte 1/2)', amount:21, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\DPT - Jur. geral - Súmulas + OJs + IRR (42 pgs).pdf', mins:68},
-  {date:'17/11/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: Estudo de Caso nº 3 liberado (enviar até 24/11)', amount:null, unit:'', mins:0},
   {date:'17/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'18/11/2026', subj:'DPT', type:'Leitura', desc:'Jurisprudência: DPT: Jur. geral (Súm + OJ + IRR) (parte 2/2)', amount:21, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\DPT - Jur. geral - Súmulas + OJs + IRR (42 pgs).pdf', mins:68},
   {date:'18/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -857,7 +852,6 @@ const BUILTIN_TASKS = [
   {date:'23/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'24/11/2026', subj:'DA', type:'Leitura', desc:'Jurisprudência: DA', amount:22, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\Direito administrativo + constitucional (jurisprudência) (28 pgs).pdf', mins:71},
   {date:'24/11/2026', subj:'DCO', type:'Leitura', desc:'Jurisprudência: DCO', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Jurisprudência\\Direito administrativo + constitucional (jurisprudência) (28 pgs).pdf', mins:19},
-  {date:'24/11/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: último dia para enviar o Estudo de Caso nº 3', amount:null, unit:'', mins:0},
   {date:'24/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'25/11/2026', subj:'DA', type:'Leitura', desc:'Tudão de DA (parte 1/2)', amount:null, unit:'', mins:120},
   {date:'25/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -871,7 +865,6 @@ const BUILTIN_TASKS = [
   {date:'30/11/2026', subj:'DCO', type:'Leitura', desc:'Tudão de DCO (parte 2/2)', amount:null, unit:'', mins:100},
   {date:'30/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'01/12/2026', subj:'DCI', type:'Leitura', desc:'Tudão de DCI (parte 1/2)', amount:null, unit:'', mins:90},
-  {date:'01/12/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: Estudo de Caso nº 4 liberado (enviar até 08/12)', amount:null, unit:'', mins:0},
   {date:'01/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'02/12/2026', subj:'DCI', type:'Leitura', desc:'Tudão de DCI (parte 2/2)', amount:null, unit:'', mins:90},
   {date:'02/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -885,7 +878,6 @@ const BUILTIN_TASKS = [
   {date:'07/12/2026', subj:'DPC', type:'Leitura', desc:'Tudão de DPC (parte 1/2)', amount:null, unit:'', mins:100},
   {date:'07/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'08/12/2026', subj:'DPC', type:'Leitura', desc:'Tudão de DPC (parte 2/2)', amount:null, unit:'', mins:100},
-  {date:'08/12/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: último dia para enviar o Estudo de Caso nº 4', amount:null, unit:'', mins:0},
   {date:'08/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'09/12/2026', subj:'DT', type:'Leitura', desc:'Tudão de DT (parte 1/2)', amount:null, unit:'', mins:100},
   {date:'09/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -899,7 +891,6 @@ const BUILTIN_TASKS = [
   {date:'14/12/2026', subj:'PORT', type:'Leitura', desc:'Tudão de Português', amount:null, unit:'', mins:90},
   {date:'14/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'15/12/2026', subj:'RLM', type:'Leitura', desc:'Tudão de RLM', amount:null, unit:'', mins:90},
-  {date:'15/12/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: Estudo de Caso nº 5 liberado (enviar até 22/12)', amount:null, unit:'', mins:0},
   {date:'15/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'16/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'16/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -913,7 +904,6 @@ const BUILTIN_TASKS = [
   {date:'21/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'21/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'22/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
-  {date:'22/12/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: último dia para enviar o Estudo de Caso nº 5', amount:null, unit:'', mins:0},
   {date:'22/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'23/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'23/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -925,7 +915,6 @@ const BUILTIN_TASKS = [
   {date:'28/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'28/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'29/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
-  {date:'29/12/2026', subj:'-', type:'Estudo de Caso', desc:'Rezende: Estudo de Caso nº 6 liberado (enviar até 05/01)', amount:null, unit:'', mins:0},
   {date:'29/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'30/12/2026', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'30/12/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -939,7 +928,6 @@ const BUILTIN_TASKS = [
   {date:'04/01/2027', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'04/01/2027', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'05/01/2027', subj:'-', type:'Leitura', desc:'Revisão dos esquemas: DA, DCO e DCI', amount:null, unit:'', mins:120},
-  {date:'05/01/2027', subj:'-', type:'Estudo de Caso', desc:'Rezende: último dia para enviar o Estudo de Caso nº 6', amount:null, unit:'', mins:0},
   {date:'05/01/2027', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
   {date:'06/01/2027', subj:'-', type:'Questões', desc:'Simulado + correção (60 questões)', amount:60, unit:'questões', mins:120},
   {date:'06/01/2027', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:30},
@@ -1645,7 +1633,20 @@ function setWeekCollapsed(weekName, collapsed){
   lsSet('weekCollapsed_'+weekName, collapsed ? '1' : '0');
 }
 
+function applyWeekSummaryState(){
+  const box = document.getElementById('weekSummary'), btn = document.getElementById('weekSummaryToggle');
+  if(!box || !btn) return;
+  const collapsed = lsGet('weekSummaryCollapsed','0') === '1';
+  box.style.display = collapsed ? 'none' : '';
+  btn.textContent = (collapsed ? '\u25B8 ' : '\u25BE ') + 'Resumo por semana';
+}
+function toggleWeekSummary(){
+  lsSet('weekSummaryCollapsed', lsGet('weekSummaryCollapsed','0') === '1' ? '0' : '1');
+  applyWeekSummaryState();
+}
+
 function renderWeekSummary(groups){
+  applyWeekSummaryState();
   const box = document.getElementById('weekSummary');
   if(!box) return;
   const weeks = {};
