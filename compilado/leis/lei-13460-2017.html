@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compilado Lei nº 13.460/2017: Direitos do Usuário de Serviços Públicos</title><style>:root{--blue:#305496;--blue-dark:#1F4E78;--yellow:#FFF2CC;--gray:#666;--light:#F5F7FA;--border:#D9D9D9;--green:#2E7D32;--red:#C0392B;
+--f1:#FFD966;--f2:#7ED957;--f3:#5271FF;--f4:#F45B8F;--f5:#FF3131}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--light);color:#222;margin:0;padding:0 0 60px;font-size:16px}
+header{background:var(--blue);color:#fff;padding:22px 20px 18px}
+header h1{margin:0 0 4px;font-size:23px}header p{margin:0;font-size:14px;color:#dbe4f5}
+header a{color:#dbe4f5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header .wrap{padding:0}
+.progress-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-top:-14px;padding:16px 18px}
+.summary-stats{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--gray)}
+.summary-stats b{color:var(--blue-dark);font-size:16px}
+.legenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--gray);align-items:center}
+.legenda strong{color:var(--blue-dark)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px;background:var(--f1)}
+.dot.f1{background:var(--f1)}.dot.f2{background:var(--f2)}.dot.f3{background:var(--f3)}.dot.f4{background:var(--f4)}.dot.f5{background:var(--f5)}
+.tab-bar{display:flex;gap:8px;margin-top:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab-btn{background:none;border:none;padding:10px 16px;font-size:14px;font-weight:bold;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}
+.tab-btn.active{color:var(--blue-dark);border-bottom-color:var(--blue)}.tab-btn:hover{color:var(--blue-dark)}
+.panel{display:none}.panel.active{display:block}
+.subtab-bar{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap;align-items:center}
+.subtab-btn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:13.5px;font-weight:bold;cursor:pointer;font-family:inherit}
+.subtab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}.subtab-btn:hover{border-color:var(--blue)}
+.subtab-bar input[type=search]{flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px}
+.small{font-size:12.5px;color:var(--gray)}.note{font-size:13px;color:var(--gray);margin:10px 0 4px;font-style:italic}
+.norma-h{background:#eef1f7;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:22px 0 0;font-weight:bold;color:var(--blue-dark);font-size:15px}
+.titulo-h{margin:18px 0 0;font-weight:bold;color:var(--blue-dark);font-size:14px;text-transform:uppercase;letter-spacing:.3px;padding-left:2px}
+.day-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:10px 0;overflow:hidden}
+.day-head{background:var(--blue-dark);color:#fff;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.day-head .d-date{font-size:15.5px;font-weight:bold}.day-head .d-badge{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:12px;font-size:13px}
+.secao-h{background:#eef1f7;color:var(--blue-dark);font-size:12.5px;font-weight:bold;padding:6px 16px;border-top:1px solid var(--border);text-transform:uppercase;letter-spacing:.3px}
+td.secao-h{border-top:1px solid var(--border)}
+details.art{border-top:1px solid var(--border)}
+.day-head+details.art{border-top:none}
+details.art>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:14px;flex-wrap:wrap}
+details.art>summary::-webkit-details-marker{display:none}
+details.art>summary::before{content:"▸";font-size:11px;color:var(--blue-dark);width:10px}
+details.art[open]>summary::before{content:"▾"}
+details.art>summary:hover{background:#f7f9fc}
+.ref{font-weight:bold;color:var(--blue-dark);white-space:nowrap}
+.inc{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:bold;border-radius:12px;padding:2px 9px 2px 7px;white-space:nowrap;color:#222;background:#f0f0f0}
+.inc .dot{margin:0}
+.inc.f1{background:#FFF3CC}.inc.f2{background:#E3F6DA}.inc.f3{background:#DDE3FF}.inc.f4{background:#FDDCE8}.inc.f5{background:#FFD9D9}
+.tit{flex:1;min-width:200px}.ctx{font-size:12px;color:var(--gray);font-style:italic}
+.dm{margin-left:auto;font-size:12.5px;color:var(--gray);white-space:nowrap}
+details.art.dom{opacity:.5}
+.body{padding:2px 18px 14px 36px;font-size:14px;line-height:1.5}
+.body h4{margin:12px 0 4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray)}
+.body ul{margin:2px 0 2px 18px;padding:0}.body li{margin:3px 0}
+.body ul.armadilha li::marker{content:"⚠ "}
+.body p{margin:4px 0}
+.cmp{overflow-x:auto}.cmp table{font-size:13px}
+.lei-txt{border-left:3px solid var(--blue);background:#f7f9fc;padding:6px 14px;border-radius:0 8px 8px 0}
+.lei-txt p{margin:7px 0}.lei-txt .d1{margin-left:22px}.lei-txt .d2{margin-left:44px}.lei-txt .d3{margin-left:66px}
+.qs a,.links a{display:inline-block;margin:0 4px 4px 0;padding:1px 8px;border:1px solid var(--border);border-radius:6px;text-decoration:none;font-size:13px;color:var(--blue-dark);background:#fff}
+.qs a.erro{background:#FADBD8;color:var(--red);border-color:#f0b3ad}.qs a.duvida{background:var(--yellow);color:#B9770E;border-color:#ecd9a0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+thead th{background:#eef1f7;color:var(--blue-dark);text-align:left;padding:7px 8px;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+.tbl-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:14px 0;overflow:hidden}
+.b{display:inline-block;border-radius:5px;padding:1px 7px;font-size:12px;font-weight:bold;margin-right:3px}
+.b.e{background:#FADBD8;color:var(--red)}.b.d{background:var(--yellow);color:#B9770E}
+.lac{background:#FFF9E6;border:1px dashed #d9b95b;border-radius:10px;padding:10px 18px;margin-top:16px}
+a{color:var(--blue-dark)}
+@media(max-width:640px){.dm{margin-left:0}.body{padding-left:18px}}
+@media print{.tab-bar,.subtab-bar{display:none}.panel{display:block!important}details.art:not([open])>*:not(summary){display:block}}
+/* ---- edição (ocultar, editar, anotações) ---- */
+.ed-b{display:none;margin-left:6px;white-space:nowrap}
+body.edicao .ed-b{display:inline}
+.ed-b button{border:0;background:#eef1f7;border-radius:4px;cursor:pointer;font-size:13px;margin-left:3px;padding:0 6px;color:var(--blue-dark);font-family:inherit}
+.ed-b button:hover{background:#dbe4f5}
+.oculto{display:none!important}
+body.ver-ocultos .oculto{display:list-item!important;opacity:.45;text-decoration:line-through}
+body.ver-ocultos p.it.oculto{display:block!important}
+.ed-t[contenteditable=true]{outline:2px solid var(--blue);padding:1px 4px;background:#fff;border-radius:4px}
+.nota-txt{min-height:36px;border:1px dashed var(--border);border-radius:8px;padding:7px 11px;background:#fffdf5;white-space:pre-wrap;color:#444}
+.nota-txt:empty::before{content:"(sem anotações)";color:#aaa}
+.nota-txt{cursor:text}
+.nota-txt:focus{outline:2px solid var(--blue);border-style:solid;border-color:var(--blue);background:#fff}
+.edit-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.edit-bar .msg{font-size:12.5px;color:var(--green)}
+body.edicao .edit-bar .subtab-btn#btn-edicao{background:var(--blue);color:#fff;border-color:var(--blue)}
+body.ver-ocultos .edit-bar .subtab-btn#btn-ocultos{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* ---- estrutura da lei: título, capítulo, botões de expandir ---- */
+.tit-wrap{margin-top:6px}
+.titulo-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.mini{border:1px solid var(--border);background:#fff;color:var(--blue-dark);border-radius:6px;font-size:12.5px;padding:2px 9px;cursor:pointer;font-family:inherit;text-transform:none;letter-spacing:0;font-weight:bold}
+.mini:hover{border-color:var(--blue)}
+.day-head .mini{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4)}
+.day-head .d-act{display:flex;gap:8px;align-items:center}
+select.sel,select.cap-sel{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px;background:#fff;color:#444;max-width:100%}
+
+/* ---- transcrição ---- */
+.lei-txt .extra{display:none;color:#8a8a8a}
+.lei-txt.completo .extra{display:block}
+.lei-txt .nota-extra{margin:6px 0 2px;font-size:12.5px}
+.lei-txt .nota-extra button{border:0;background:none;color:var(--blue-dark);cursor:pointer;font-weight:bold;font-family:inherit;font-size:12.5px;padding:0;text-decoration:underline}
+.resumo li{margin:4px 0}
+
+/* ---- possíveis omissões ---- */
+.omissao{background:#FFF9E6;border:1px dashed #d9b95b;border-radius:8px;padding:6px 14px;margin:4px 0}
+.omissao p{margin:6px 0}
+
+/* ---- barra do site (modo site) ---- */
+.sitenav{background:#1F4E78;display:flex;gap:4px;align-items:center;padding:0 16px;height:40px;font-family:Arial,Helvetica,sans-serif}
+.sitenav a{color:#dbe4f5;text-decoration:none;font-size:13.5px;font-weight:bold;padding:9px 14px;border-radius:6px}
+.sitenav a:hover{background:rgba(255,255,255,.12)}
+.sitenav a.on{background:rgba(255,255,255,.2);color:#fff}
+.sitenav .logo{color:#fff;margin-right:10px;letter-spacing:.4px}
+
+/* ---- cartões de resumo (página de Erros) ---- */
+.week-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 16px;flex:1;min-width:220px}
+.w-title{font-size:12px;color:var(--gray);font-weight:bold;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.w-time{font-size:21px;font-weight:bold;color:var(--blue-dark)}.w-sub{font-size:12.5px;color:var(--gray);margin-top:2px}
+
+details.lei-det{margin:12px 0 4px}details.lei-det>summary{cursor:pointer;list-style:none;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);font-weight:bold;padding:2px 0}details.lei-det>summary::-webkit-details-marker{display:none}details.lei-det>summary::before{content:"▸ ";color:var(--blue-dark)}details.lei-det[open]>summary::before{content:"▾ "}details.lei-det>summary:hover{color:var(--blue-dark)}
+</style></head>
+<body><nav class="sitenav"><span class="logo" style="color:#fff;font-weight:bold;margin-right:10px">TRTeiros</span><a href="../../index.html#cronograma">Cronograma</a><a href="../../index.html#desempenho">Desempenho</a><a href="../../index.html#estatisticas">Estatísticas</a><a href="../index.html" class=on>Compilado de Revisão</a></nav><header><div class="wrap"><h1>Lei nº 13.460/2017: Direitos do Usuário de Serviços Públicos</h1><p><a href="../index.html">Biblioteca</a> › Lei 13.460/2017</p></div></header>
+<div class="wrap"><div class="progress-card"><div class="summary-stats"><span><b>3</b> Dispositivos cobrados</span><span><b>3</b> Citações</span><span><b>1</b> Filtros</span></div><div class="legenda"><strong>Legenda (vezes cobrado):</strong><span><i class="dot f1"></i>1 vez</span><span><i class="dot f2"></i>2 vezes</span><span><i class="dot f3"></i>3 vezes</span><span><i class="dot f4"></i>4 vezes</span><span><i class="dot f5"></i>5 ou mais vezes</span></div><div class="small" style="margin-top:8px">Filtros que cobraram esta norma: <a href="../Direito Administrativo/2026-10-09_24a.html">24A</a></div></div><div class="tab-bar"><button class="tab-btn active" data-tab="lei">Na ordem da lei</button><button class="tab-btn" data-tab="inc">Por incidência</button><button class="tab-btn" data-tab="err">Meus erros e dúvidas</button></div><div class="subtab-bar"><input id="busca" type="search" placeholder="Buscar artigo, tema, palavra (funciona sem acento)"><button class="subtab-btn active" data-fx="*">Todas</button><button class="subtab-btn" data-fx="1"><i class="dot f1"></i>1×</button><label class="small"><input type="checkbox" id="ocultar"> ocultar dominados</label></div><div class="edit-bar"><button class="subtab-btn" id="btn-edicao" type="button">Modo edição</button><button class="subtab-btn" id="btn-ocultos" type="button">Mostrar ocultos</button><button class="subtab-btn" id="btn-salvar" type="button">Salvar edições</button><span class="msg" id="ed-msg"></span></div><section class="panel active" id="lei"><p class="note">Todos os filtros somados, na ordem da lei (artigos em ordem crescente). O número ao lado de cada artigo é o total de questões que o cobraram em todos os filtros.</p><div class="day-card" id="cap-capítulo-ii-dos-direitos-básicos-e-deveres-dos-usuários"><div class="day-head"><span class="d-date">Capítulo II: Dos Direitos Básicos e Deveres dos Usuários</span><span class="d-act"><span class="d-badge">1 dispositivo · 1 questão</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-lei-13460-2017-5" data-f="1"><summary><span class="ref">Art. 5</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="lei-13460-2017:5|titulo|fae21ee6" data-raw="Direitos do usuário: igualdade, autenticação de documentos e aviso de desligamento"><span class="ed-t">Direitos do usuário: igualdade, autenticação de documentos e aviso de desligamento</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><span class="b e" title="Erros anteriores no cronograma">reincidente (1)</span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="lei-13460-2017:5|essencial|52429935" data-raw="O usuário tem direito a **igualdade no tratamento**, vedado qualquer tipo de **discriminação** (inciso V)."><span class="ed-t">O usuário tem direito a <b>igualdade no tratamento</b>, vedado qualquer tipo de <b>discriminação</b> (inciso V).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="lei-13460-2017:5|essencial|8a4bb9bf" data-raw="A **autenticação de documentos é feita pelo próprio agente público**, à vista dos originais apresentados pelo usuário, vedada a exigência de reconhecimento de firma, salvo dúvida de autenticidade (inciso IX)."><span class="ed-t">A <b>autenticação de documentos é feita pelo próprio agente público</b>, à vista dos originais apresentados pelo usuário, vedada a exigência de reconhecimento de firma, salvo dúvida de autenticidade (inciso IX).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="lei-13460-2017:5|essencial|38c0706c" data-raw="O consumidor deve ser **comunicado previamente** do desligamento do serviço por inadimplemento, bem como do dia a partir do qual será realizado, durante horário comercial (inciso XVI)."><span class="ed-t">O consumidor deve ser <b>comunicado previamente</b> do desligamento do serviço por inadimplemento, bem como do dia a partir do qual será realizado, durante horário comercial (inciso XVI).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><details class="lei-det"><summary>Texto da lei (texto integral dos trechos cobrados)</summary><div class="lei-txt"><p class="it d0" data-ek="lei-13460-2017:5|lei|d977cefb" data-raw="Art. 5. O usuário de serviço público tem direito à adequada prestação dos serviços, devendo os agentes públicos e prestadores de serviços públicos observar as seguintes diretrizes:"><span class="ed-t">Art. 5. O usuário de serviço público tem direito à adequada prestação dos serviços, devendo os agentes públicos e prestadores de serviços públicos observar as seguintes diretrizes:</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|43e8e82c" data-raw="I – urbanidade, respeito, acessibilidade e cortesia no atendimento aos usuários;"><span class="ed-t">I – urbanidade, respeito, acessibilidade e cortesia no atendimento aos usuários;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|5e3955a9" data-raw="II – presunção de boa-fé do usuário;"><span class="ed-t">II – presunção de boa-fé do usuário;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|42093db4" data-raw="III – atendimento por ordem de chegada, ressalvados casos de urgência e aqueles em que houver possibilidade de agendamento, asseguradas as prioridades legais às pessoas com deficiência, aos idosos, às gestantes, às lactantes e às pessoas acompanhadas por crianças de colo;"><span class="ed-t">III – atendimento por ordem de chegada, ressalvados casos de urgência e aqueles em que houver possibilidade de agendamento, asseguradas as prioridades legais às pessoas com deficiência, aos idosos, às gestantes, às lactantes e às pessoas acompanhadas por crianças de colo;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|bfaa449c" data-raw="IV – adequação entre meios e fins, vedada a imposição de exigências, obrigações, restrições e sanções não previstas na legislação;"><span class="ed-t">IV – adequação entre meios e fins, vedada a imposição de exigências, obrigações, restrições e sanções não previstas na legislação;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1" data-ek="lei-13460-2017:5|lei|8144b4d7" data-raw="V – igualdade no tratamento aos usuários, vedado qualquer tipo de discriminação;"><span class="ed-t">V – igualdade no tratamento aos usuários, vedado qualquer tipo de discriminação;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|7359547d" data-raw="VI – cumprimento de prazos e normas procedimentais;"><span class="ed-t">VI – cumprimento de prazos e normas procedimentais;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|2744da5d" data-raw="VII – definição, publicidade e observância de horários e normas compatíveis com o bom atendimento ao usuário;"><span class="ed-t">VII – definição, publicidade e observância de horários e normas compatíveis com o bom atendimento ao usuário;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|3acbb8da" data-raw="VIII – adoção de medidas visando a proteção à saúde e a segurança dos usuários;"><span class="ed-t">VIII – adoção de medidas visando a proteção à saúde e a segurança dos usuários;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1" data-ek="lei-13460-2017:5|lei|8ad03f61" data-raw="IX – autenticação de documentos pelo próprio agente público, à vista dos originais apresentados pelo usuário, vedada a exigência de reconhecimento de firma, salvo em caso de dúvida de autenticidade;"><span class="ed-t">IX – autenticação de documentos pelo próprio agente público, à vista dos originais apresentados pelo usuário, vedada a exigência de reconhecimento de firma, salvo em caso de dúvida de autenticidade;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|a284ddac" data-raw="X – manutenção de instalações salubres, seguras, sinalizadas, acessíveis e adequadas ao serviço e ao atendimento;"><span class="ed-t">X – manutenção de instalações salubres, seguras, sinalizadas, acessíveis e adequadas ao serviço e ao atendimento;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|40a91e28" data-raw="XI – eliminação de formalidades e de exigências cujo custo econômico ou social seja superior ao risco envolvido;"><span class="ed-t">XI – eliminação de formalidades e de exigências cujo custo econômico ou social seja superior ao risco envolvido;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|24fed307" data-raw="XII – observância dos códigos de ética ou de conduta aplicáveis às várias categorias de agentes públicos;"><span class="ed-t">XII – observância dos códigos de ética ou de conduta aplicáveis às várias categorias de agentes públicos;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|9df0228b" data-raw="XIII – aplicação de soluções tecnológicas que visem a simplificar processos e procedimentos de atendimento ao usuário e a propiciar melhores condições para o compartilhamento das informações;"><span class="ed-t">XIII – aplicação de soluções tecnológicas que visem a simplificar processos e procedimentos de atendimento ao usuário e a propiciar melhores condições para o compartilhamento das informações;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|226a474f" data-raw="XIV – utilização de linguagem simples e compreensível, evitando o uso de siglas, jargões e estrangeirismos; e"><span class="ed-t">XIV – utilização de linguagem simples e compreensível, evitando o uso de siglas, jargões e estrangeirismos; e</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:5|lei|a32c3417" data-raw="XV – vedação da exigência de nova prova sobre fato já comprovado em documentação válida apresentada."><span class="ed-t">XV – vedação da exigência de nova prova sobre fato já comprovado em documentação válida apresentada.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1" data-ek="lei-13460-2017:5|lei|4b89de68" data-raw="XVI – comunicação prévia ao consumidor de que o serviço será desligado em virtude de inadimplemento, bem como do dia a partir do qual será realizado o desligamento, necessariamente durante horário comercial."><span class="ed-t">XVI – comunicação prévia ao consumidor de que o serviço será desligado em virtude de inadimplemento, bem como do dia a partir do qual será realizado o desligamento, necessariamente durante horário comercial.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:5|lei|2d0f7c18" data-raw="Parágrafo único. A taxa de religação de serviços não será devida se houver descumprimento da exigência de notificação prévia ao consumidor prevista no inciso XVI do caput deste artigo, o que ensejará a aplicação de multa à concessionária, conforme regulamentação."><span class="ed-t">Parágrafo único. A taxa de religação de serviços não será devida se houver descumprimento da exigência de notificação prévia ao consumidor prevista no inciso XVI do caput deste artigo, o que ensejará a aplicação de multa à concessionária, conforme regulamentação.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="nota-extra"><button type="button" class="ver-completo">ver o artigo completo</button></p></div></details><h4>Armadilhas de banca</h4><ul class="armadilha"><li class="" data-ek="lei-13460-2017:5|armadilhas|bc4871e9" data-raw="Trocar &quot;discriminação&quot; por &quot;preferência&quot; no direito de igualdade (existem preferências legais)."><span class="ed-t">Trocar &quot;discriminação&quot; por &quot;preferência&quot; no direito de igualdade (existem preferências legais).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="lei-13460-2017:5|armadilhas|d71db156" data-raw="Atribuir ao usuário a autenticação dos próprios documentos."><span class="ed-t">Atribuir ao usuário a autenticação dos próprios documentos.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="lei-13460-2017:5|armadilhas|ff072a17" data-raw="Dispensar o aviso prévio em caso de inadimplemento."><span class="ed-t">Dispensar o aviso prévio em caso de inadimplemento.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Erros anteriores registrados no cronograma (1)</h4><ul><li>09/10/2026 · FCC 2022 · Lei 13.460/2017, art. 5º, IX</li></ul><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="lei-13460-2017:5"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro 24A:</span> <a href="../Direito Administrativo/2026-10-09_24a.html#q22" class="erro">Q22</a></div></div></details></div><div class="day-card" id="cap-capítulo-iii-das-manifestações-dos-usuários-de-serviços-públicos"><div class="day-head"><span class="d-date">Capítulo III: Das Manifestações dos Usuários de Serviços Públicos</span><span class="d-act"><span class="d-badge">1 dispositivo · 1 questão</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-lei-13460-2017-10" data-f="1"><summary><span class="ref">Art. 10</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="lei-13460-2017:10|titulo|bd35543f" data-raw="Manifestação do usuário perante a ouvidoria"><span class="ed-t">Manifestação do usuário perante a ouvidoria</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="lei-13460-2017:10|essencial|657f875e" data-raw="A manifestação é dirigida à ouvidoria do órgão ou entidade responsável e contém a identificação do requerente."><span class="ed-t">A manifestação é dirigida à ouvidoria do órgão ou entidade responsável e contém a identificação do requerente.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="lei-13460-2017:10|essencial|a1da6939" data-raw="A identificação não conterá exigências que inviabilizem a manifestação (§ 1º)."><span class="ed-t">A identificação não conterá exigências que inviabilizem a manifestação (§ 1º).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><details class="lei-det"><summary>Texto da lei (texto integral dos trechos cobrados)</summary><div class="lei-txt"><p class="it d0" data-ek="lei-13460-2017:10|lei|47fbb9c2" data-raw="Art. 10. A manifestação será dirigida à ouvidoria do órgão ou entidade responsável e conterá a identificação do requerente."><span class="ed-t">Art. 10. A manifestação será dirigida à ouvidoria do órgão ou entidade responsável e conterá a identificação do requerente.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0" data-ek="lei-13460-2017:10|lei|428aa561" data-raw="§ 1º A identificação do requerente não conterá exigências que inviabilizem sua manifestação."><span class="ed-t">§ 1º A identificação do requerente não conterá exigências que inviabilizem sua manifestação.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:10|lei|c2412534" data-raw="§ 2º São vedadas quaisquer exigências relativas aos motivos determinantes da apresentação de manifestações perante a ouvidoria."><span class="ed-t">§ 2º São vedadas quaisquer exigências relativas aos motivos determinantes da apresentação de manifestações perante a ouvidoria.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:10|lei|c1caa6e7" data-raw="§ 3º Caso não haja ouvidoria, o usuário poderá apresentar manifestações diretamente ao órgão ou entidade responsável pela execução do serviço e ao órgão ou entidade a que se subordinem ou se vinculem."><span class="ed-t">§ 3º Caso não haja ouvidoria, o usuário poderá apresentar manifestações diretamente ao órgão ou entidade responsável pela execução do serviço e ao órgão ou entidade a que se subordinem ou se vinculem.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:10|lei|d0bc21b3" data-raw="§ 4º A manifestação poderá ser feita por meio eletrônico, ou correspondência convencional, ou verbalmente, hipótese em que deverá ser reduzida a termo."><span class="ed-t">§ 4º A manifestação poderá ser feita por meio eletrônico, ou correspondência convencional, ou verbalmente, hipótese em que deverá ser reduzida a termo.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:10|lei|fc6bab44" data-raw="§ 5º No caso de manifestação por meio eletrônico, prevista no § 4º, respeitada a legislação específica de sigilo e proteção de dados, poderá a administração pública ou sua ouvidoria requerer meio de certificação da identidade do usuário."><span class="ed-t">§ 5º No caso de manifestação por meio eletrônico, prevista no § 4º, respeitada a legislação específica de sigilo e proteção de dados, poderá a administração pública ou sua ouvidoria requerer meio de certificação da identidade do usuário.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:10|lei|4a4859c7" data-raw="§ 6º Os órgãos e entidades públicos abrangidos por esta Lei deverão colocar à disposição do usuário formulários simplificados e de fácil compreensão para a apresentação do requerimento previsto no caput, facultada ao usuário sua utilização."><span class="ed-t">§ 6º Os órgãos e entidades públicos abrangidos por esta Lei deverão colocar à disposição do usuário formulários simplificados e de fácil compreensão para a apresentação do requerimento previsto no caput, facultada ao usuário sua utilização.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:10|lei|934d578e" data-raw="§ 7º A identificação do requerente é informação pessoal protegida com restrição de acesso nos termos da Lei nº 12.527, de 18 de novembro de 2011."><span class="ed-t">§ 7º A identificação do requerente é informação pessoal protegida com restrição de acesso nos termos da Lei nº 12.527, de 18 de novembro de 2011.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="nota-extra"><button type="button" class="ver-completo">ver o artigo completo</button></p></div></details><h4>Armadilhas de banca</h4><ul class="armadilha"><li class="" data-ek="lei-13460-2017:10|armadilhas|6b2a4403" data-raw="Entender que a lei garante, em qualquer caso, o direito de manifestar-se de forma anônima, sem observar a regra de identificação do requerente."><span class="ed-t">Entender que a lei garante, em qualquer caso, o direito de manifestar-se de forma anônima, sem observar a regra de identificação do requerente.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="lei-13460-2017:10"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro 24A:</span> <a href="../Direito Administrativo/2026-10-09_24a.html#q22" class="erro">Q22</a></div></div></details></div><div class="day-card" id="cap-capítulo-vi-da-avaliação-continuada-dos-serviços-públicos"><div class="day-head"><span class="d-date">Capítulo VI: Da Avaliação Continuada dos Serviços Públicos</span><span class="d-act"><span class="d-badge">1 dispositivo · 1 questão</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-lei-13460-2017-23" data-f="1"><summary><span class="ref">Art. 23</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="lei-13460-2017:23|titulo|b7ac803c" data-raw="Avaliação continuada dos serviços: pesquisa de satisfação"><span class="ed-t">Avaliação continuada dos serviços: pesquisa de satisfação</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><span class="b e" title="Erros anteriores no cronograma">reincidente (1)</span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="lei-13460-2017:23|essencial|cc95a653" data-raw="A avaliação continuada dos serviços é realizada por **pesquisa de satisfação feita, no mínimo, a cada um ano**, ou por qualquer outro meio que garanta significância estatística aos resultados (§ 1º)."><span class="ed-t">A avaliação continuada dos serviços é realizada por <b>pesquisa de satisfação feita, no mínimo, a cada um ano</b>, ou por qualquer outro meio que garanta significância estatística aos resultados (§ 1º).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><details class="lei-det"><summary>Texto da lei (texto integral dos trechos cobrados)</summary><div class="lei-txt"><p class="it d0" data-ek="lei-13460-2017:23|lei|37c0b262" data-raw="Art. 23. Os órgãos e entidades públicos abrangidos por esta Lei deverão avaliar os serviços prestados, nos seguintes aspectos:"><span class="ed-t">Art. 23. Os órgãos e entidades públicos abrangidos por esta Lei deverão avaliar os serviços prestados, nos seguintes aspectos:</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:23|lei|2653ae3c" data-raw="I – satisfação do usuário com o serviço prestado;"><span class="ed-t">I – satisfação do usuário com o serviço prestado;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:23|lei|5d70f4dc" data-raw="II – qualidade do atendimento prestado ao usuário;"><span class="ed-t">II – qualidade do atendimento prestado ao usuário;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:23|lei|a77b9d05" data-raw="III – cumprimento dos compromissos e prazos definidos para a prestação dos serviços;"><span class="ed-t">III – cumprimento dos compromissos e prazos definidos para a prestação dos serviços;</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:23|lei|89d71d20" data-raw="IV – quantidade de manifestações de usuários; e"><span class="ed-t">IV – quantidade de manifestações de usuários; e</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d1 extra" data-ek="lei-13460-2017:23|lei|c615ddd3" data-raw="V – medidas adotadas pela administração pública para melhoria e aperfeiçoamento da prestação do serviço."><span class="ed-t">V – medidas adotadas pela administração pública para melhoria e aperfeiçoamento da prestação do serviço.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0" data-ek="lei-13460-2017:23|lei|03086dd1" data-raw="§ 1º A avaliação será realizada por pesquisa de satisfação feita, no mínimo, a cada 1 ano, ou por qualquer outro meio que garanta significância estatística aos resultados."><span class="ed-t">§ 1º A avaliação será realizada por pesquisa de satisfação feita, no mínimo, a cada 1 ano, ou por qualquer outro meio que garanta significância estatística aos resultados.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="it d0 extra" data-ek="lei-13460-2017:23|lei|9667128c" data-raw="§ 2º O resultado da avaliação deverá ser integralmente publicado no sítio do órgão ou entidade, incluindo o ranking das entidades com maior incidência de reclamação dos usuários na periodicidade a que se refere o § 1º, e servirá de subsídio para reorientar e ajustar os serviços prestados, em especial quanto ao cumprimento dos compromissos e dos padrões de qualidade de atendimento divulgados na Carta de Serviços ao Usuário."><span class="ed-t">§ 2º O resultado da avaliação deverá ser integralmente publicado no sítio do órgão ou entidade, incluindo o ranking das entidades com maior incidência de reclamação dos usuários na periodicidade a que se refere o § 1º, e servirá de subsídio para reorientar e ajustar os serviços prestados, em especial quanto ao cumprimento dos compromissos e dos padrões de qualidade de atendimento divulgados na Carta de Serviços ao Usuário.</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></p><p class="nota-extra"><button type="button" class="ver-completo">ver o artigo completo</button></p></div></details><h4>Erros anteriores registrados no cronograma (1)</h4><ul><li>09/10/2026 · FCC 2022 · Lei 13.460/2017, art. 23, § 1º</li></ul><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="lei-13460-2017:23"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro 24A:</span> <a href="../Direito Administrativo/2026-10-09_24a.html#q22" class="erro">Q22</a></div></div></details></div></section><section class="panel" id="inc"><div class="day-card"><div class="day-head"><span class="d-date"><i class="dot f1"></i>Cobrados 1 vez</span><span class="d-badge">3 dispositivo(s)</span></div><details class="art" data-f="1" data-src="a-lei-13460-2017-5"><summary><span class="ref">Art. 5</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Direitos do usuário: igualdade, autenticação de documentos e aviso de desligamento <span class="ctx">· Capítulo II: Dos Direitos Básicos e Deveres dos Usuários</span></span></summary><div class="body"></div></details><details class="art" data-f="1" data-src="a-lei-13460-2017-10"><summary><span class="ref">Art. 10</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Manifestação do usuário perante a ouvidoria <span class="ctx">· Capítulo III: Das Manifestações dos Usuários de Serviços Públicos</span></span></summary><div class="body"></div></details><details class="art" data-f="1" data-src="a-lei-13460-2017-23"><summary><span class="ref">Art. 23</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Avaliação continuada dos serviços: pesquisa de satisfação <span class="ctx">· Capítulo VI: Da Avaliação Continuada dos Serviços Públicos</span></span></summary><div class="body"></div></details></div></section><section class="panel" id="err"><p class="note">Conta só a partir da data de corte configurada. </p><div class="tbl-card"><table><thead><tr><th>Dispositivo</th><th>Incidência</th><th>Tópico</th><th>Onde</th><th>Histórico no cronograma</th></tr></thead><tbody><tr><td><a href="#a-lei-13460-2017-5"><b>Art. 5</b></a></td><td><span class="inc f1"><i class="dot f1"></i>1×</span></td><td>Direitos do usuário: igualdade, autenticação de documentos e aviso de desligamento</td><td><span class="b e">erro Q22 (24A)</span></td><td class="small">reincidente: 1 erro(s) antes, último em 09/10/2026</td></tr><tr><td><a href="#a-lei-13460-2017-10"><b>Art. 10</b></a></td><td><span class="inc f1"><i class="dot f1"></i>1×</span></td><td>Manifestação do usuário perante a ouvidoria</td><td><span class="b e">erro Q22 (24A)</span></td><td class="small"></td></tr><tr><td><a href="#a-lei-13460-2017-23"><b>Art. 23</b></a></td><td><span class="inc f1"><i class="dot f1"></i>1×</span></td><td>Avaliação continuada dos serviços: pesquisa de satisfação</td><td><span class="b e">erro Q22 (24A)</span></td><td class="small">reincidente: 1 erro(s) antes, último em 09/10/2026</td></tr></tbody></table></div></section></div><script>window.__ED={"ocultar": [], "editar": {}, "notas": {}};</script><script>(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var N = function (x) { return (x || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase(); };
+  var st = function (k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var rich = function (t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+
+  /* ---------- abas ---------- */
+  function tab(id) {
+    $$('.tab-btn').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === id); });
+    $$('.panel').forEach(function (p) { p.classList.toggle('active', p.id === id); });
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  }
+  $$('.tab-btn').forEach(function (t) { t.onclick = function () { tab(t.dataset.tab); }; });
+
+  /* ---------- cartões ---------- */
+  var law = $$('#lei details.art'), lite = $$('#inc details.art');
+  var dom = function (c) { return c.id || c.dataset.src; };
+  law.forEach(function (c) {
+    var k = $('input.dm-i', c);
+    if (st('dom:' + c.id) === '1') { c.classList.add('dom'); if (k) k.checked = true; }
+    if (k) {
+      k.onclick = function (e) { e.stopPropagation(); };
+      k.onchange = function () {
+        c.classList.toggle('dom', k.checked); st('dom:' + c.id, k.checked ? '1' : '0');
+        lite.forEach(function (l) { if (l.dataset.src === c.id) l.classList.toggle('dom', k.checked); });
+      };
+    }
+  });
+  lite.forEach(function (l) {
+    if (st('dom:' + l.dataset.src) === '1') l.classList.add('dom');
+    l.addEventListener('toggle', function () {
+      var b = $('.body', l);
+      if (l.open && b && !b.innerHTML.trim()) { var s = document.getElementById(l.dataset.src); if (s) b.innerHTML = $('.body', s).innerHTML; }
+    });
+  });
+
+  /* ---------- filtros e busca (sem acento) ---------- */
+  var f = { fx: '*', q: '', ocultar: false };
+  function apply() {
+    var qs = N(f.q);
+    law.concat(lite).forEach(function (c) {
+      var t = c.dataset.src ? document.getElementById(c.dataset.src).textContent : c.textContent;
+      var ok = (f.fx === '*' || c.dataset.f === f.fx) && (!qs || N(t).indexOf(qs) > -1) && !(f.ocultar && c.classList.contains('dom'));
+      c.style.display = ok ? '' : 'none';
+    });
+    $$('.day-card').forEach(function (c) {
+      if (!$('details.art', c)) return;
+      c.style.display = $$('details.art', c).some(function (d) { return d.style.display !== 'none'; }) ? '' : 'none';
+    });
+    $$('.tit-wrap').forEach(function (w) {
+      w.style.display = $$('.day-card', w).some(function (d) { return d.style.display !== 'none'; }) ? '' : 'none';
+    });
+    $$('div.secao-h').forEach(function (h) {
+      var n = h.nextElementSibling, any = false;
+      while (n && !n.classList.contains('secao-h')) { if (n.matches('details.art') && n.style.display !== 'none') any = true; n = n.nextElementSibling; }
+      h.style.display = any ? '' : 'none';
+    });
+  }
+  $$('[data-fx]').forEach(function (b) {
+    b.onclick = function () { f.fx = b.dataset.fx; $$('[data-fx]').forEach(function (x) { x.classList.toggle('active', x.dataset.fx === f.fx); }); apply(); };
+  });
+  var s = $('#busca'); if (s) s.oninput = function () { f.q = s.value; apply(); };
+  var oc = $('#ocultar'); if (oc) oc.onchange = function () { f.ocultar = oc.checked; apply(); };
+
+  /* ---------- expandir / recolher partes da lei (botão de cada título e de cada capítulo) ---------- */
+  function setOpen(list, open) { list.forEach(function (d) { d.open = open; }); }
+  $$('[data-expand]').forEach(function (b) {
+    b.onclick = function (e) {
+      e.stopPropagation();
+      var box = b.closest(b.dataset.expand === 'tit' ? '.tit-wrap' : '.day-card');
+      var ds = $$('details.art', box);
+      var open = !ds.every(function (d) { return d.open; });
+      setOpen(ds, open);
+      b.textContent = open ? 'recolher' : 'expandir artigos';
+    };
+  });
+
+  /* ---------- edição: ocultar, editar texto, anotações ---------- */
+  var BASE = window.__ED || { ocultar: [], editar: {}, notas: {} };
+  var LOC = { ocultar: {}, editar: {}, notas: {} };
+  try { var raw = JSON.parse(st('cr:ed:v1') || 'null'); if (raw) LOC = raw; } catch (e) {}
+  LOC.ocultar = LOC.ocultar || {}; LOC.editar = LOC.editar || {}; LOC.notas = LOC.notas || {};
+  function persist() { st('cr:ed:v1', JSON.stringify(LOC)); }
+  function setText(el, raw) { el.dataset.raw = raw; var t = $('.ed-t', el); if (t) t.innerHTML = rich(raw); }
+  $$('[data-ek]').forEach(function (el) {
+    var k = el.dataset.ek;
+    if (k in LOC.ocultar) el.classList.toggle('oculto', !!LOC.ocultar[k]);
+    if (k in LOC.editar) setText(el, LOC.editar[k]);
+  });
+  $$('.nota-txt').forEach(function (n) { var k = n.dataset.nota; if (k in LOC.notas) n.textContent = LOC.notas[k]; });
+
+  function msg(t) { var m = $('#ed-msg'); if (m) { m.textContent = t; setTimeout(function () { m.textContent = ''; }, 6000); } }
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.classList.contains('ed-del')) {
+      e.preventDefault(); e.stopPropagation();
+      var el = t.closest('[data-ek]'), k = el.dataset.ek, now = el.classList.contains('oculto');
+      LOC.ocultar[k] = !now; el.classList.toggle('oculto', !now); persist();
+      msg(now ? 'Item restaurado.' : 'Item ocultado (use "Mostrar ocultos" para restaurar).');
+    } else if (t.classList.contains('ed-edit')) {
+      e.preventDefault(); e.stopPropagation();
+      var li = t.closest('[data-ek]'), sp = $('.ed-t', li), antes = li.dataset.raw;
+      sp.textContent = antes; sp.contentEditable = 'true'; sp.focus();
+      var fim = function (salvar) {
+        sp.contentEditable = 'false';
+        if (salvar) { var novo = sp.innerText.replace(/\s+/g, ' ').trim(); if (novo && novo !== antes) { LOC.editar[li.dataset.ek] = novo; persist(); setText(li, novo); msg('Texto editado.'); return; } }
+        setText(li, antes);
+      };
+      sp.onkeydown = function (ev) { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); sp.onblur = null; fim(true); } else if (ev.key === 'Escape') { sp.onblur = null; fim(false); } };
+      sp.onblur = function () { fim(true); };
+    }
+  }, true);
+
+  function editMode(on) { document.body.classList.toggle('edicao', on); }
+  var be = $('#btn-edicao'); if (be) be.onclick = function () { editMode(!document.body.classList.contains('edicao')); };
+  var bo = $('#btn-ocultos'); if (bo) bo.onclick = function () { document.body.classList.toggle('ver-ocultos'); };
+  document.addEventListener('input', function (e) {
+    var n = e.target.closest && e.target.closest('.nota-txt');
+    if (n) { LOC.notas[n.dataset.nota] = n.innerText; persist(); }
+  });
+  function merged() {
+    var o = BASE.ocultar.filter(function (k) { return !(k in LOC.ocultar) || LOC.ocultar[k]; });
+    Object.keys(LOC.ocultar).forEach(function (k) { if (LOC.ocultar[k] && o.indexOf(k) < 0) o.push(k); });
+    return { ocultar: o, editar: Object.assign({}, BASE.editar, LOC.editar), notas: Object.assign({}, BASE.notas, LOC.notas) };
+  }
+  function baixar(txt) {
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' }));
+    a.download = 'compilado-edicoes.json'; document.body.appendChild(a); a.click(); a.remove();
+    msg('Arquivo "compilado-edicoes.json" baixado. Ele é importado sozinho na próxima geração do compilado.');
+  }
+  var bs = $('#btn-salvar');
+  if (bs) bs.onclick = function () {
+    var txt = JSON.stringify(merged(), null, 1);
+    if (window.showSaveFilePicker) {
+      window.showSaveFilePicker({ suggestedName: 'edicoes.json', types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] })
+        .then(function (h) { return h.createWritable().then(function (w) { return w.write(txt).then(function () { return w.close(); }); }); })
+        .then(function () { msg('Edições salvas no arquivo escolhido.'); })
+        .catch(function (e) { if (!e || e.name !== 'AbortError') baixar(txt); });
+    } else baixar(txt);
+  };
+
+  /* ---------- links entre abas/páginas ---------- */
+  $$('a[href^="#a-"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); tab('lei');
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if (c) { c.style.display = ''; c.open = true; setTimeout(function () { c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); }
+    });
+  });
+  $$('a[href^="#q"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); tab('idx');
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if (c) setTimeout(function () { c.scrollIntoView({ block: 'center' }); }, 30);
+    });
+  });
+  $$('.lei-txt').forEach(function (b) {
+    var btn = $('.ver-completo', b);
+    if (btn) btn.onclick = function () { b.classList.toggle('completo'); btn.textContent = b.classList.contains('completo') ? 'mostrar só os trechos cobrados' : 'ver o artigo completo'; };
+  });
+
+  var h = (location.hash || '').slice(1);
+  if (h && $('#' + h + '.panel')) tab(h);
+  if (h.indexOf('a-') === 0) { var c0 = document.getElementById(h); if (c0) { tab('lei'); c0.open = true; setTimeout(function () { c0.scrollIntoView(); }, 50); } }
+  if (/^q\d+$/.test(h)) { tab('idx'); var q0 = document.getElementById(h); if (q0) setTimeout(function () { q0.scrollIntoView({ block: 'center' }); }, 50); }
+  apply();
+})();
+</script></body></html>
