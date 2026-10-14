@@ -485,7 +485,7 @@ body > .wrap > .tab-bar{display:none}
   <div id="view-desempenho" style="display:none;">
     <div class="subtab-bar">
       <button class="subtab-btn" id="desSubDesempenho">Desempenho</button>
-      <button class="subtab-btn" id="desSubHistorico">Histórico dos filtros</button>
+      <button class="subtab-btn" id="desSubHistorico">Histórico dos filtros e cadernos</button>
       <button class="subtab-btn" id="desSubEstatisticas">Estatísticas</button>
     </div>
     <div id="desempenho-content" style="display:none;">
@@ -493,7 +493,7 @@ body > .wrap > .tab-bar{display:none}
       <div class="charts-grid" id="chartsGrid"></div>
     </div>
     <div id="historico-content" style="display:none;">
-      <p class="note">Histórico de acertos por filtro: a primeira vez que você resolveu cada filtro e as vezes em que o refez, com a variação entre as tentativas.</p>
+      <p class="note">Histórico de acertos por filtro e por caderno: a primeira vez que você resolveu cada filtro e as vezes em que o refez, com a variação entre as tentativas.</p>
       <div id="historicoBox"></div>
     </div>
     <div id="estatisticas-content" style="display:none;">
@@ -824,12 +824,12 @@ const BUILTIN_TASKS = [
   {date:'15/10/2026', subj:'INF', type:'Questões', desc:'Internet IV - Google Workspace', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15250999', mins:16},
   {date:'15/10/2026', subj:'INF', type:'Questões', desc:'Segurança da Informação', amount:7, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15250985', mins:9},
   {date:'15/10/2026', subj:'INF', type:'Questões', desc:'Redes de Computadores', amount:4, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15250993', mins:5},
+  {date:'15/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.2 Morfologia: Verbos e Conjunções (parte 2)', amount:11, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 2 - Morfologia - Verbos e Conjunções (31 páginas).pdf', mins:42},
   {date:'15/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.3 Sintaxe', amount:12, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 3 - Sintaxe (12 páginas).pdf', mins:46},
   {date:'15/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.4 Reescritura de texto', amount:5, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 4 - Reescritura de texto (5 páginas).pdf', mins:19},
-  {date:'15/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.5 Figuras de Linguagem', amount:12, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 5 - Figuras de Linguagem (12 páginas).pdf', mins:46},
   {date:'15/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
   {date:'16/10/2026', subj:'PORT', type:'Questões', desc:'Pt.1 Ortografia, Crase e Pontuação', amount:17, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251217', mins:27},
-  {date:'16/10/2026', subj:'PORT', type:'Questões', desc:'Pt.2 Morfologia: Verbos e Conjunções', amount:30, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251225', mins:47},
+  {date:'16/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.5 Figuras de Linguagem', amount:12, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 5 - Figuras de Linguagem (12 páginas).pdf', mins:46},
   {date:'16/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.6 Discurso', amount:7, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 6 - Discurso (7 páginas).pdf', mins:27},
   {date:'16/10/2026', subj:'PORT', type:'Leitura', desc:'Pt.7 Compreensão e Interpretação Textual', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Português\\Português pt. 7 - Compreensão e Interpretação Textual (6 páginas).pdf', mins:23},
   {date:'16/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
@@ -838,58 +838,56 @@ const BUILTIN_TASKS = [
   {date:'17/10/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de Caso: refazer um que você já fez', amount:null, unit:'', mins:45},
   {date:'17/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
   {date:'18/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
+  {date:'19/10/2026', subj:'PORT', type:'Questões', desc:'Pt.2 Morfologia: Verbos e Conjunções', amount:30, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251225', mins:47},
   {date:'19/10/2026', subj:'PORT', type:'Questões', desc:'Pt.3 Sintaxe', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251259', mins:19},
   {date:'19/10/2026', subj:'PORT', type:'Questões', desc:'Pt.5 Figuras de Linguagem', amount:13, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251229', mins:21},
   {date:'19/10/2026', subj:'PORT', type:'Questões', desc:'Pt.6 Discurso', amount:10, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251239', mins:16},
   {date:'19/10/2026', subj:'PORT', type:'Questões', desc:'Pt.7 Compreensão e Interpretação Textual', amount:16, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251268', mins:25},
-  {date:'19/10/2026', subj:'RLM', type:'Questões', desc:'Questões 1 a 6', amount:6, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:37},
   {date:'19/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
+  {date:'20/10/2026', subj:'RLM', type:'Questões', desc:'Questões 1 a 6', amount:6, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:37},
   {date:'20/10/2026', subj:'RLM', type:'Questões', desc:'Questões 7 a 24', amount:18, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:111},
-  {date:'20/10/2026', subj:'RLM', type:'Questões', desc:'Questões 25 a 39 (parte 1)', amount:15, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:37},
   {date:'20/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
-  {date:'21/10/2026', subj:'RLM', type:'Questões', desc:'Questões 25 a 39 (parte 2)', amount:15, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:56},
-  {date:'21/10/2026', subj:'RLM', type:'Questões', desc:'Questões 40 a 58 (parte 1)', amount:19, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:93},
+  {date:'21/10/2026', subj:'RLM', type:'Questões', desc:'Questões 25 a 39', amount:15, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:93},
+  {date:'21/10/2026', subj:'RLM', type:'Questões', desc:'Questões 40 a 58 (parte 1)', amount:19, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:56},
   {date:'21/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
-  {date:'22/10/2026', subj:'RLM', type:'Questões', desc:'Questões 40 a 58 (parte 2)', amount:19, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:25},
-  {date:'22/10/2026', subj:'RLM', type:'Questões', desc:'Questões 59 a 84 (parte 1)', amount:26, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:124},
+  {date:'22/10/2026', subj:'RLM', type:'Questões', desc:'Questões 40 a 58 (parte 2)', amount:19, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:62},
+  {date:'22/10/2026', subj:'RLM', type:'Questões', desc:'Questões 59 a 84 (parte 1)', amount:26, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:87},
   {date:'22/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
-  {date:'23/10/2026', subj:'RLM', type:'Questões', desc:'Questões 59 a 84 (parte 2)', amount:26, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:37},
+  {date:'23/10/2026', subj:'RLM', type:'Questões', desc:'Questões 59 a 84 (parte 2)', amount:26, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:74},
   {date:'23/10/2026', subj:'RLM', type:'Questões', desc:'Questões 85 e 86', amount:2, unit:'questões', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\RLM\\Raciocínio Lógico Matemático (RLM) por assunto (110 pgs).pdf', mins:12},
-  {date:'23/10/2026', subj:'DPT', type:'Leitura', desc:'Legislação aplicada (CLT)', amount:37, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo extra - Direito processual do trabalho (Legislação aplicada - CLT) (37 pgs).pdf', mins:90},
+  {date:'23/10/2026', subj:'DPT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 1)', amount:26, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo extra - Direito processual do trabalho (Legislação aplicada - CLT) (37 pgs).pdf', mins:63},
   {date:'23/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
   {date:'24/10/2026', subj:'-', type:'Estudo de Caso', desc:'Estudo de Caso nº 1 (curso Rezende), enviar até 27/10', amount:null, unit:'', mins:45},
   {date:'24/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
   {date:'25/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
+  {date:'26/10/2026', subj:'DPT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 2)', amount:11, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Capítulo extra - Direito processual do trabalho (Legislação aplicada - CLT) (37 pgs).pdf', mins:27},
   {date:'26/10/2026', subj:'DPT', type:'Leitura', desc:'IN 39', amount:20, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.IN 39 (extra) (20 pgs).pdf', mins:49},
   {date:'26/10/2026', subj:'DPT', type:'Leitura', desc:'IN 41', amount:11, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.IN 41 (extra) (11 pgs).pdf', mins:27},
   {date:'26/10/2026', subj:'DPT', type:'Leitura', desc:'IN 41-A', amount:4, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.IN 41-A (extra) (4 pgs).pdf', mins:10},
   {date:'26/10/2026', subj:'DPT', type:'Leitura', desc:'LC 75', amount:4, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.LC 75 (extra) (4 pgs).pdf', mins:10},
   {date:'26/10/2026', subj:'DPT', type:'Leitura', desc:'Seguro Garantia Judicial', amount:3, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual do Trabalho\\DPT.Seguro Garantia Judicial (extra) (3 pgs).pdf', mins:7},
-  {date:'26/10/2026', subj:'DT', type:'Leitura', desc:'Cap. 12 Comissão de Conciliação Prévia', amount:2, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 12 (extra) - Direito do trabalho (Comissão de Conciliação Prévia) (2 pgs).pdf', mins:5},
-  {date:'26/10/2026', subj:'DT', type:'Leitura', desc:'Cap. 13 arts. 611-A e 611-B', amount:13, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 13 (extra) - Direito do trabalho (arts. 611-A e 611-B da CLT) (13 pgs).pdf', mins:35},
   {date:'26/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
+  {date:'27/10/2026', subj:'DT', type:'Leitura', desc:'Cap. 12 Comissão de Conciliação Prévia', amount:2, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 12 (extra) - Direito do trabalho (Comissão de Conciliação Prévia) (2 pgs).pdf', mins:5},
+  {date:'27/10/2026', subj:'DT', type:'Leitura', desc:'Cap. 13 arts. 611-A e 611-B', amount:13, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 13 (extra) - Direito do trabalho (arts. 611-A e 611-B da CLT) (13 pgs).pdf', mins:35},
   {date:'27/10/2026', subj:'DT', type:'Leitura', desc:'Cap. 15 Lei do FGTS', amount:7, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT.Capítulo 15 (extra) - Direito do trabalho (Lei do FGTS) (7 pgs).pdf', mins:19},
-  {date:'27/10/2026', subj:'DT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 1)', amount:47, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT. Capítulo extra - Direito do Trabalho (Legislação aplicada - CLT) (60 pgs).pdf', mins:128},
+  {date:'27/10/2026', subj:'DT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 1)', amount:32, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT. Capítulo extra - Direito do Trabalho (Legislação aplicada - CLT) (60 pgs).pdf', mins:87},
   {date:'27/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
   {date:'28/10/2026', subj:'DPT', type:'Questões', desc:'IN 39', amount:2, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251654', mins:3},
   {date:'28/10/2026', subj:'DPT', type:'Questões', desc:'LC 75', amount:6, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251647', mins:9},
   {date:'28/10/2026', subj:'DPT', type:'Questões', desc:'Seguro Garantia Judicial', amount:2, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251590', mins:3},
-  {date:'28/10/2026', subj:'DT', type:'Questões', desc:'Cap. 13 arts. 611-A e 611-B', amount:7, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251313', mins:9},
-  {date:'28/10/2026', subj:'DT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 2)', amount:13, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT. Capítulo extra - Direito do Trabalho (Legislação aplicada - CLT) (60 pgs).pdf', mins:35},
+  {date:'28/10/2026', subj:'DT', type:'Leitura', desc:'Legislação aplicada (CLT) (parte 2)', amount:28, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito do Trabalho\\DT. Capítulo extra - Direito do Trabalho (Legislação aplicada - CLT) (60 pgs).pdf', mins:76},
   {date:'28/10/2026', subj:'DCT', type:'Leitura', desc:'Direito coletivo do trabalho (CLT)', amount:16, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Coletivo do Trabalho\\DCT.Direito coletivo do trabalho (CLT) (16 pgs).pdf', mins:52},
-  {date:'28/10/2026', subj:'DCT', type:'Leitura', desc:'Súmulas + OJs + IRR', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Coletivo do Trabalho\\DCT. Súmulas + OJs + IRR (10 pgs).pdf', mins:32},
   {date:'28/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
+  {date:'29/10/2026', subj:'DT', type:'Questões', desc:'Cap. 13 arts. 611-A e 611-B', amount:7, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251313', mins:9},
   {date:'29/10/2026', subj:'DT', type:'Questões', desc:'Cap. 15 Lei do FGTS', amount:5, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251309', mins:7},
+  {date:'29/10/2026', subj:'DCT', type:'Leitura', desc:'Súmulas + OJs + IRR', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Coletivo do Trabalho\\DCT. Súmulas + OJs + IRR (10 pgs).pdf', mins:32},
   {date:'29/10/2026', subj:'DCT', type:'Leitura', desc:'Lei de Greve', amount:4, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Coletivo do Trabalho\\DCT.Lei de Greve (4 pgs).pdf', mins:13},
   {date:'29/10/2026', subj:'DCI', type:'Leitura', desc:'Cap. 09 Direito de família', amount:23, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 09 - Direito de família (23 pgs).pdf', mins:87},
-  {date:'29/10/2026', subj:'DCI', type:'Leitura', desc:'Cap. 10 Direito das sucessões (parte 1)', amount:11, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 10 - Direito das sucessões (17 pgs).pdf', mins:42},
   {date:'29/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
-  {date:'30/10/2026', subj:'DCI', type:'Leitura', desc:'Cap. 10 Direito das sucessões (parte 2)', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 10 - Direito das sucessões (17 pgs).pdf', mins:23},
+  {date:'30/10/2026', subj:'DCI', type:'Leitura', desc:'Cap. 10 Direito das sucessões', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Capítulo 10 - Direito das sucessões (17 pgs).pdf', mins:65},
   {date:'30/10/2026', subj:'DCI', type:'Leitura', desc:'Lei do Bem de família', amount:4, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Civil\\DCI.Lei do Bem de família (4 pgs).pdf', mins:15},
   {date:'30/10/2026', subj:'DPC', type:'Leitura', desc:'Comparativo de prazos (CPC e TST)', amount:4, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Comparativo de prazos para sanar vícios (CPC e TST) (4 pgs).pdf', mins:13},
   {date:'30/10/2026', subj:'DPC', type:'Leitura', desc:'Lei 9.099 (JEC)', amount:13, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Lei 9099 (Juizados Especiais Cíveis) (13 pgs).pdf', mins:41},
-  {date:'30/10/2026', subj:'DPC', type:'Leitura', desc:'Lei da ACP (7.347/85)', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Lei ACP (7347_85) (6 pgs).pdf', mins:19},
-  {date:'30/10/2026', subj:'DPC', type:'Leitura', desc:'Mandado de Segurança', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Mandado de Seguranca (10 pgs).pdf', mins:32},
   {date:'30/10/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
   {date:'31/10/2026', subj:'DCT', type:'Questões', desc:'Direito coletivo do trabalho', amount:9, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251317', mins:12},
   {date:'31/10/2026', subj:'DCT', type:'Questões', desc:'Lei de Greve', amount:4, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251320', mins:5},
@@ -900,20 +898,23 @@ const BUILTIN_TASKS = [
   {date:'02/11/2026', subj:'DCI', type:'Questões', desc:'Cap. 10 Direito das sucessões', amount:11, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251285', mins:12},
   {date:'02/11/2026', subj:'DCI', type:'Questões', desc:'Lei do Bem de família', amount:4, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251613', mins:4},
   {date:'02/11/2026', subj:'DPC', type:'Questões', desc:'Lei 9.099', amount:6, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251584', mins:7},
-  {date:'02/11/2026', subj:'DPC', type:'Questões', desc:'Lei da ACP', amount:5, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251572', mins:6},
-  {date:'02/11/2026', subj:'DPC', type:'Questões', desc:'Mandado de Segurança', amount:8, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251527', mins:9},
-  {date:'02/11/2026', subj:'DA', type:'Leitura', desc:'LAI (Lei 12.527)', amount:20, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Direito administrativo (assuntos extras)\\Lei de Acesso à Informação - Lei nº 12.527_2011 (20 páginas).pdf', mins:71},
+  {date:'02/11/2026', subj:'DPC', type:'Leitura', desc:'Lei da ACP (7.347/85)', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Lei ACP (7347_85) (6 pgs).pdf', mins:19},
+  {date:'02/11/2026', subj:'DPC', type:'Leitura', desc:'Mandado de Segurança', amount:10, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Direito Processual Civil\\DPC.Mandado de Seguranca (10 pgs).pdf', mins:32},
+  {date:'02/11/2026', subj:'DA', type:'Leitura', desc:'LAI (Lei 12.527) (parte 1)', amount:17, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Direito administrativo (assuntos extras)\\Lei de Acesso à Informação - Lei nº 12.527_2011 (20 páginas).pdf', mins:61},
   {date:'02/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards (feriado: Finados)', amount:null, unit:'', mins:15},
+  {date:'03/11/2026', subj:'DA', type:'Leitura', desc:'LAI (Lei 12.527) (parte 2)', amount:3, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Direito administrativo (assuntos extras)\\Lei de Acesso à Informação - Lei nº 12.527_2011 (20 páginas).pdf', mins:11},
   {date:'03/11/2026', subj:'DA', type:'Leitura', desc:'LGPD (Lei 13.709)', amount:26, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Direito administrativo (assuntos extras)\\Lei Geral de Proteção de Dados (LGPD) - Lei nº 13.709_2018 (26 páginas).pdf', mins:93},
   {date:'03/11/2026', subj:'DCI', type:'Leitura', desc:'Nome empresarial', amount:3, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Direito civil (nome empresarial)\\Direito Civil (Capítulo Extra) - Nome Empresarial (3 páginas).pdf', mins:11},
   {date:'03/11/2026', subj:'DT', type:'Leitura', desc:'Convenção 87 da OIT', amount:8, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Direito do trabalho (assuntos extras)\\Convenção nº 87 da OIT.pdf', mins:22},
   {date:'03/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
-  {date:'04/11/2026', subj:'DA', type:'Questões', desc:'LAI', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15262242', mins:19},
+  {date:'04/11/2026', subj:'DPC', type:'Questões', desc:'Lei da ACP', amount:5, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251572', mins:6},
+  {date:'04/11/2026', subj:'DPC', type:'Questões', desc:'Mandado de Segurança', amount:8, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251527', mins:9},
   {date:'04/11/2026', subj:'DH', type:'Leitura', desc:'Cap. 01 Natureza, gerações e características', amount:6, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\DH - Direitos Humanos\\Capítulo 01 - Direitos humanos (Natureza, gerações e características dos direitos humanos) (6 pgs).pdf', mins:19},
   {date:'04/11/2026', subj:'DH', type:'Leitura', desc:'Cap. 02 Controle de convencionalidade', amount:4, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\DH - Direitos Humanos\\Capítulo 02 - Direitos humanos (Controle de convencionalidade) (4 pgs).docx - Documentos Google.pdf', mins:13},
   {date:'04/11/2026', subj:'DH', type:'Leitura', desc:'Cap. 03 DUDH, PIDCP e PIDESC', amount:20, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\DH - Direitos Humanos\\Capítulo 03 - Direitos humanos (Declaração Universal dos Direitos Humanos + PIDCP e PIDESC) (20 pgs).pdf', mins:65},
   {date:'04/11/2026', subj:'LEG', type:'Leitura', desc:'Carta da ONU e Estatuto da CIJ', amount:8, unit:'páginas', file:'C:\\Users\\Administrador\\Desktop\\Teiros\\Curso TRTeiros (TRT 8ª Região - extra) (em produção)\\Noções de Legislação\\Carta das Nações Unidas (8 páginas).pdf', mins:26},
   {date:'04/11/2026', subj:'-', type:'Flashcards', desc:'Revisão diária de flashcards', amount:null, unit:'', mins:15},
+  {date:'05/11/2026', subj:'DA', type:'Questões', desc:'LAI', amount:12, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15262242', mins:19},
   {date:'05/11/2026', subj:'DA', type:'Questões', desc:'LGPD', amount:15, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15262243', mins:24},
   {date:'05/11/2026', subj:'DCI', type:'Questões', desc:'Nome empresarial', amount:2, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15262244', mins:2},
   {date:'05/11/2026', subj:'DT', type:'Questões', desc:'Convenção 87 da OIT', amount:5, unit:'questões', link:'https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15262245', mins:7},
@@ -2854,11 +2855,18 @@ let histCharts = {};
 function dateKey(d){ const p=(d||'').split('/'); return p.length===3 ? p[2]+p[1]+p[0] : d; }
 function filterAttemptsBySubject(){
   const map = {};
-  tasks.filter(t=>t.type==='Questões' && /Filtro\s*\d+/i.test(t.desc||'')).forEach(t=>{
-    const fk = filtroKeyFromDesc(t.desc); if(!fk) return;
-    const key = fk.num + fk.letter;
+  // Filtros (Filtro 12A...) e cadernos (qualquer outro conjunto de questões de uma matéria, ex.: "Pt.2 Morfologia").
+  tasks.filter(t=>t.type==='Questões').forEach(t=>{
+    const fk = filtroKeyFromDesc(t.desc);
+    let key, init;
+    if(fk){ key = fk.num + fk.letter; init = { num: fk.num, letter: fk.letter, key, caderno: false, firstParts: [], redos: [] }; }
+    else {
+      const nome = (t.desc||'').replace(/^Refazer\s+/i,'').replace(/\s*\(parte \d+\)\s*$/i,'').trim();
+      if(!nome || !SUBJECTS.includes(t.subj)) return;
+      key = 'c:' + nome.toLowerCase(); init = { num: null, letter: '', nome, key, caderno: true, firstParts: [], redos: [] };
+    }
     const m = map[t.subj] = map[t.subj] || {};
-    const f = m[key] = m[key] || { num: fk.num, letter: fk.letter, key, firstParts: [], redos: [] };
+    const f = m[key] = m[key] || init;
     const amt = effectiveAmount(t) || 0; const totStr = acertosTotalStr(t);
     const part = { id: t.id, date: effectiveDate(t), amt, total: totStr==='' ? null : Math.min(Number(totStr), amt) };
     if(/^Refazer/i.test(t.desc||'')) f.redos.push(part); else f.firstParts.push(part);
@@ -2883,12 +2891,12 @@ function renderHistorico(){
   Object.values(histCharts).forEach(c=>c.destroy()); histCharts = {};
   const data = filterAttemptsBySubject();
   const subs = SUBJECTS.filter(s=>data[s]);
-  if(!subs.length){ box.innerHTML = '<div class="chart-empty">Ainda não há filtros no cronograma.</div>'; return; }
+  if(!subs.length){ box.innerHTML = '<div class="chart-empty">Ainda não há filtros nem cadernos no cronograma.</div>'; return; }
   let sum = '', det = '';
   const chartData = [];
   let anyRedo = false;
   subs.forEach(sj=>{
-    const fl = Object.values(data[sj]).sort((a,b)=>a.num-b.num || a.letter.localeCompare(b.letter));
+    const fl = Object.values(data[sj]).sort((a,b)=> a.caderno!==b.caderno ? (a.caderno?1:-1) : a.caderno ? (dateKey(a.attempts[0]?a.attempts[0].date:'')<dateKey(b.attempts[0]?b.attempts[0].date:'') ? -1 : 1) : (a.num-b.num || a.letter.localeCompare(b.letter)));
     let a1q=0,a1a=0, rq=0, rFirst=0, rLast=0, nResp=0, nRedo=0;
     fl.forEach(f=>{
       const resp = f.attempts.filter(x=>x.total!==null);
@@ -2901,7 +2909,7 @@ function renderHistorico(){
     if(nRedo) anyRedo = true;
     sum += `<div class="hist-card"><h4>${sj} · ${SUBJECT_NAMES[sj]}</h4>
       <div class="big">${fmtPct(p1)} <span style="font-size:12px;font-weight:normal;color:var(--gray)">1ª vez</span></div>
-      <div class="sm">${nResp} de ${fl.length} filtros resolvidos${nRedo ? ` · ${nRedo} refeito${nRedo>1?'s':''}: ${fmtPct(pr1)} → <span class="${pr2>=pr1?'up':'down'}">${fmtPct(pr2)}</span>` : ' · nenhum refeito ainda'}</div></div>`;
+      <div class="sm">${nResp} de ${fl.length} filtros e cadernos resolvidos${nRedo ? ` · ${nRedo} refeito${nRedo>1?'s':''}: ${fmtPct(pr1)} → <span class="${pr2>=pr1?'up':'down'}">${fmtPct(pr2)}</span>` : ' · nenhum refeito ainda'}</div></div>`;
     let rows = '';
     fl.forEach(f=>{
       const cells = [0,1,2].map(i=>{
@@ -2913,11 +2921,11 @@ function renderHistorico(){
       const resp = f.attempts.filter(x=>x.total!==null);
       let delta = '<td>-</td>';
       if(resp.length>=2){ const d = pctOf(resp[resp.length-1]) - pctOf(resp[0]); delta = `<td><span class="${d>=0?'up':'down'}">${d>=0?'+':''}${d.toFixed(0)} pp</span></td>`; }
-      const topic = FILTRO_TOPICS[f.num] || '';
-      rows += `<tr><td><b>${f.num}${f.letter}</b></td><td>${topic}</td>${cells}${delta}</tr>`;
+      const topic = f.caderno ? f.nome : (FILTRO_TOPICS[f.num] || '');
+      rows += `<tr><td><b>${f.caderno ? 'Caderno' : f.num+f.letter}</b></td><td>${topic}</td>${cells}${delta}</tr>`;
     });
-    det += `<details class="hist-det"><summary>${sj} · ${SUBJECT_NAMES[sj]} (${fl.length} filtros)</summary>
-      <table class="ed-tab" style="margin-top:8px"><thead><tr><th>Filtro</th><th>Assunto</th><th>1ª vez</th><th>2ª vez</th><th>3ª vez</th><th>Variação</th></tr></thead><tbody>${rows}</tbody></table></details>`;
+    det += `<details class="hist-det"><summary>${sj} · ${SUBJECT_NAMES[sj]} (${fl.length} filtros e cadernos)</summary>
+      <table class="ed-tab" style="margin-top:8px"><thead><tr><th>Filtro / caderno</th><th>Assunto</th><th>1ª vez</th><th>2ª vez</th><th>3ª vez</th><th>Variação</th></tr></thead><tbody>${rows}</tbody></table></details>`;
   });
   box.innerHTML = `<div class="hist-sum">${sum}</div>
     ${anyRedo ? '<div class="chart-card"><h3>1ª vez × refeito (%)</h3><div class="chart-sub">Só os filtros que já foram refeitos: acerto na primeira tentativa e na última, por matéria</div><canvas id="chart-hist" style="max-height:320px"></canvas></div>' : '<div class="chart-empty">Nenhum filtro foi refeito ainda. Quando você refizer algum (tarefas "Refazer Filtro"), o gráfico de 1ª vez × refeito aparece aqui.</div>'}
