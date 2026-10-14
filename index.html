@@ -247,6 +247,49 @@
   .chart-card canvas{max-height:340px;}
   .chart-empty{grid-column:1/-1;text-align:center;color:var(--gray);font-size:13px;padding:30px 0;}
 
+
+  .ed-group{margin:18px 0 6px;font-size:13px;font-weight:bold;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.4px;}
+  .ed-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;}
+  .ed-card{background:#fff;border:2px solid transparent;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 14px;cursor:pointer;}
+  .ed-card:hover{border-color:var(--blue);}
+  .ed-card.sel{border-color:var(--blue);background:#F2F7FC;}
+  .ed-card .ed-n{font-size:12.5px;font-weight:bold;color:var(--blue-dark);}
+  .ed-card .ed-p{font-size:22px;font-weight:bold;margin:4px 0 2px;}
+  .ed-card .ed-s{font-size:11px;color:var(--gray);}
+  .ed-bar{height:7px;border-radius:4px;background:#E3E8EF;overflow:hidden;margin-top:6px;}
+  .ed-bar span{display:block;height:100%;background:#2E7D32;}
+  .ed-total{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:14px 18px;margin:12px 0;}
+  .ed-det{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:16px 18px;margin-top:16px;}
+  .ed-det h3{margin:0 0 4px;color:var(--blue-dark);font-size:17px;}
+  .ed-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0;}
+  .ed-tools button{background:#fff;border:1px solid var(--border);padding:5px 11px;border-radius:7px;font-size:12px;font-weight:bold;cursor:pointer;color:var(--gray);}
+  .ed-tools button.on{background:var(--blue);color:#fff;border-color:var(--blue);}
+  table.ed-tab{width:100%;border-collapse:collapse;font-size:13px;}
+  table.ed-tab th{text-align:left;font-size:11px;color:var(--gray);text-transform:uppercase;padding:6px 8px;border-bottom:2px solid var(--border);}
+  table.ed-tab td{padding:7px 8px;border-bottom:1px solid #EDF0F4;vertical-align:top;}
+  .ed-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:bold;white-space:nowrap;}
+  .ed-estudado{background:#DDF1DE;color:#1E6B24;} .ed-andamento{background:#FFF1CC;color:#8A6A00;} .ed-pendente{background:#E8ECF1;color:#4A5568;}
+  .ed-reserva{background:#EADCF7;color:#6A2C91;} .ed-sem{background:#FBDADA;color:#9B1C1C;}
+  .ed-mat{display:inline-block;font-size:10.5px;background:#F1F4F8;border-radius:6px;padding:1px 6px;margin:1px 3px 1px 0;color:#4A5568;}
+  .ed-mat.ok{background:#DDF1DE;color:#1E6B24;}
+  .ed-nota-btn{background:none;border:1px solid var(--border);border-radius:6px;cursor:pointer;font-size:13px;padding:1px 6px;}
+  .ed-nota-btn.tem{background:#FFF7D6;border-color:#E8C547;}
+  .nota-overlay{position:fixed;inset:0;background:rgba(15,25,40,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;}
+  .nota-box{background:#fff;border-radius:12px;width:min(780px,100%);max-height:92vh;display:flex;flex-direction:column;padding:18px 20px;box-shadow:0 12px 40px rgba(0,0,0,.35);}
+  .nota-box h3{margin:0 0 2px;color:var(--blue-dark);font-size:17px;}
+  .nota-sub{font-size:12px;color:var(--gray);margin-bottom:10px;}
+  .nota-box textarea{flex:1;min-height:320px;resize:vertical;border:1px solid var(--border);border-radius:8px;padding:10px;font:14px/1.5 Arial,Helvetica,sans-serif;}
+  .nota-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px;}
+  .nota-actions button{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 16px;font-weight:bold;cursor:pointer;}
+  .nota-actions button.primary{background:var(--blue);color:#fff;border-color:var(--blue);}
+  .hist-sum{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:14px;}
+  .hist-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 14px;}
+  .hist-card h4{margin:0 0 4px;font-size:13.5px;color:var(--blue-dark);}
+  .hist-card .big{font-size:20px;font-weight:bold;}
+  .hist-card .sm{font-size:11.5px;color:var(--gray);margin-top:2px;}
+  .up{color:#1E6B24;font-weight:bold;} .down{color:#B42318;font-weight:bold;}
+  details.hist-det{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:10px 0;padding:10px 14px;}
+  details.hist-det summary{cursor:pointer;font-weight:bold;color:var(--blue-dark);}
   .bloco-charts-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:20px;}
   @media(max-width:900px){.bloco-charts-grid{grid-template-columns:1fr;}}
 
@@ -277,7 +320,7 @@
 .stopwatch{top:56px!important}
 body > .wrap > .tab-bar{display:none}
 </style>
-<nav class="sitenav"><span class="logo">TRTeiros</span><a id="sn-cronograma" data-tab="cronograma" class="on" href="index.html#cronograma">Cronograma</a><a id="sn-desempenho" data-tab="desempenho" href="index.html#desempenho">Desempenho</a><a id="sn-estatisticas" data-tab="estatisticas" href="index.html#estatisticas">Estatísticas</a><a href="compilado/index.html">Compilado de Revisão</a></nav>
+<nav class="sitenav"><span class="logo">TRTeiros</span><a id="sn-cronograma" data-tab="cronograma" class="on" href="index.html#cronograma">Cronograma</a><a id="sn-desempenho" data-tab="desempenho" href="index.html#desempenho">Desempenho e Estatísticas</a><a id="sn-edital" data-tab="edital" href="index.html#edital">Edital</a><a href="compilado/index.html">Compilado de Revisão</a></nav>
 
 
 <div id="bootOverlay" style="position:fixed;inset:0;background:#F5F7FA;z-index:999;display:flex;align-items:center;justify-content:center;font-family:Arial,Helvetica,sans-serif;color:#305496;font-size:15px;">Carregando cronograma…</div>
@@ -321,8 +364,8 @@ body > .wrap > .tab-bar{display:none}
 
   <div class="tab-bar">
     <button class="tab-btn active" id="tabBtnCronograma">Cronograma</button>
-    <button class="tab-btn" id="tabBtnDesempenho">Desempenho</button>
-    <button class="tab-btn" id="tabBtnEstatisticas">Estatísticas</button>
+    <button class="tab-btn" id="tabBtnDesempenho">Desempenho e Estatísticas</button>
+    <button class="tab-btn" id="tabBtnEdital">Edital</button>
   </div>
 
   <div id="view-cronograma">
@@ -411,18 +454,39 @@ body > .wrap > .tab-bar{display:none}
   </div>
 
   <div id="view-desempenho" style="display:none;">
+    <div class="subtab-bar">
+      <button class="subtab-btn" id="desSubDesempenho">Desempenho</button>
+      <button class="subtab-btn" id="desSubHistorico">Histórico dos filtros</button>
+      <button class="subtab-btn" id="desSubEstatisticas">Estatísticas</button>
+    </div>
     <div id="desempenho-content">
       <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
       <div class="charts-grid" id="chartsGrid"></div>
-      <div class="bloco-charts-grid" id="blocoChartsGrid"></div>
     </div>
-
-      </div>
-
-  <div id="view-estatisticas" style="display:none;">
-    <p class="note">Horas efetivamente estudadas (campo "Tempo total" preenchido em cada atividade), por matéria, semana, mês e dia da semana. Só entram nas contas as atividades com tempo registrado.</p>
+    <div id="historico-content" style="display:none;">
+      <p class="note">Histórico de acertos por filtro: a primeira vez que você resolveu cada filtro e as vezes em que o refez, com a variação entre as tentativas.</p>
+      <div id="historicoBox"></div>
+    </div>
+    <div id="estatisticas-content" style="display:none;">
+      <p class="note">Horas efetivamente estudadas (campo "Tempo total" preenchido em cada atividade), por matéria, semana, mês e dia da semana. Só entram nas contas as atividades com tempo registrado.</p>
     <div class="week-summary" id="statsSummaryCards"></div>
     <div class="charts-grid" id="statsChartsGrid"></div>
+    </div>
+  </div>
+
+  <div id="view-edital" style="display:none;">
+    <p class="note">Conteúdo programático do edital (cargo 01, Analista Judiciário, Área Judiciária) item por item. Um item conta como estudado quando todas as leituras do cronograma que o cobrem estão concluídas. Clique em um item ou em uma matéria para guardar anotações.</p>
+    <div id="editalResumo"></div>
+    <div id="editalDetalhe"></div>
+  </div>
+
+  <div id="notaOverlay" class="nota-overlay" style="display:none;">
+    <div class="nota-box">
+      <h3 id="notaTitulo"></h3>
+      <div class="nota-sub" id="notaSub"></div>
+      <textarea id="notaTexto" placeholder="Escreva aqui o que for útil: prazos, exceções, pegadinhas, esquemas..."></textarea>
+      <div class="nota-actions"><button type="button" id="notaFechar">Fechar</button><button type="button" id="notaSalvar" class="primary">Salvar</button></div>
+    </div>
   </div>
 </div>
 
@@ -2386,9 +2450,7 @@ function subjectBlocoStats(subj, bloco){
 
 function renderDesempenho(){
   const grid = document.getElementById('chartsGrid');
-  const blocoGrid = document.getElementById('blocoChartsGrid');
   grid.innerHTML = '';
-  blocoGrid.innerHTML = '';
   Object.values(subjectCharts).forEach(c=>c.destroy());
   subjectCharts = {};
 
@@ -2428,74 +2490,13 @@ function renderDesempenho(){
       }
     });
   });
-
-  // Gráficos por bloco de dificuldade (A = mais fácil ... C = mais difícil): coluna 1 = Bloco A,
-  // coluna 2 = Bloco B, coluna 3 = Bloco C (grid de 3 colunas fixas em #blocoChartsGrid), cada
-  // coluna com "Evolução de Aproveitamento" em cima e "Distribuição de Acertos e Erros" embaixo -
-  // por isso o loop roda em duas passadas (todas as evoluções primeiro, depois todas as
-  // distribuições), pra ordem no HTML bater com o encaixe nas colunas do grid.
-  const blocoStats = {};
-  BLOCOS.forEach(bloco=>{ blocoStats[bloco] = SUBJECTS.map(s=>subjectBlocoStats(s, bloco)); });
-
-  BLOCOS.forEach(bloco=>{
-    const stats = blocoStats[bloco];
-    const evolCard = document.createElement('div');
-    evolCard.className = 'chart-card';
-    evolCard.innerHTML = `
-      <h3>Evolução de Aproveitamento (%) - Bloco ${bloco}</h3>
-      <div class="chart-sub">% de acertos (seguros + com dúvida) sobre as questões respondidas do filtro ${bloco}, por matéria</div>
-      <canvas id="chart-bloco-evol-${bloco}"></canvas>
-    `;
-    blocoGrid.appendChild(evolCard);
-    subjectCharts['bloco-evol-'+bloco] = new Chart(document.getElementById('chart-bloco-evol-'+bloco), {
-      type: 'bar',
-      data: {
-        labels: SUBJECTS,
-        datasets: [{ label: '% de acertos', data: stats.map(s=>s.pct===null?0:+s.pct.toFixed(2)), backgroundColor: '#E8A6A6' }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { y: { min:0, max:100, ticks:{ callback:v=>v+'%' } } },
-        plugins: { legend: { display:false } }
-      }
-    });
-  });
-
-  BLOCOS.forEach(bloco=>{
-    const stats = blocoStats[bloco];
-    const distCard = document.createElement('div');
-    distCard.className = 'chart-card';
-    distCard.innerHTML = `
-      <h3>Distribuição de Acertos e Erros - Bloco ${bloco}</h3>
-      <div class="chart-sub">Percentual de acertos com segurança, com dúvida e erros, por matéria (filtro ${bloco})</div>
-      <canvas id="chart-bloco-dist-${bloco}"></canvas>
-    `;
-    blocoGrid.appendChild(distCard);
-    subjectCharts['bloco-dist-'+bloco] = new Chart(document.getElementById('chart-bloco-dist-'+bloco), {
-      type: 'bar',
-      data: {
-        labels: SUBJECTS,
-        datasets: [
-          { label:'Acertos com segurança', backgroundColor:'#1F4E78', stack:'total',
-            data: stats.map(s=>s.respondidas ? +(s.seguros/s.respondidas*100).toFixed(1) : 0) },
-          { label:'Acertos com dúvida', backgroundColor:'#F1C40F', stack:'total',
-            data: stats.map(s=>s.respondidas ? +(s.duvida/s.respondidas*100).toFixed(1) : 0) },
-          { label:'Erros', backgroundColor:'#C0392B', stack:'total',
-            data: stats.map(s=>s.respondidas ? +(s.erros/s.respondidas*100).toFixed(1) : 0) }
-        ]
-      },
-      options: {
-        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-        scales: { x: { stacked:true, min:0, max:100, ticks:{ callback:v=>v+'%' } }, y: { stacked:true } },
-        plugins: { legend: { position:'bottom', labels:{ boxWidth:11, font:{size:10} } } }
-      }
-    });
-  });
 }
 
+function refreshEditalIfVisible(){ const el=document.getElementById('view-edital'); if(el && el.style.display!=='none') renderEdital(); }
 function refreshDesempenhoIfVisible(){
   if(document.getElementById('view-desempenho').style.display !== 'none'){
-    renderDesempenho();
+    const sub = lsGet('desempenhoSub','desempenho');
+    if(sub==='historico') renderHistorico(); else if(sub==='estatisticas') renderEstatisticas(); else renderDesempenho();
   }
 }
 
@@ -2642,8 +2643,8 @@ function renderEstatisticas(){
   });
 }
 function refreshEstatisticasIfVisible(){
-  const el = document.getElementById('view-estatisticas');
-  if(el && el.style.display !== 'none'){
+  const el = document.getElementById('estatisticas-content');
+  if(el && el.style.display !== 'none' && document.getElementById('view-desempenho').style.display !== 'none'){
     renderEstatisticas();
   }
 }
@@ -2669,16 +2670,222 @@ function errosMakeChart(canvasId, config){
   errosCharts[canvasId] = new Chart(ctx, config);
 }
 
+
+// ---------- Histórico dos filtros ----------
+let histCharts = {};
+function dateKey(d){ const p=(d||'').split('/'); return p.length===3 ? p[2]+p[1]+p[0] : d; }
+function filterAttemptsBySubject(){
+  const map = {};
+  tasks.filter(t=>t.type==='Questões' && /Filtro\s*\d+/i.test(t.desc||'')).forEach(t=>{
+    const fk = filtroKeyFromDesc(t.desc); if(!fk) return;
+    const key = fk.num + fk.letter;
+    const m = map[t.subj] = map[t.subj] || {};
+    const f = m[key] = m[key] || { num: fk.num, letter: fk.letter, key, firstParts: [], redos: [] };
+    const amt = effectiveAmount(t) || 0; const totStr = acertosTotalStr(t);
+    const part = { id: t.id, date: effectiveDate(t), amt, total: totStr==='' ? null : Math.min(Number(totStr), amt) };
+    if(/^Refazer/i.test(t.desc||'')) f.redos.push(part); else f.firstParts.push(part);
+  });
+  // Um filtro dividido em dois dias na 1ª vez conta como uma tentativa só (soma das partes).
+  Object.values(map).forEach(m=>Object.values(m).forEach(f=>{
+    const fp = f.firstParts.slice().sort((x,y)=> dateKey(x.date) < dateKey(y.date) ? -1 : 1);
+    const att = [];
+    if(fp.length){
+      const allResp = fp.every(p=>p.total!==null);
+      att.push({ date: fp[0].date, amt: fp.reduce((n,p)=>n+p.amt,0), total: allResp ? fp.reduce((n,p)=>n+p.total,0) : (fp.some(p=>p.total!==null) ? null : null) });
+    }
+    f.redos.sort((x,y)=> dateKey(x.date) < dateKey(y.date) ? -1 : 1).forEach(p=>att.push({ date: p.date, amt: p.amt, total: p.total }));
+    f.attempts = att;
+  }));
+  return map;
+}
+function pctOf(a){ return a.total===null || !a.amt ? null : a.total/a.amt*100; }
+function fmtPct(p){ return p===null ? '-' : p.toFixed(0)+'%'; }
+function renderHistorico(){
+  const box = document.getElementById('historicoBox');
+  Object.values(histCharts).forEach(c=>c.destroy()); histCharts = {};
+  const data = filterAttemptsBySubject();
+  const subs = SUBJECTS.filter(s=>data[s]);
+  if(!subs.length){ box.innerHTML = '<div class="chart-empty">Ainda não há filtros no cronograma.</div>'; return; }
+  let sum = '', det = '';
+  const chartData = [];
+  let anyRedo = false;
+  subs.forEach(sj=>{
+    const fl = Object.values(data[sj]).sort((a,b)=>a.num-b.num || a.letter.localeCompare(b.letter));
+    let a1q=0,a1a=0, rq=0, rFirst=0, rLast=0, nResp=0, nRedo=0;
+    fl.forEach(f=>{
+      const resp = f.attempts.filter(x=>x.total!==null);
+      if(resp.length){ nResp++; a1q += resp[0].amt; a1a += resp[0].total; }
+      if(resp.length>=2){ nRedo++; rq += resp[resp.length-1].amt; rFirst += resp[0].total * (resp[resp.length-1].amt/(resp[0].amt||1)); rLast += resp[resp.length-1].total; }
+    });
+    const p1 = a1q ? a1a/a1q*100 : null;
+    const pr1 = rq ? rFirst/rq*100 : null, pr2 = rq ? rLast/rq*100 : null;
+    chartData.push({ sj, p1, pr1, pr2 });
+    if(nRedo) anyRedo = true;
+    sum += `<div class="hist-card"><h4>${sj} · ${SUBJECT_NAMES[sj]}</h4>
+      <div class="big">${fmtPct(p1)} <span style="font-size:12px;font-weight:normal;color:var(--gray)">1ª vez</span></div>
+      <div class="sm">${nResp} de ${fl.length} filtros resolvidos${nRedo ? ` · ${nRedo} refeito${nRedo>1?'s':''}: ${fmtPct(pr1)} → <span class="${pr2>=pr1?'up':'down'}">${fmtPct(pr2)}</span>` : ' · nenhum refeito ainda'}</div></div>`;
+    let rows = '';
+    fl.forEach(f=>{
+      const cells = [0,1,2].map(i=>{
+        const a = f.attempts[i];
+        if(!a) return '<td style="color:#A0AEC0">-</td>';
+        const p = pctOf(a);
+        return `<td>${p===null ? `<span style="color:#A0AEC0">${a.date.slice(0,5)} · pendente</span>` : `${a.date.slice(0,5)} · ${a.total}/${a.amt} <b>(${fmtPct(p)})</b>`}</td>`;
+      }).join('');
+      const resp = f.attempts.filter(x=>x.total!==null);
+      let delta = '<td>-</td>';
+      if(resp.length>=2){ const d = pctOf(resp[resp.length-1]) - pctOf(resp[0]); delta = `<td><span class="${d>=0?'up':'down'}">${d>=0?'+':''}${d.toFixed(0)} pp</span></td>`; }
+      const topic = FILTRO_TOPICS[f.num] || '';
+      rows += `<tr><td><b>${f.num}${f.letter}</b></td><td>${topic}</td>${cells}${delta}</tr>`;
+    });
+    det += `<details class="hist-det"><summary>${sj} · ${SUBJECT_NAMES[sj]} (${fl.length} filtros)</summary>
+      <table class="ed-tab" style="margin-top:8px"><thead><tr><th>Filtro</th><th>Assunto</th><th>1ª vez</th><th>2ª vez</th><th>3ª vez</th><th>Variação</th></tr></thead><tbody>${rows}</tbody></table></details>`;
+  });
+  box.innerHTML = `<div class="hist-sum">${sum}</div>
+    ${anyRedo ? '<div class="chart-card"><h3>1ª vez × refeito (%)</h3><div class="chart-sub">Só os filtros que já foram refeitos: acerto na primeira tentativa e na última, por matéria</div><canvas id="chart-hist" style="max-height:320px"></canvas></div>' : '<div class="chart-empty">Nenhum filtro foi refeito ainda. Quando você refizer algum (tarefas "Refazer Filtro"), o gráfico de 1ª vez × refeito aparece aqui.</div>'}
+    <div style="margin-top:14px">${det}</div>`;
+  const labels = chartData.map(c=>c.sj);
+  if(anyRedo) histCharts.main = new Chart(document.getElementById('chart-hist'), {
+    type:'bar',
+    data:{ labels, datasets:[
+      { label:'1ª vez (filtros refeitos)', backgroundColor:'#9DB7D5', data: chartData.map(c=>c.pr1===null?null:+c.pr1.toFixed(1)) },
+      { label:'Refeito', backgroundColor:'#2E7D32', data: chartData.map(c=>c.pr2===null?null:+c.pr2.toFixed(1)) }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, scales:{ y:{ min:0, max:100, ticks:{ callback:v=>v+'%' } } }, plugins:{ legend:{ position:'bottom' } } }
+  });
+}
+
+// ---------- Edital verticalizado ----------
+const EDITAL = [{"id":"DCO","nome":"Direito Constitucional","grupo":"Específicos","itens":[{"t":"Direito constitucional: Da aplicabilidade e interpretação das normas constitucionais; vigência e eficácia das normas constitucionais","k":["DCO|Teoria da Constituição"]},{"t":"Controle de constitucionalidade: sistemas difuso e concentrado; ação direta de inconstitucionalidade","k":["DCO|Controle de constitucionalidade"]},{"t":"Controle de constitucionalidade: ação declaratória de constitucionalidade e arguição de descumprimento de preceito fundamental","k":["DCO|Controle de constitucionalidade"]},{"t":"Princípios fundamentais","k":["DCO|Princípios fundamentais"]},{"t":"Dos direitos e garantias fundamentais: dos direitos e deveres individuais e coletivos; dos direitos sociais; dos direitos de nacionalidade; dos direitos políticos; dos partidos políticos","k":["DCO|Princípios fundamentais","DCO|Direitos sociais"]},{"t":"Da organização do Estado: da organização político administrativa: da União; dos Estados Federados; dos Municípios; Do Distrito Federal; dos Territórios; da intervenção","k":["DCO|Organização do Estado"]},{"t":"Da Administração Pública: disposições gerais; dos servidores públicos","k":["DCO|Administração pública"]},{"t":"Da Organização dos Poderes","k":["DCO|Poder Executivo","DCO|Poder Legislativo (Organização","DCO|Poder Judiciário (Introdução)"]},{"t":"Do Poder Executivo: do Presidente e do Vice-Presidente da República; Das atribuições e responsabilidades do Presidente da República; Dos Ministros de Estado","k":["DCO|Poder Executivo"]},{"t":"Do Poder Legislativo: do processo legislativo","k":["DCO|Poder Legislativo (Processo"]},{"t":"Da fiscalização contábil, financeira e orçamentária","k":["DCO|Poder Legislativo (Processo"]},{"t":"Do Poder Judiciário: disposições gerais; do Supremo Tribunal Federal; do Conselho Nacional de Justiça: organização e competência; do Superior Tribunal de Justiça","k":["DCO|Poder Judiciário (Introdução)","DCO|Poder Judiciário (Tribunais)"]},{"t":"Do Poder Judiciário: do Tribunal Superior do Trabalho, dos Tribunais Regionais do Trabalho e dos Juízes do Trabalho","k":["DCO|Poder Judiciário (Tribunais)"]},{"t":"Do Poder Judiciário: do Conselho Superior da Justiça do Trabalho: organização e competência","k":["DCO|Poder Judiciário (Tribunais)"]},{"t":"Das funções essenciais à Justiça: do Ministério Público; da Advocacia Pública; da Advocacia e da Defensoria Pública","k":["DCO|Funções essenciais"]}]},{"id":"DA","nome":"Direito Administrativo","grupo":"Específicos","itens":[{"t":"Administração Pública","k":["DA|Introdução e princípios","DA|Administração Pública + Terceiro Setor"]},{"t":"Regime jurídico administrativo","k":["DA|Introdução e princípios"]},{"t":"Princípios constitucionais e legais da Administração Pública","k":["DA|Introdução e princípios"]},{"t":"Princípios administrativos implícitos","k":["DA|Introdução e princípios"]},{"t":"Lei de Introdução às normas do Direito Brasileiro e sua aplicação na Administração Pública (Decreto-Lei nº 4.657/1942 e suas alterações)","k":["DCI|LINDB"]},{"t":"Poderes da Administração Pública: poder hierárquico, poder disciplinar, poder regulamentar, poder de polícia","k":["DA|Poderes administrativos"]},{"t":"Poderes e deveres dos administradores públicos","k":["DA|Poderes administrativos"]},{"t":"Uso e abuso do poder","k":["DA|Poderes administrativos"]},{"t":"Crimes de abuso de autoridade (Lei nº 13.869/2019 e suas alterações)","k":["DA|Abuso de autoridade, Lei 13.869 (PDF a chegar)"]},{"t":"Ato administrativo","k":["DA|Atos administrativos"]},{"t":"Conceito, características e atributos","k":["DA|Atos administrativos"]},{"t":"Elementos e requisitos de validade","k":["DA|Atos administrativos"]},{"t":"Classificação dos atos administrativos","k":["DA|Atos administrativos"]},{"t":"Formação e efeitos","k":["DA|Atos administrativos"]},{"t":"Extinção, revogação, invalidação e convalidação","k":["DA|Atos administrativos"]},{"t":"Cassação e caducidade","k":["DA|Atos administrativos"]},{"t":"Processo administrativo no âmbito da Administração Pública Federal (Lei nº 9.784/1999 e suas alterações)","k":["DA|Processo Administrativo no Âmbito Federal"]},{"t":"Controle da Administração Pública","k":["DA|Controle da Administração Pública"]},{"t":"Classificações relativas ao controle da Administração Pública","k":["DA|Controle da Administração Pública"]},{"t":"Controle interno e controle externo","k":["DA|Controle da Administração Pública"]},{"t":"Controle exercido pelo Poder Judiciário, pelo Poder Legislativo e pelos Tribunais de Contas","k":["DA|Controle da Administração Pública"]},{"t":"Licitações e contratos administrativos (Lei nº 14.133/2021 e suas alterações)","k":["DA|Licitações (disposições preliminares)","DA|Licitações (processo licitatório)","DA|Licitações (contratação direta)","DA|Licitações (alienação"]},{"t":"Licitação: conceito, natureza jurídica, objeto e finalidade; princípios básicos e correlatos; modalidades; obrigatoriedade, dispensa e inexigibilidade","k":["DA|Licitações (disposições preliminares)","DA|Licitações (contratação direta)"]},{"t":"Licitação: procedimento licitatório; anulação, revogação e recursos administrativos; sanções e procedimento sancionatório","k":["DA|Licitações (processo licitatório)"]},{"t":"Licitação: crimes em licitações e contratos administrativos","k":["DA|Licitações (processo licitatório)"]},{"t":"Contrato administrativo: conceito, principais características e espécies; formalização, execução e inexecução; duração, prorrogação, renovação e extinção; revisão e rescisão","k":["DA|Contratos Administrativos"]},{"t":"Contrato administrativo: reajustamento","k":["DA|Contratos Administrativos"]},{"t":"Convênios administrativos","k":["DA|Administração Pública + Terceiro Setor"]},{"t":"Parcerias entre a Administração Pública e o terceiro setor (Lei nº 13.019/2014 e suas alterações)","k":["DA|Administração Pública + Terceiro Setor","DA|Terceiro setor e OSCs, Lei 13.019 (PDF a chegar)"]},{"t":"Serviço público: conceito; classificação; princípios; formas de delegação de serviço público","k":["DA|Serviços Públicos","DA|Lei dos usuários dos serviços públicos"]},{"t":"Direitos dos usuários de serviço público","k":["DA|Serviços Públicos","DA|Lei dos usuários dos serviços públicos"]},{"t":"Concessão e permissão de serviços públicos (Lei nº 8.987/1995 e suas alterações)","k":["DA|Serviços Públicos"]},{"t":"Extinção, reversão dos bens","k":["DA|Serviços Públicos"]},{"t":"Parcerias Público-Privadas: normas gerais para licitação e contratação de parceria público-privada no âmbito da Administração Pública (Lei nº 11.079/2004 e suas alterações)","k":["DA|Serviços Públicos"]},{"t":"Agentes públicos: classificação; cargo, emprego e função pública; provimento e investidura; exercício e afastamentos","k":["DA|Agentes públicos"]},{"t":"Direito de Greve","k":["DA|Agentes públicos"]},{"t":"Regime jurídico dos servidores públicos civis da União, das autarquias e das fundações públicas federais (Lei nº 8.112/1990 consolidada nos termos da Lei nº 9.527/1997 e suas alterações)","k":["DA|Estatuto dos servidores federais"]},{"t":"Lei nº 11.416/2006 (dispõe sobre as carreiras dos servidores públicos do Poder Judiciário Federal)","k":[]},{"t":"Regime constitucional dos servidores públicos na Constituição Federal de 1988","k":["DA|Agentes públicos"]},{"t":"Regime de emprego público e disposições da Consolidação das Leis do Trabalho (CLT) aplicáveis","k":["DA|Agentes públicos"]},{"t":"Responsabilidade civil, administrativa e penal dos agentes públicos","k":["DA|Estatuto dos servidores federais"]},{"t":"Regime e processo administrativo disciplinar","k":["DA|Estatuto dos servidores federais"]},{"t":"Responsabilidade extracontratual do Estado","k":["DA|Responsabilidade extracontratual do Estado"]},{"t":"Bens Públicos","k":["DA|Bens públicos"]},{"t":"Formas de utilização dos bens públicos por terceiros","k":["DA|Bens públicos"]},{"t":"Lei de acesso a informações (Lei nº 12.527/2011 e suas alterações)","k":["DA|LAI (Lei 12.527)"]},{"t":"Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 com redação dada pela Lei nº 13.853/2019)","k":["DA|LGPD (Lei 13.709)"]},{"t":"Improbidade Administrativa e sanções aplicáveis em virtude da prática de atos de improbidade administrativa (Lei nº 8.429/1992 e Lei nº 14.230/2021","k":["DA|Improbidade administrativa"]}]},{"id":"DT","nome":"Direito do Trabalho","grupo":"Específicos","itens":[{"t":"Dos princípios e fontes do Direito do Trabalho","k":["DT|Fontes, princípios, sujeitos"]},{"t":"Dos direitos constitucionais dos trabalhadores (artigo 7º da Constituição Federal de 1988)","k":["DT|Fontes, princípios, sujeitos"]},{"t":"Da relação de trabalho e da relação de emprego: requisitos e distinção; relações de trabalho lato sensu: trabalho autônomo, trabalho eventual, trabalho temporário e trabalho avulso","k":["DT|Contrato individual de trabalho","DT|Normas especiais e outros contratos"]},{"t":"Trabalho intermitente: regramento legal; características; peculiaridades","k":["DT|Normas especiais e outros contratos"]},{"t":"Dos sujeitos do contrato de trabalho stricto sensu: do empregado e do empregador: conceito e caracterização; dos poderes do empregador no contrato de trabalho","k":["DT|Fontes, princípios, sujeitos"]},{"t":"Do grupo econômico; da sucessão de empregadores; da responsabilidade solidária e subsidiária","k":["DT|Fontes, princípios, sujeitos"]},{"t":"Do contrato individual de trabalho: conceito, classificação e características","k":["DT|Contrato individual de trabalho"]},{"t":"Da alteração do contrato de trabalho: alteração unilateral e bilateral; o jus variandi","k":["DT|Contrato individual de trabalho"]},{"t":"Da suspensão e interrupção do contrato de trabalho: caracterização e distinção","k":["DT|Contrato individual de trabalho"]},{"t":"Da rescisão do contrato de trabalho: das justas causas; da despedida indireta; da dispensa arbitrária; da rescisão por acordo mútuo; da despedida coletiva; da culpa recíproca","k":["DT|Contrato individual de trabalho"]},{"t":"Da rescisão do contrato de trabalho: da indenização","k":["DT|Contrato individual de trabalho"]},{"t":"Do aviso prévio","k":["DT|Contrato individual de trabalho"]},{"t":"Prazo do aviso prévio","k":["DT|Contrato individual de trabalho"]},{"t":"Da estabilidade e das garantias provisórias de emprego: das formas de estabilidade; da despedida e da reintegração de empregado estável","k":["DT|Estabilidade + CCP"]},{"t":"Da duração do trabalho; da jornada de trabalho; dos períodos de descanso; do intervalo para repouso e alimentação; do descanso semanal remunerado","k":["DT|Duração do trabalho"]},{"t":"do trabalho noturno e do trabalho extraordinário; do sistema de compensação de horas","k":["DT|Duração do trabalho"]},{"t":"Do salário mínimo: irredutibilidade e garantia","k":["DT|Remuneração"]},{"t":"Das férias: do direito a férias e da sua duração; da concessão e da época das férias; da remuneração e do abono de férias","k":["DT|Férias"]},{"t":"Do salário e da remuneração: conceito e distinções; composição do salário; modalidades de salário; formas e meios de pagamento do salário; 13º salário","k":["DT|Remuneração"]},{"t":"Da equiparação salarial: hipóteses ensejadoras e forma de aferição; do princípio da igualdade de salário; do desvio de função","k":["DT|Remuneração"]},{"t":"Da arbitragem","k":["DT|Legislação aplicada (CLT)"]},{"t":"Do Fundo de Garantia do Tempo de Serviço (FGTS)","k":["DT|Cap. 15 Lei do FGTS"]},{"t":"Da prescrição e decadência","k":["DT|Comissão de representação dos empregados, Segurança e Medicina do trabalho e Prescrição"]},{"t":"Da segurança e medicina no trabalho: da CIPA; das atividades insalubres ou perigosas","k":["DT|Comissão de representação dos empregados, Segurança e Medicina do trabalho e Prescrição"]},{"t":"Da proteção ao trabalho da mulher, da gestante e do menor","k":["DT|Normas especiais e outros contratos"]},{"t":"Da estabilidade da gestante; da licença- maternidade","k":["DT|Estabilidade + CCP"]},{"t":"Do direito coletivo do trabalho: da liberdade sindical (Convenção nº 87 da OIT); da organização sindical: conceito de categoria; categoria diferenciada","k":["DT|Convenção 87 da OIT","DCT|Direito coletivo do trabalho (CLT)"]},{"t":"Do direito coletivo do trabalho: das convenções e dos acordos coletivos de trabalho","k":["DT|Cap. 13 arts. 611-A e 611-B","DCT|Direito coletivo do trabalho (CLT)"]},{"t":"Do direito de greve; dos serviços essenciais","k":["DCT|Lei de Greve"]},{"t":"Das comissões de Conciliação Prévia","k":["DT|Cap. 12 Comissão de Conciliação Prévia"]},{"t":"Da renúncia e transação","k":["DT|Legislação aplicada (CLT)"]},{"t":"Do teletrabalho (Lei nº 13.467/2017)","k":["DT|Teletrabalho"]},{"t":"Dano moral e material nas relações de trabalho","k":["DT|Dano moral"]},{"t":"Precedentes vinculantes (IRDR e IAC)","k":["DT|Jurisprudência: DT: Teses de IRR do TST"]},{"t":"Súmulas e Orientações da Jurisprudência uniformizada do Tribunal Superior do Trabalho sobre Direito do Trabalho","k":["DT|Jurisprudência: DT: Súmulas + OJs + IRR","DCT|Súmulas + OJs + IRR"]},{"t":"Súmulas Vinculantes do Supremo Tribunal Federal relativas ao Direito do Trabalho","k":["DT|Jurisprudência: DT: Súmulas + OJs + IRR","DCT|Súmulas + OJs + IRR"]},{"t":"Instruções e atos Normativos do TST em matéria de Direito do Trabalho","k":["DT|Jurisprudência: DT: Súmulas + OJs + IRR","DCT|Súmulas + OJs + IRR"]},{"t":"Reforma Trabalhista (Lei nº 13.467/2017)","k":["DT|Legislação aplicada (CLT)"]},{"t":"Teses de Repercussão Geral do STF em matéria trabalhista","k":["DT|Teses de Repercussão Geral"]},{"t":"Trabalho por Plataformas","k":["DT|Plataformas"]},{"t":"Da igualdade salarial (Lei nº 14.611/2023)","k":["DT|Plataformas"]},{"t":"Do teletrabalho/trabalho remoto (Lei nº 13.467/2017 e Lei nº 14.442/2022)","k":["DT|Teletrabalho","DT|Plataformas"]},{"t":"Saúde e higiene e Segurança do trabalho","k":["DT|Comissão de representação dos empregados, Segurança e Medicina do trabalho e Prescrição"]},{"t":"Acidente de trabalho","k":["DT|Comissão de representação dos empregados, Segurança e Medicina do trabalho e Prescrição"]},{"t":"Danos nas relações de trabalho","k":["DT|Dano moral"]},{"t":"Meio ambiente do trabalho: caracterização, responsabilidade e efeitos jurídicos","k":["DT|Plataformas"]},{"t":"Trabalho escravo contemporâneo","k":["DT|Plataformas"]},{"t":"Súmulas, Orientações Jurisprudenciais","k":["DT|Jurisprudência: DT: Súmulas + OJs + IRR","DCT|Súmulas + OJs + IRR"]},{"t":"Precedentes","k":["DT|Jurisprudência: DT: Teses de IRR do TST"]},{"t":"Jurisprudência aplicável do Tribunal Superior do Trabalho e do Supremo Tribunal Federal","k":["DT|Jurisprudência: DT: Súmulas + OJs + IRR","DCT|Súmulas + OJs + IRR"]},{"t":"Entidades sindicais","k":["DCT|Direito coletivo do trabalho (CLT)"]},{"t":"Negociação coletiva no Direito do Trabalho","k":["DT|Cap. 13 arts. 611-A e 611-B","DCT|Direito coletivo do trabalho (CLT)"]},{"t":"Contrato Coletivo de Trabalho","k":["DCT|Direito coletivo do trabalho (CLT)"]},{"t":"A greve no direito brasileiro","k":["DCT|Lei de Greve"]}]},{"id":"DPT","nome":"Direito Processual do Trabalho","grupo":"Específicos","itens":[{"t":"Da Justiça do Trabalho: organização e competência","k":["DPT|Organização e competência da Justiça do Trabalho"]},{"t":"Das Varas do Trabalho, dos Tribunais Regionais do Trabalho e do Tribunal Superior do Trabalho: jurisdição e competência","k":["DPT|Organização e competência da Justiça do Trabalho"]},{"t":"Dos serviços auxiliares da Justiça do Trabalho: das secretarias das Varas do Trabalho; dos distribuidores; dos oficiais de justiça avaliadores","k":["DPT|Organização e competência da Justiça do Trabalho"]},{"t":"Dos Peritos Judiciais: responsabilidade pelos honorários periciais, Gratuidade de Justiça","k":["DPT|Sujeitos da relação processual"]},{"t":"Do Ministério Público do Trabalho: organização","k":["DPT|LC 75"]},{"t":"Do processo judiciário do trabalho: princípios gerais do processo trabalhista (aplicação subsidiária do CPC)","k":["DPT|Integração e princípios"]},{"t":"Prescrição e decadência","k":["DPT|Legislação aplicada (CLT)"]},{"t":"Prescrição intercorrente","k":["DPT|Legislação aplicada (CLT)"]},{"t":"Dos atos, termos e prazos processuais","k":["DPT|Atos processuais"]},{"t":"Da distribuição","k":["DPT|Reclamação trabalhista"]},{"t":"Do valor da causa no Processo do Trabalho; Das custas e emolumentos","k":["DPT|Atos processuais"]},{"t":"Custas e emolumentos para a Fazenda Pública","k":["DPT|Atos processuais"]},{"t":"Hipóteses de isenção","k":["DPT|Atos processuais"]},{"t":"Das partes e procuradores; do jus postulandi; da substituição e representação processuais","k":["DPT|Sujeitos da relação processual"]},{"t":"Da representação da massa falida e das empresas em Recuperação judicial","k":["DPT|Sujeitos da relação processual"]},{"t":"Do litisconsórcio no Processo do Trabalho; da assistência judiciária; dos honorários de advogado: sucumbenciais e honorários contratados","k":["DPT|Sujeitos da relação processual"]},{"t":"Das nulidades e das exceções: hipóteses ensejadoras, prazo e forma de arguição","k":["DPT|Atos processuais"]},{"t":"Das audiências: de conciliação, de instrução e de julgamento; da notificação das partes; do arquivamento do processo; da revelia e confissão","k":["DPT|Procedimentos trabalhistas"]},{"t":"Das provas","k":["DPT|Procedimentos trabalhistas"]},{"t":"Dos dissídios individuais: da forma de reclamação e notificação; da reclamação escrita e verbal; da legitimidade para ajuizar","k":["DPT|Reclamação trabalhista"]},{"t":"Do procedimento ordinário e sumaríssimo","k":["DPT|Procedimentos trabalhistas"]},{"t":"Dos procedimentos especiais: inquérito para apuração de falta grave, ação rescisória e mandado de segurança","k":["DPT|Procedimentos trabalhistas","DPT|Jurisprudência: DPT: Jur. específica"]},{"t":"Da ação civil pública","k":["DPC|Lei da ACP (7.347/85)"]},{"t":"Da sentença e da coisa julgada; da liquidação da sentença: por cálculo, por artigos e por arbitramento","k":["DPT|Liquidação + execução trabalhista","DPT|Reclamação trabalhista"]},{"t":"Dos dissídios coletivos: extensão, cumprimento e revisão da sentença normativa","k":["DPT|Procedimentos trabalhistas"]},{"t":"Da execução: execução provisória; execução por prestações sucessivas; execução contra a Fazenda Pública; execução contra a massa falida","k":["DPT|Liquidação + execução trabalhista"]},{"t":"Do Incidente de Desconsideração da Personalidade Jurídica","k":["DPT|Liquidação + execução trabalhista"]},{"t":"Da citação; do depósito da condenação e da nomeação de bens","k":["DPT|Liquidação + execução trabalhista"]},{"t":"Garantias na execução","k":["DPT|Liquidação + execução trabalhista","DPT|Seguro Garantia Judicial"]},{"t":"Seguro-fiança e seguro-garantia; do mandado e da penhora; dos bens penhoráveis e impenhoráveis; da impenhorabilidade do bem de família (Lei nº 8.009/1990 e alterações)","k":["DPT|Seguro Garantia Judicial","DPT|Liquidação + execução trabalhista","DCI|Lei do Bem de família"]},{"t":"Dos embargos à execução; da impugnação à sentença; dos embargos de terceiros","k":["DPT|Liquidação + execução trabalhista"]},{"t":"Da praça e leilão; da arrematação; das custas na execução","k":["DPT|Liquidação + execução trabalhista"]},{"t":"Dos recursos no processo do trabalho","k":["DPT|Recursos"]},{"t":"Normas atinentes ao Processo Judicial Eletrônico; Lei nº 13.467/2017 (Reforma Trabalhista)","k":["DPT|Processo eletrônico (Lei 11.419)","DPT|Legislação aplicada (CLT)"]},{"t":"Uniformização de jurisprudência à luz do CPC e sua aplicação ao processo do trabalho","k":["DPT|Jurisprudência: DPT: Teses de IRR do TST"]},{"t":"Precedentes Obrigatórios (IAC e IRDR)","k":["DPT|Jurisprudência: DPT: Teses de IRR do TST"]},{"t":"Súmulas e Orientações Jurisprudenciais do TST em matéria de Direito Processual do Trabalho","k":["DPT|Jurisprudência: DPT: Jur. geral"]},{"t":"Instruções Normativas e Atos em Geral do TST em matéria de Direito Processual do Trabalho","k":["DPT|Instrução Normativa nº 38","DPT|IN 39","DPT|Instrução Normativa nº 40","DPT|IN 41"]},{"t":"Súmulas Vinculantes do Supremo Tribunal Federal relativas ao Direito Processual do Trabalho","k":["DPT|Jurisprudência: DPT: Jur. geral","DPT|Jurisprudência: DPT: Teses de IRR do TST"]},{"t":"Teses de Repercussão Geral do STF em matéria afeta ao processo do trabalho","k":["DPT|Jurisprudência: DPT: Jur. geral","DPT|Jurisprudência: DPT: Teses de IRR do TST"]},{"t":"Precedentes Qualificados do STF e TST","k":["DPT|Jurisprudência: DPT: Jur. geral","DPT|Jurisprudência: DPT: Teses de IRR do TST"]}]},{"id":"DCI","nome":"Direito Civil","grupo":"Específicos","itens":[{"t":"Da Pessoa Natural","k":["DCI|Pessoas e domicílio"]},{"t":"Personalidade e Capacidade","k":["DCI|Pessoas e domicílio"]},{"t":"Direitos da Personalidade","k":["DCI|Pessoas e domicílio"]},{"t":"Das Pessoas Jurídicas","k":["DCI|Pessoas e domicílio"]},{"t":"Domicílio Civil","k":["DCI|Pessoas e domicílio"]},{"t":"Dos Bens: classificação, afetação e desafetação","k":["DCI|Bens"]},{"t":"Do Negócio Jurídico: Conceito","k":["DCI|Fatos jurídicos"]},{"t":"Classificação","k":["DCI|Fatos jurídicos"]},{"t":"Elementos essenciais gerais","k":["DCI|Fatos jurídicos"]},{"t":"Elementos acidentais (condição, termo, encargo)","k":["DCI|Fatos jurídicos"]},{"t":"Defeitos do negócio jurídico (erro ou ignorância, dolo, coação, estado de perigo, lesão, fraude contra credores), invalidade do negócio jurídico","k":["DCI|Fatos jurídicos"]},{"t":"Da prescrição e da decadência","k":["DCI|Prescrição e decadência"]},{"t":"Da prova","k":["DCI|Fatos jurídicos"]},{"t":"Do Direito das Obrigações","k":["DCI|Obrigações"]},{"t":"Dos contratos em geral e em espécie","k":["DCI|Contratos em geral","DCI|Contratos em espécie"]},{"t":"Dos vícios redibitórios e da Evicção","k":["DCI|Contratos em geral"]},{"t":"Da responsabilidade civil","k":["DCI|Responsabilidade civil + atos unilaterais"]},{"t":"Do Direito de Empresa","k":["DCI|Direito de Empresa (PDF a chegar)"]},{"t":"Do nome empresarial","k":["DCI|Nome empresarial"]},{"t":"Direito das coisas","k":["DCI|Direitos reais + garantias"]},{"t":"Posse","k":["DCI|Direitos reais + garantias"]},{"t":"Teorias da posse","k":["DCI|Direitos reais + garantias"]},{"t":"Conceito, classificação, aquisição, efeitos, proteção e perda da posse","k":["DCI|Direitos reais + garantias"]},{"t":"Função social da posse","k":["DCI|Direitos reais + garantias"]},{"t":"Teorias da função social da posse","k":["DCI|Direitos reais + garantias"]},{"t":"Conceito, conteúdo e concretização da função social da posse","k":["DCI|Direitos reais + garantias"]},{"t":"Função socioambiental da posse","k":["DCI|Direitos reais + garantias"]},{"t":"Direitos reais","k":["DCI|Direitos reais + garantias"]},{"t":"Propriedade","k":["DCI|Direitos reais + garantias"]},{"t":"Conceito, classificação, aquisição, proteção e perda da propriedade","k":["DCI|Direitos reais + garantias"]},{"t":"Função social da propriedade: conceito, conteúdo e concretização da função social da propriedade","k":["DCI|Direitos reais + garantias"]},{"t":"Direitos de vizinhança","k":["DCI|Direitos reais + garantias"]},{"t":"Condomínio geral","k":["DCI|Direitos reais + garantias"]},{"t":"Condomínio edilício","k":["DCI|Direitos reais + garantias"]},{"t":"Propriedade resolúvel","k":["DCI|Direitos reais + garantias"]},{"t":"Propriedade fiduciária","k":["DCI|Direitos reais + garantias"]},{"t":"Direitos reais sobre coisa alheia","k":["DCI|Direitos reais + garantias"]},{"t":"Superfície","k":["DCI|Direitos reais + garantias"]},{"t":"Servidões","k":["DCI|Direitos reais + garantias"]},{"t":"Uso","k":["DCI|Direitos reais + garantias"]},{"t":"Usufruto","k":["DCI|Direitos reais + garantias"]},{"t":"Habitação","k":["DCI|Direitos reais + garantias"]},{"t":"A concessão de uso especial para fins de moradia","k":["DCI|Direitos reais + garantias"]},{"t":"A laje","k":["DCI|Direitos reais + garantias"]},{"t":"Direito real à aquisição","k":["DCI|Direitos reais + garantias"]},{"t":"Direito do promitente comprador","k":["DCI|Direitos reais + garantias"]},{"t":"Compromisso de venda e compra","k":["DCI|Direitos reais + garantias"]},{"t":"Adjudicação compulsória","k":["DCI|Direitos reais + garantias"]},{"t":"Direitos reais em garantia","k":["DCI|Direitos reais + garantias"]},{"t":"Penhor","k":["DCI|Direitos reais + garantias"]},{"t":"Hipoteca","k":["DCI|Direitos reais + garantias"]},{"t":"Do direito de família","k":["DCI|Cap. 09 Direito de família"]},{"t":"Esponsais","k":["DCI|Cap. 09 Direito de família"]},{"t":"Casamento heteroafetivo e homoafetivo: capacidade, impedimentos, causas suspensivas, habilitação, celebração, eficácia, direitos e deveres","k":["DCI|Cap. 09 Direito de família"]},{"t":"Dissolução do vínculo conjugal","k":["DCI|Cap. 09 Direito de família"]},{"t":"Invalidade do casamento, separação e divórcio","k":["DCI|Cap. 09 Direito de família"]},{"t":"Da proteção da pessoa dos filhos","k":["DCI|Cap. 09 Direito de família"]},{"t":"Das relações de parentesco e da filiação","k":["DCI|Cap. 09 Direito de família"]},{"t":"Do Poder Familiar","k":["DCI|Cap. 09 Direito de família"]},{"t":"Direito patrimonial","k":["DCI|Cap. 09 Direito de família"]},{"t":"Regime de bens: espécies","k":["DCI|Cap. 09 Direito de família"]},{"t":"Pacto antenupcial","k":["DCI|Cap. 09 Direito de família"]},{"t":"Meação e sucessão do cônjuge","k":["DCI|Cap. 09 Direito de família"]},{"t":"Usufruto e administração de bens de filhos incapazes","k":["DCI|Cap. 09 Direito de família"]},{"t":"Bem de família","k":["DCI|Cap. 09 Direito de família","DCI|Lei do Bem de família"]},{"t":"União estável heteorafetiva e homoafetiva","k":["DCI|Cap. 09 Direito de família"]},{"t":"Aspectos constitucionais","k":["DCI|Cap. 09 Direito de família"]},{"t":"Características, estado, impedimentos, direitos, deveres e efeitos patrimoniais","k":["DCI|Cap. 09 Direito de família"]},{"t":"Regime de bens, meação e sucessão do companheiro","k":["DCI|Cap. 09 Direito de família"]},{"t":"Uniões estáveis concomitantes","k":["DCI|Cap. 09 Direito de família"]},{"t":"Concubinato","k":["DCI|Cap. 09 Direito de família"]},{"t":"Sucessão","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Disposições gerais","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Herança","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Vocação hereditária","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Aceitação e renúncia","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Exclusão da sucessão","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Herança jacente","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Herança vacante","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Sucessão legítima e sucessão testamentária","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Inventário e partilha","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Arrolamentos","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Alvarás judiciais","k":["DCI|Cap. 10 Direito das sucessões"]},{"t":"Partilha de bens e direitos","k":["DCI|Cap. 10 Direito das sucessões"]}]},{"id":"DPC","nome":"Direito Processual Civil","grupo":"Específicos","itens":[{"t":"Da jurisdição e da ação: conceito, natureza e características; das condições da ação","k":["DPC|Normas fundamentais","DPC|Teoria geral do processo"]},{"t":"Magistratura","k":["DPC|Sujeitos do processo"]},{"t":"Auxiliares da Justiça","k":["DPC|Sujeitos do processo"]},{"t":"Do Ministério Público","k":["DPC|Sujeitos do processo"]},{"t":"Defensoria Pública","k":["DPC|Sujeitos do processo"]},{"t":"Advocacia","k":["DPC|Sujeitos do processo"]},{"t":"Das partes e procuradores: da capacidade processual e postulatória; dos deveres das partes e de seus procuradores","k":["DPC|Sujeitos do processo"]},{"t":"Da sucessão das partes e dos procuradores","k":["DPC|Sujeitos do processo"]},{"t":"Do litisconsórcio e da assistência","k":["DPC|Sujeitos do processo"]},{"t":"Da intervenção de terceiros","k":["DPC|Sujeitos do processo"]},{"t":"Da competência: em razão do valor e da matéria; competência funcional e territorial; modificações de competência e declaração de incompetência","k":["DPC|Normas fundamentais"]},{"t":"Do Juiz","k":["DPC|Sujeitos do processo"]},{"t":"Dos atos processuais: da forma dos atos; dos prazos; da comunicação dos atos; das nulidades","k":["DPC|Atos processuais"]},{"t":"Preclusão","k":["DPC|Atos processuais"]},{"t":"Da formação, suspensão e extinção do processo","k":["DPC|Tutela provisória + formação"]},{"t":"Do processo de conhecimento: da petição inicial: requisitos, pedido e indeferimento","k":["DPC|Procedimento comum"]},{"t":"Valor da causa","k":["DPC|Procedimento comum"]},{"t":"Da resposta do réu: contestação, exceções e reconvenção","k":["DPC|Procedimento comum"]},{"t":"Da revelia","k":["DPC|Procedimento comum"]},{"t":"Da tutela provisória","k":["DPC|Tutela provisória + formação"]},{"t":"Do julgamento conforme o estado do processo","k":["DPC|Procedimento comum"]},{"t":"Das provas: ônus da prova; depoimento pessoal; confissão; provas documental e testemunhal","k":["DPC|Procedimento comum"]},{"t":"Da audiência: da conciliação e da instrução e julgamento","k":["DPC|Procedimento comum"]},{"t":"Da sentença e da coisa julgada","k":["DPC|Procedimento comum"]},{"t":"Da liquidação e do cumprimento da sentença","k":["DPC|Liquidação de sentença + cumprimento de sentença"]},{"t":"Impugnação ao cumprimento de sentença","k":["DPC|Liquidação de sentença + cumprimento de sentença"]},{"t":"Da ação rescisória","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Dos recursos: disposições gerais e recursos em espécie","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Do processo de execução: da execução em geral; das diversas espécies de execução","k":["DPC|Execução"]},{"t":"Dos embargos à execução","k":["DPC|Execução"]},{"t":"Da suspensão e extinção do processo de execução","k":["DPC|Execução"]},{"t":"Dos procedimentos especiais: ação de consignação em pagamento; embargos de terceiro; ação monitória; ações possessórias","k":["DPC|Procedimentos especiais"]},{"t":"Mandado de segurança individual e coletivo","k":["DPC|Mandado de Segurança"]},{"t":"Ação civil pública (Lei nº 7.347/1985 e suas alterações)","k":["DPC|Lei da ACP (7.347/85)"]},{"t":"Juizados Especiais Cíveis e Criminais (Lei nº 9.099/1995 e suas alterações)","k":["DPC|Lei 9.099 (JEC)"]},{"t":"Lei nº 13.140/2015 (Mediação)","k":["DPC|Mediação, Lei 13.140 (PDF a chegar)"]},{"t":"Processo de execução","k":["DPC|Execução"]},{"t":"Execução em geral: disposições gerais","k":["DPC|Execução"]},{"t":"Partes","k":["DPC|Execução"]},{"t":"Competência","k":["DPC|Execução"]},{"t":"Requisitos necessários","k":["DPC|Execução"]},{"t":"Responsabilidade Patrimonial","k":["DPC|Execução"]},{"t":"Espécies de execução: disposições gerais, execução para a entrega de coisa, execução de obrigação de fazer ou não fazer, execução por quantia certa, Execução contra a Fazenda Pública","k":["DPC|Execução"]},{"t":"Embargos à execução","k":["DPC|Execução"]},{"t":"Suspensão e extinção do processo de execução","k":["DPC|Execução"]},{"t":"Ordem dos processos nos tribunais","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Do incidente de assunção de competência e de arguição de inconstitucionalidade","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Conflito de competência","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Homologação de decisão estrangeira e da concessão do exequatur à carta rogatória","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Ação rescisória","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Incidente de resolução de demandas repetitivas","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Reclamação","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Recursos: disposições gerais","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Apelação","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Agravo de instrumento","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Agravo interno","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Embargos de declaração","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Recursos para o Supremo Tribunal Federal e para o Superior Tribunal de Justiça","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Sistema de precedentes","k":["DPC|Procedimentos nos Tribunais"]},{"t":"Lei nº 11.419/2006 (Informatização do processo judicial)","k":["DPT|Processo eletrônico (Lei 11.419)"]},{"t":"Jurisprudência aplicável dos Tribunais Superiores","k":["DPC|Jurisprudência: DPC"]}]},{"id":"PORT","nome":"Língua Portuguesa","grupo":"Gerais","itens":[{"t":"Redação Oficial","k":[]},{"t":"Ortografia e acentuação","k":["PORT|Pt.1"]},{"t":"Emprego do sinal indicativo de crase","k":["PORT|Pt.1"]},{"t":"Compreensão e interpretação de textos de gêneros variados","k":["PORT|Pt.7"]},{"t":"Relação do texto com seu contexto histórico","k":["PORT|Pt.7"]},{"t":"Denotação e conotação","k":["PORT|Pt.5"]},{"t":"Discurso direto, discurso indireto e discurso indireto livre","k":["PORT|Pt.6"]},{"t":"Intertextualidade","k":["PORT|Pt.5"]},{"t":"Figuras de linguagem","k":["PORT|Pt.5"]},{"t":"Morfossintaxe","k":["PORT|Pt.3"]},{"t":"Elementos estruturais e processos de formação de palavras","k":["PORT|Pt.2"]},{"t":"Sinonímia e antonímia","k":["PORT|Pt.2"]},{"t":"Pontuação","k":["PORT|Pt.1"]},{"t":"Pronomes","k":["PORT|Pt.2"]},{"t":"Concordância nominal e concordância verbal","k":["PORT|Pt.3"]},{"t":"Flexão nominal e flexão verbal","k":["PORT|Pt.2"]},{"t":"Vozes do verbo","k":["PORT|Pt.2"]},{"t":"Correlação de tempos e modos verbais","k":["PORT|Pt.2"]},{"t":"Regência nominal e regência verbal","k":["PORT|Pt.3"]},{"t":"Coordenação e subordinação","k":["PORT|Pt.3"]},{"t":"Conectivos","k":["PORT|Pt.2"]},{"t":"Redação (confronto e reconhecimento de frases corretas e incorretas; organização e reorganização de orações e períodos; equivalência e transformação de estruturas)","k":["PORT|Pt.4"]}]},{"id":"RLM","nome":"Matemática e Raciocínio Lógico","grupo":"Gerais","itens":[{"t":"Estrutura lógica de relações arbitrárias entre pessoas, lugares, objetos ou eventos fictícios; deduzir novas informações das relações fornecidas e avaliar as condições usadas para estabelecer a estrutura daquelas relações","k":["RLM|Questões"]},{"t":"Compreensão e elaboração da lógica das situações por meio de: raciocínio verbal, raciocínio matemático, raciocínio sequencial, orientação espacial e temporal, formação de conceitos, discriminação de elementos","k":["RLM|Questões"]},{"t":"Compreensão do processo lógico que, a partir de um conjunto de hipóteses, conduz, de forma válida, a conclusões determinadas","k":["RLM|Questões"]},{"t":"Números inteiros e racionais: operações (adição, subtração, multiplicação, divisão, potenciação); expressões numéricas; múltiplos e divisores de números naturais; problemas","k":["RLM|Questões"]},{"t":"Frações e operações com frações","k":["RLM|Questões"]},{"t":"Números e grandezas proporcionais: razões e proporções; divisão em partes proporcionais; regra de três; porcentagem e problemas envolvendo regra de três simples, cálculos de porcentagem, acréscimos e descontos","k":["RLM|Questões"]},{"t":"Noções de Estatísticas: medidas de tendência central (moda, mediana, média aritmética simples e ponderada) e de dispersão (desvio médio, amplitude, variância, desvio padrão); leitura e interpretação de gráficos (histogramas, setores, infográficos) e tabelas","k":["RLM|Questões"]}]},{"id":"LEG","nome":"Noções de Legislação","grupo":"Gerais","itens":[{"t":"Noções de Sustentabilidade: Resolução CNJ nº 400/2021 (Dispõe sobre a política de sustentabilidade no âmbito do Poder Judiciário)","k":["LEG|Res. CNJ 400"]},{"t":"Código de Ética do Tribunal Regional do Trabalho da 8ª Região (Resolução TRT8 nº 88/2012)","k":["LEG|Código de Ética"]},{"t":"Regimento Interno do Egrégio Tribunal Regional do Trabalho da Oitava Região (atualizado em 22 de junho de 2026)","k":["LEG|Regimento Interno"]},{"t":"Política de Prevenção e Enfrentamento da Violência, do Assédio e de Todas as Formas de Discriminação no âmbito do Tribunal Regional do Trabalho da 8ª Região, regulamentada pela Resolução TRT8 nº 067/2021 e alinhada às diretrizes do Conselho Nacional de Justiça (Resolução CNJ nº 351/2020) e do Conselho Superior da Justiça do Trabalho (Resolução CSJT nº 360/2023)","k":["LEG|Código de Ética"]},{"t":"Perspectiva de Gênero no Poder Judiciário e o Comitê de Incentivo à Participação Institucional Feminina no Poder Judiciário (Resolução CNJ nº 492/2023); Programa de Equidade de Raça, Gênero e Diversidade no âmbito da Justiça do Trabalho (Resolução CSJT nº 368/2023)","k":["LEG|Res. CNJ 492"]},{"t":"Tribunal Penal Internacional: Estatuto de Roma e Decreto nº 4.388/2002","k":["LEG|Tribunal Penal Internacional"]},{"t":"Carta das Nações Unidas, da qual faz parte integrante o anexo Estatuto da Corte Internacional de Justiça (Decreto nº 19.841/1945)","k":["LEG|Carta da ONU"]}]},{"id":"DH","nome":"Noções de Direitos Humanos","grupo":"Gerais","itens":[{"t":"Direitos Humanos: Evolução histórica dos Direitos Humanos","k":["DH|Cap. 01"]},{"t":"Os fundamentos filosóficos dos Direitos Humanos","k":["DH|Cap. 01"]},{"t":"Fontes, classificação, princípios, características e gerações de direitos humanos","k":["DH|Cap. 01"]},{"t":"Interpretação dos tratados de Direitos Humanos","k":["DH|Cap. 01"]},{"t":"Colisão entre direitos humanos: Teorias para resolução","k":["DH|Cap. 01"]},{"t":"Tratados internacionais de Direitos Humanos em face da Constituição da República Federativa do Brasil de 1988","k":["DH|Cap. 02"]},{"t":"Controle de convencionalidade","k":["DH|Cap. 02"]},{"t":"Declaração Universal dos Direitos Humanos","k":["DH|Cap. 03"]},{"t":"Pacto Internacional dos Direitos Civis e Políticos (PIDCP) e protocolos facultativos","k":["DH|Cap. 03"]},{"t":"Pacto Internacional dos Direitos Econômicos, Sociais e Culturais (PIDESC) e protocolos facultativos","k":["DH|Cap. 03"]}]},{"id":"PCD","nome":"Pessoas com Deficiência","grupo":"Gerais","itens":[{"t":"(Resolução CSJT nº 386/2024 - Art. 6º): Inclusão, direitos e garantias legais e constitucionais das pessoas com deficiência","k":["PCD|Pessoas com deficiência"]},{"t":"Lei nº 13.146/2015 institui a Lei Brasileira de Inclusão da Pessoa com Deficiência (Estatuto da Pessoa com Deficiência); Lei nº 11.126/2005 e Constituição Federal de 1988","k":["PCD|Pessoas com deficiência"]},{"t":"Normas gerais e critérios básicos para a promoção da acessibilidade das pessoas portadoras de deficiência ou com mobilidade reduzida (Lei nº 10.098/2000 e Decreto 5.296/2004)","k":["PCD|Pessoas com deficiência"]},{"t":"Prioridade de atendimento às pessoas portadoras de deficiência (Lei nº 10.048/2000 e Decreto 5.296/2004)","k":["PCD|Pessoas com deficiência"]},{"t":"Símbolo de identificação de pessoas portadoras de deficiência auditiva (Lei nº 8.160/1991)","k":["PCD|Pessoas com deficiência"]},{"t":"Normas de apoio às pessoas portadoras de deficiência e sua integração social (Lei nº 7.853/1989 e alterações e Decreto 3.298/1999 e alterações)","k":["PCD|Pessoas com deficiência"]}]},{"id":"INF","nome":"Noções de Informática","grupo":"Gerais","itens":[{"t":"Noções de sistema operacional: Windows 10 e 11","k":["INF|Sistemas Operacionais"]},{"t":"E-mail, edição de textos, planilhas, agenda e apresentações: Google Workspace","k":["INF|Internet IV - Google Workspace"]},{"t":"Compartilhamento de arquivos: Google Workspace","k":["INF|Internet IV - Google Workspace"]},{"t":"Google Drive: Criar arquivos, editar, compartilhamento de arquivos e permissões; Agenda: Criar eventos, convidar participantes, ajustar horários, anexar documentos, adicionar videoconferência; Tarefas; Google Meet; Gmail: Configurações rápidas, painel de visualização, marcadores; editor de texto (documentos Google)","k":["INF|Internet IV - Google Workspace"]},{"t":"Redes de Computadores: Conceitos básicos, ferramentas, aplicativos e procedimentos de internet e intranet","k":["INF|Redes de Computadores","INF|Internet I - Conceitos e Navegadores"]},{"t":"Navegadores web: Mozilla Firefox, Google Chrome, Microsoft Edge","k":["INF|Internet IV - Google Workspace"]},{"t":"Sítios de busca e pesquisa na internet: Utilização de mecanismos de busca como Google, Bing","k":["INF|Internet IV - Google Workspace"]},{"t":"Conceitos de organização e de gerenciamento de informações: Arquivos, pastas e programas","k":["INF|Sistemas Operacionais"]},{"t":"Segurança da informação: Procedimentos de segurança; noções de vírus, worms e outras pragas virtuais; aplicativos para segurança (antivírus, firewall, antispyware etc.); boas práticas de segurança cibernética, incluindo autenticação de dois fatores e gestão de senhas","k":["INF|Segurança da Informação"]}]}];
+const EDITAL_SEEDS = {
+  'DA_17': `Quadro esquematizado com os prazos da Lei 9.784 (PA):
+a) atos do processo administrativo: 5 dias (podendo ser dilatado até o dobro);
+b) comparecimento: 3 dias úteis;
+c) anular atos administrativos: decai em 5 anos (quando importam em benefícios ao
+destinatário, salvo comprovada má-fé);
+d) parecer de órgão consultivo: 15 dias;
+e) para o interessado manifestar-se (após a instrução): 10 dias;
+f) decisão do processo administrativo: 30 dias (podendo prorrogar por igual período);
+g) reconsideração (pela autoridade que proferiu a decisão): 5 dias;
+h) recurso administrativo: 10 dias;
+i) alegações (= contrarrazões) ao recurso: 5 dias úteis;
+j) decisão do recurso: 30 dias (podendo prorrogar por igual período);
+k) revisão (processo de que resulte sanção): a qualquer tempo.`
+};
+let editalSel = null, editalFiltro = 'todos';
+function normDescEd(d){ return (d||'').replace(/^Continuação:\s*/,'').replace(/ \(parte \d+\)$/,'').trim(); }
+function editalTasksFor(key){
+  const p = key.indexOf('|'); const sj = key.slice(0,p), pref = key.slice(p+1);
+  return tasks.filter(t=>t.subj===sj && (t.type==='Leitura' || sj==='RLM') && normDescEd(t.desc).indexOf(pref)===0);
+}
+function editalItemState(it){
+  if(!it.k.length) return { st:'sem', mats:[] };
+  let all = true, any = false, reserva = false, found = 0; const mats = [];
+  it.k.forEach(k=>{
+    const ts = editalTasksFor(k);
+    if(!ts.length){ return; }
+    found++;
+    const done = ts.filter(t=>lsGet('status_'+t.id,'Pendente')==='Concluído').length;
+    const ok = done===ts.length;
+    if(!ok) all = false;
+    if(done>0) any = true;
+    if(ts.some(t=>/PDF a chegar/.test(t.desc||'')) && !ok) reserva = true;
+    mats.push({ label: normDescEd(ts[0].desc).replace(/ \(PDF a chegar\)/,'').slice(0,48), ok, reserva: ts.some(t=>/PDF a chegar/.test(t.desc||'')) });
+  });
+  if(!found) return { st:'sem', mats };
+  if(all) return { st:'estudado', mats };
+  if(reserva) return { st:'reserva', mats };
+  return { st: any ? 'andamento' : 'pendente', mats };
+}
+const ED_LABEL = { estudado:'Estudado', andamento:'Em andamento', pendente:'Pendente', reserva:'PDF a chegar', sem:'Sem material' };
+function editalStats(m){
+  const c = { estudado:0, andamento:0, pendente:0, reserva:0, sem:0 };
+  const rows = m.itens.map(it=>{ const r = editalItemState(it); c[r.st]++; return r; });
+  const total = m.itens.length;
+  return { c, total, pct: total ? c.estudado/total*100 : 0, rows };
+}
+function notaGet(key, seed){ const v = lsGet(key, null); return v===null ? (seed||'') : v; }
+let notaCtx = null;
+function openNota(key, titulo, sub, seed){
+  notaCtx = { key };
+  document.getElementById('notaTitulo').textContent = titulo;
+  document.getElementById('notaSub').textContent = sub || '';
+  document.getElementById('notaTexto').value = notaGet(key, seed);
+  document.getElementById('notaOverlay').style.display = 'flex';
+  document.getElementById('notaTexto').focus();
+}
+document.getElementById('notaFechar').addEventListener('click', ()=>{ document.getElementById('notaOverlay').style.display='none'; });
+document.getElementById('notaSalvar').addEventListener('click', ()=>{
+  if(notaCtx){ lsSet(notaCtx.key, document.getElementById('notaTexto').value); }
+  document.getElementById('notaOverlay').style.display = 'none';
+  renderEdital();
+});
+document.getElementById('notaOverlay').addEventListener('click', e=>{ if(e.target.id==='notaOverlay') document.getElementById('notaOverlay').style.display='none'; });
+function renderEdital(){
+  const resumo = document.getElementById('editalResumo'), det = document.getElementById('editalDetalhe');
+  if(!resumo) return;
+  if(!editalSel) editalSel = lsGet('editalSel','') || EDITAL[0].id;
+  const st = {}; EDITAL.forEach(m=>{ st[m.id] = editalStats(m); });
+  let tot = 0, est = 0; EDITAL.forEach(m=>{ tot += st[m.id].total; est += st[m.id].c.estudado; });
+  const card = m=>{ const s = st[m.id]; const temNota = lsGet('nota_m_'+m.id,'')!=='';
+    return `<div class="ed-card ${m.id===editalSel?'sel':''}" data-ed="${m.id}"><div class="ed-n">${m.nome}${temNota?' 📝':''}</div>
+      <div class="ed-p">${s.pct.toFixed(0)}%</div><div class="ed-s">${s.c.estudado} de ${s.total} itens estudados · faltam ${s.total-s.c.estudado}</div>
+      <div class="ed-bar"><span style="width:${s.pct}%"></span></div></div>`; };
+  const grp = g=>EDITAL.filter(m=>m.grupo===g).map(card).join('');
+  resumo.innerHTML = `<div class="ed-total"><b>Edital completo:</b> ${est} de ${tot} itens estudados (<b>${(est/tot*100).toFixed(1)}%</b>) · faltam ${tot-est}
+      <div class="ed-bar" style="height:10px"><span style="width:${est/tot*100}%"></span></div></div>
+    <div class="ed-group">Conhecimentos específicos</div><div class="ed-cards">${grp('Específicos')}</div>
+    <div class="ed-group">Conhecimentos gerais</div><div class="ed-cards">${grp('Gerais')}</div>`;
+  resumo.querySelectorAll('.ed-card').forEach(el=>el.addEventListener('click', ()=>{ editalSel = el.dataset.ed; lsSet('editalSel', editalSel); renderEdital(); document.getElementById('editalDetalhe').scrollIntoView({behavior:'smooth', block:'start'}); }));
+  const m = EDITAL.find(x=>x.id===editalSel) || EDITAL[0]; const s = st[m.id];
+  const filtros = [['todos','Todos'],['estudado','Estudados'],['faltam','Faltam'],['sem','Sem material']];
+  const rows = m.itens.map((it,i)=>({ it, i:i+1, r:s.rows[i] })).filter(x=> editalFiltro==='todos' ? true : editalFiltro==='faltam' ? (x.r.st!=='estudado') : (x.r.st===editalFiltro));
+  const body = rows.map(x=>{
+    const key = 'nota_i_'+m.id+'_'+x.i; const seed = EDITAL_SEEDS[m.id+'_'+x.i]; const tem = notaGet(key, seed)!=='';
+    const mats = x.r.mats.map(t=>`<span class="ed-mat ${t.ok?'ok':''}">${t.ok?'✓ ':''}${t.label}</span>`).join('');
+    return `<tr><td>${x.i}</td><td>${x.it.t}</td><td><span class="ed-badge ed-${x.r.st}">${ED_LABEL[x.r.st]}</span></td><td>${mats||'<span style="color:#A0AEC0">-</span>'}</td>
+      <td><button class="ed-nota-btn ${tem?'tem':''}" data-nota="${key}" data-i="${x.i}" title="Anotações deste item">📝</button></td></tr>`;
+  }).join('');
+  const mNota = lsGet('nota_m_'+m.id,'')!=='';
+  det.innerHTML = `<div class="ed-det"><h3>${m.nome}</h3>
+    <div class="ed-s" style="font-size:12px;color:var(--gray)">${s.c.estudado} estudados · ${s.c.andamento} em andamento · ${s.c.pendente + s.c.reserva} pendentes · ${s.c.sem} sem material · ${s.total} itens no edital (${s.pct.toFixed(1)}% estudado)</div>
+    <div class="ed-tools">${filtros.map(f=>`<button data-f="${f[0]}" class="${editalFiltro===f[0]?'on':''}">${f[1]}</button>`).join('')}
+      <span style="flex:1"></span><button id="edNotaMateria" class="${mNota?'on':''}">📝 Anotações da matéria</button></div>
+    <table class="ed-tab"><thead><tr><th>#</th><th>Item do edital</th><th>Situação</th><th>Material no cronograma</th><th></th></tr></thead><tbody>${body || '<tr><td colspan="5" style="color:#718096">Nenhum item neste filtro.</td></tr>'}</tbody></table></div>`;
+  det.querySelectorAll('.ed-tools button[data-f]').forEach(b=>b.addEventListener('click', ()=>{ editalFiltro = b.dataset.f; renderEdital(); }));
+  det.querySelector('#edNotaMateria').addEventListener('click', ()=>openNota('nota_m_'+m.id, 'Anotações: '+m.nome, 'Notas gerais da matéria, salvas na sua conta.', ''));
+  det.querySelectorAll('.ed-nota-btn').forEach(b=>b.addEventListener('click', ()=>{
+    const i = Number(b.dataset.i); const it = m.itens[i-1];
+    openNota(b.dataset.nota, m.nome+' · item '+i, it.t, EDITAL_SEEDS[m.id+'_'+i]);
+  }));
+}
+
 // ---------- Abas ----------
+function activateDesempenhoSub(sub){
+  if(['desempenho','historico','estatisticas'].indexOf(sub)<0) sub = 'desempenho';
+  lsSet('desempenhoSub', sub);
+  const ids = {desempenho:'desempenho-content', historico:'historico-content', estatisticas:'estatisticas-content'};
+  const btn = {desempenho:'desSubDesempenho', historico:'desSubHistorico', estatisticas:'desSubEstatisticas'};
+  Object.keys(ids).forEach(k=>{
+    document.getElementById(ids[k]).style.display = (k===sub) ? '' : 'none';
+    document.getElementById(btn[k]).classList.toggle('active', k===sub);
+  });
+  if(sub==='desempenho') renderDesempenho();
+  if(sub==='historico') renderHistorico();
+  if(sub==='estatisticas') renderEstatisticas();
+}
 function activateTab(name){
-  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', estatisticas:'view-estatisticas' };
-  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', estatisticas:'tabBtnEstatisticas' };
+  let sub = null;
+  if(name==='estatisticas' || name==='historico'){ sub = name; name = 'desempenho'; }
+  const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', edital:'view-edital' };
+  const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', edital:'tabBtnEdital' };
+  if(!viewMap[name]) name = 'cronograma';
   Object.keys(viewMap).forEach(k=>{
     document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
     document.getElementById(btnMap[k]).classList.toggle('active', k===name);
   });
-  if(name==='desempenho') renderDesempenho();
-  if(name==='estatisticas') renderEstatisticas();
+  if(name==='desempenho') activateDesempenhoSub(sub || lsGet('desempenhoSub','desempenho'));
+  if(name==='edital') renderEdital();
 }
 document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
 document.getElementById('subtabDiaria').addEventListener('click', ()=>{
@@ -2690,7 +2897,10 @@ document.getElementById('subtabMateria').addEventListener('click', ()=>{
   renderActiveSubview();
 });
 document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
-document.getElementById('tabBtnEstatisticas').addEventListener('click', ()=>activateTab('estatisticas'));
+document.getElementById('tabBtnEdital').addEventListener('click', ()=>activateTab('edital'));
+document.getElementById('desSubDesempenho').addEventListener('click', ()=>activateDesempenhoSub('desempenho'));
+document.getElementById('desSubHistorico').addEventListener('click', ()=>activateDesempenhoSub('historico'));
+document.getElementById('desSubEstatisticas').addEventListener('click', ()=>activateDesempenhoSub('estatisticas'));
 
 document.getElementById('saveIndicator').addEventListener('click', ()=>{
   if(saveFailedKeys.size === 0) return;
@@ -2781,14 +2991,14 @@ boot();
 </script>
 <script>
 (function(){
-  var orig = window.activateTab, ids = {cronograma:'sn-cronograma', desempenho:'sn-desempenho', estatisticas:'sn-estatisticas'};
+  var orig = window.activateTab, ids = {cronograma:'sn-cronograma', desempenho:'sn-desempenho', edital:'sn-edital'};
   function marca(n){ Object.keys(ids).forEach(function(k){ var a=document.getElementById(ids[k]); if(a) a.classList.toggle('on', k===n); }); }
-  window.activateTab = function(n){ orig(n); marca(n); try{ history.replaceState(null,'','#'+n); }catch(e){} };
+  window.activateTab = function(n){ orig(n); marca((n==='estatisticas'||n==='historico')?'desempenho':n); try{ history.replaceState(null,'','#'+n); }catch(e){} };
   [].slice.call(document.querySelectorAll('.sitenav a[data-tab]')).forEach(function(a){
     a.addEventListener('click', function(e){ e.preventDefault(); window.activateTab(a.dataset.tab); });
   });
   var h=(location.hash||'').slice(1);
-  if(ids[h]){ var t=setInterval(function(){ var o=document.getElementById('bootOverlay'); if(!o || o.style.display==='none'){ clearInterval(t); window.activateTab(h); } },200); }
+  if(ids[h] || h==='estatisticas' || h==='historico'){ var t=setInterval(function(){ var o=document.getElementById('bootOverlay'); if(!o || o.style.display==='none'){ clearInterval(t); window.activateTab(h); } },200); }
 })();
 </script>
 </body>
