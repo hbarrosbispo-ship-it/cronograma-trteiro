@@ -93,6 +93,12 @@
     cursor:pointer;
   }
   .sw-apply button:hover{background:#f0eeff;}
+  .sw-sync-box{margin-top:8px;border-top:1px solid rgba(255,255,255,.25);padding-top:8px;}
+  .sw-sync-box button{width:100%;background:rgba(255,255,255,.18);color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:6px;padding:6px;font-size:11px;font-weight:bold;cursor:pointer;}
+  .sw-sync-box button:hover{background:rgba(255,255,255,.3);}
+  .sw-sync-box button:disabled{opacity:.6;cursor:wait;}
+  .sw-syncmsg{font-size:10px;line-height:1.35;margin-top:5px;color:#fff;text-align:center;min-height:12px;}
+  .sw-syncmsg.erro{color:#FFD1D1;font-weight:bold;}
   .sw-tag{
     font-size:10px;
     opacity:.85;
@@ -361,6 +367,10 @@ body > .wrap > .tab-bar{display:none}
     <select id="swTaskSelect"></select>
     <button id="swApply">Salvar tempo nesta atividade</button>
   </div>
+  <div class="sw-sync-box">
+    <button id="swSync" title="Envia ao servidor o que estiver pendente, confere se foi gravado e traz o que está salvo lá">&#10227; Sincronizar agora</button>
+    <div id="swSyncMsg" class="sw-syncmsg"></div>
+  </div>
 </div>
 
 <div class="wrap">
@@ -470,12 +480,10 @@ body > .wrap > .tab-bar{display:none}
 
   <div id="view-desempenho" style="display:none;">
     <div class="subtab-bar">
-      <button class="subtab-btn" id="desSubGeral">Visão geral</button>
       <button class="subtab-btn" id="desSubDesempenho">Desempenho</button>
       <button class="subtab-btn" id="desSubHistorico">Histórico dos filtros</button>
       <button class="subtab-btn" id="desSubEstatisticas">Estatísticas</button>
     </div>
-    <div id="geral-content" style="display:none;"><div id="geralBox"></div></div>
     <div id="desempenho-content" style="display:none;">
       <p class="note">Percentual de acerto por matéria, com as respectivas quantidades de questões e acertos registrados até agora.</p>
       <div class="charts-grid" id="chartsGrid"></div>
@@ -492,9 +500,16 @@ body > .wrap > .tab-bar{display:none}
   </div>
 
   <div id="view-edital" style="display:none;">
-    <p class="note">Conteúdo programático do edital (cargo 01, Analista Judiciário, Área Judiciária) item por item. Um item conta como estudado quando todas as leituras do cronograma que o cobrem estão concluídas. Clique em um item ou em uma matéria para guardar anotações.</p>
+    <div class="subtab-bar">
+      <button class="subtab-btn" id="edSubGeral">Visão geral</button>
+      <button class="subtab-btn" id="edSubItens">Itens do edital</button>
+    </div>
+    <div id="edital-geral-content" style="display:none;"><div id="geralBox"></div></div>
+    <div id="edital-itens-content" style="display:none;">
+      <p class="note">Conteúdo programático do edital (cargo 01, Analista Judiciário, Área Judiciária) item por item. Um item conta como estudado quando todas as leituras do cronograma que o cobrem estão concluídas. Clique em um item ou em uma matéria para guardar anotações.</p>
     <div id="editalResumo"></div>
     <div id="editalDetalhe"></div>
+    </div>
   </div>
 
   <div id="notaOverlay" class="nota-overlay" style="display:none;">
@@ -1517,17 +1532,40 @@ async function processSaveQueue(){
       saveFailedKeys.add(key);
       console.warn('Não foi possível salvar "'+key+'" no servidor depois de 3 tentativas.');
     }
+    persistPending();
     updateSaveIndicator();
   }
   saveWorkerRunning = false;
+  persistPending();
   updateSaveIndicator();
 }
+
+// Chaves ainda nao confirmadas pelo servidor ficam gravadas no navegador. Sem isso, fechar ou
+// recarregar a pagina antes do envio terminar fazia o servidor (mais antigo) sobrescrever o que
+// voce tinha acabado de marcar.
+const PENDING_KEY = 'cronogramaPendingV1';
+function persistPending(){
+  try{ localStorage.setItem(PENDING_KEY, JSON.stringify(Array.from(new Set([...saveDirtyKeys, ...saveFailedKeys])))); }catch(e){}
+}
+function restorePending(from){
+  try{ JSON.parse(localStorage.getItem(PENDING_KEY)||'[]').forEach(k=>{ if(from && from[k]!==undefined) saveDirtyKeys.add(k); }); }catch(e){}
+}
+window.addEventListener('beforeunload', e=>{
+  if(saveDirtyKeys.size>0 || saveFailedKeys.size>0 || saveWorkerRunning){ writeStoreCache(); persistPending(); e.preventDefault(); e.returnValue=''; }
+});
+window.addEventListener('pagehide', ()=>{
+  writeStoreCache(); persistPending();
+  Array.from(new Set([...saveDirtyKeys, ...saveFailedKeys])).forEach(k=>{
+    try{ fetch(WEBAPP_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({key:k, value:STORE[k]}), keepalive:true}).catch(()=>{}); }catch(e){}
+  });
+});
 
 function lsSet(key, val){
   STORE[key] = String(val);
   saveDirtyKeys.add(key);
   saveFailedKeys.delete(key); // uma mudança nova nesse campo merece nova tentativa
   scheduleStoreCache();
+  persistPending();
   updateSaveIndicator();
   processSaveQueue();
 }
@@ -1549,6 +1587,45 @@ function readStoreCache(){
     return (c && typeof c==='object' && !Array.isArray(c)) ? c : null;
   }catch(e){ return null; }
 }
+
+// Sincronização forçada: (1) reenvia tudo que estiver pendente ou tiver falhado, (2) confere no
+// servidor se cada chave enviada ficou gravada, (3) traz o estado salvo no servidor.
+async function forceSync(){
+  const btn = document.getElementById('swSync'), msg = document.getElementById('swSyncMsg');
+  btn.disabled = true; msg.className = 'sw-syncmsg'; msg.textContent = 'Sincronizando…';
+  try{
+    saveFailedKeys.forEach(k=>saveDirtyKeys.add(k)); saveFailedKeys.clear();
+    const enviadas = Array.from(saveDirtyKeys);
+    processSaveQueue();
+    for(let i=0; i<400 && (saveWorkerRunning || saveDirtyKeys.size>0); i++){ await new Promise(r=>setTimeout(r,300)); }
+    persistPending();
+    if(saveFailedKeys.size>0){
+      msg.className = 'sw-syncmsg erro';
+      msg.textContent = 'Não consegui enviar '+saveFailedKeys.size+' alteração(ões). Verifique a conexão e tente de novo.';
+      return;
+    }
+    const data = await fetch(WEBAPP_URL + '?action=data').then(r=>r.json());
+    const faltou = enviadas.filter(k=>String(data[k])!==String(STORE[k]));
+    if(faltou.length){
+      faltou.forEach(k=>saveDirtyKeys.add(k)); persistPending(); processSaveQueue();
+      msg.className = 'sw-syncmsg erro';
+      msg.textContent = 'O servidor não confirmou '+faltou.length+' alteração(ões). Tentei reenviar; clique de novo em alguns segundos.';
+      return;
+    }
+    saveDirtyKeys.forEach(k=>{ data[k] = STORE[k]; });
+    let novas = 0; Object.keys(data).forEach(k=>{ if(STORE[k]!==data[k]) novas++; });
+    STORE = data; writeStoreCache(); rebuildTasks(); renderAll();
+    try{ refreshDesempenhoIfVisible(); }catch(e){}
+    const d = new Date(), hh = String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+    msg.textContent = 'Sincronizado às '+hh+(enviadas.length?' · '+enviadas.length+' enviada(s)':'')+(novas?' · '+novas+' atualizada(s) do servidor':'');
+  }catch(err){
+    msg.className = 'sw-syncmsg erro'; msg.textContent = 'Falha ao sincronizar: '+err.message;
+  }finally{
+    btn.disabled = false;
+  }
+}
+document.getElementById('swSync').addEventListener('click', forceSync);
+
 function seedTasksRemote(){
   // Só reenvia quando a lista efetiva mudou (antes mandava as ~240 tarefas a cada carga).
   const payload = JSON.stringify({
@@ -1599,8 +1676,10 @@ function boot(){
   if(cached){
     STORE = cached;
     snapshot = JSON.stringify(cached);
+    restorePending(cached);
     initFromStore();
     booted = true;
+    if(saveDirtyKeys.size>0) processSaveQueue();
   }
   fetch(WEBAPP_URL + '?action=data')
     .then(r=>r.json())
@@ -2512,8 +2591,8 @@ function renderDesempenho(){
 function refreshEditalIfVisible(){ const el=document.getElementById('view-edital'); if(el && el.style.display!=='none') renderEdital(); }
 function refreshDesempenhoIfVisible(){
   if(document.getElementById('view-desempenho').style.display !== 'none'){
-    const sub = lsGet('desempenhoSub','geral');
-    if(sub==='historico') renderHistorico(); else if(sub==='estatisticas') renderEstatisticas(); else if(sub==='desempenho') renderDesempenho(); else renderGeral();
+    const sub = lsGet('desempenhoSub','desempenho');
+    if(sub==='historico') renderHistorico(); else if(sub==='estatisticas') renderEstatisticas(); else renderDesempenho();
   }
 }
 
@@ -2957,22 +3036,31 @@ function renderEdital(){
 
 // ---------- Abas ----------
 function activateDesempenhoSub(sub){
-  if(['geral','desempenho','historico','estatisticas'].indexOf(sub)<0) sub = 'geral';
+  if(['desempenho','historico','estatisticas'].indexOf(sub)<0) sub = 'desempenho';
   lsSet('desempenhoSub', sub);
-  const ids = {geral:'geral-content', desempenho:'desempenho-content', historico:'historico-content', estatisticas:'estatisticas-content'};
-  const btn = {geral:'desSubGeral', desempenho:'desSubDesempenho', historico:'desSubHistorico', estatisticas:'desSubEstatisticas'};
+  const ids = {desempenho:'desempenho-content', historico:'historico-content', estatisticas:'estatisticas-content'};
+  const btn = {desempenho:'desSubDesempenho', historico:'desSubHistorico', estatisticas:'desSubEstatisticas'};
   Object.keys(ids).forEach(k=>{
     document.getElementById(ids[k]).style.display = (k===sub) ? '' : 'none';
     document.getElementById(btn[k]).classList.toggle('active', k===sub);
   });
-  if(sub==='geral') renderGeral();
   if(sub==='desempenho') renderDesempenho();
   if(sub==='historico') renderHistorico();
   if(sub==='estatisticas') renderEstatisticas();
 }
+function activateEditalSub(sub){
+  if(['geral','itens'].indexOf(sub)<0) sub = 'geral';
+  lsSet('editalSub', sub);
+  document.getElementById('edital-geral-content').style.display = sub==='geral' ? '' : 'none';
+  document.getElementById('edital-itens-content').style.display = sub==='itens' ? '' : 'none';
+  document.getElementById('edSubGeral').classList.toggle('active', sub==='geral');
+  document.getElementById('edSubItens').classList.toggle('active', sub==='itens');
+  if(sub==='geral') renderGeral(); else renderEdital();
+}
 function activateTab(name){
-  let sub = null;
+  let sub = null, edSub = null;
   if(name==='estatisticas' || name==='historico'){ sub = name; name = 'desempenho'; }
+  if(name==='geral'){ edSub = 'geral'; name = 'edital'; }
   const viewMap = { cronograma:'view-cronograma', desempenho:'view-desempenho', edital:'view-edital' };
   const btnMap = { cronograma:'tabBtnCronograma', desempenho:'tabBtnDesempenho', edital:'tabBtnEdital' };
   if(!viewMap[name]) name = 'cronograma';
@@ -2980,8 +3068,8 @@ function activateTab(name){
     document.getElementById(viewMap[k]).style.display = (k===name) ? '' : 'none';
     document.getElementById(btnMap[k]).classList.toggle('active', k===name);
   });
-  if(name==='desempenho') activateDesempenhoSub(sub || lsGet('desempenhoSub','geral'));
-  if(name==='edital') renderEdital();
+  if(name==='desempenho') activateDesempenhoSub(sub || lsGet('desempenhoSub','desempenho'));
+  if(name==='edital') activateEditalSub(edSub || lsGet('editalSub','geral'));
 }
 document.getElementById('tabBtnCronograma').addEventListener('click', ()=>activateTab('cronograma'));
 document.getElementById('subtabDiaria').addEventListener('click', ()=>{
@@ -2994,7 +3082,8 @@ document.getElementById('subtabMateria').addEventListener('click', ()=>{
 });
 document.getElementById('tabBtnDesempenho').addEventListener('click', ()=>activateTab('desempenho'));
 document.getElementById('tabBtnEdital').addEventListener('click', ()=>activateTab('edital'));
-document.getElementById('desSubGeral').addEventListener('click', ()=>activateDesempenhoSub('geral'));
+document.getElementById('edSubGeral').addEventListener('click', ()=>activateEditalSub('geral'));
+document.getElementById('edSubItens').addEventListener('click', ()=>activateEditalSub('itens'));
 document.getElementById('desSubDesempenho').addEventListener('click', ()=>activateDesempenhoSub('desempenho'));
 document.getElementById('desSubHistorico').addEventListener('click', ()=>activateDesempenhoSub('historico'));
 document.getElementById('desSubEstatisticas').addEventListener('click', ()=>activateDesempenhoSub('estatisticas'));
@@ -3090,12 +3179,12 @@ boot();
 (function(){
   var orig = window.activateTab, ids = {cronograma:'sn-cronograma', desempenho:'sn-desempenho', edital:'sn-edital'};
   function marca(n){ Object.keys(ids).forEach(function(k){ var a=document.getElementById(ids[k]); if(a) a.classList.toggle('on', k===n); }); }
-  window.activateTab = function(n){ orig(n); marca((n==='estatisticas'||n==='historico')?'desempenho':n); try{ history.replaceState(null,'','#'+n); }catch(e){} };
+  window.activateTab = function(n){ orig(n); marca((n==='estatisticas'||n==='historico')?'desempenho':(n==='geral'?'edital':n)); try{ history.replaceState(null,'','#'+n); }catch(e){} };
   [].slice.call(document.querySelectorAll('.sitenav a[data-tab]')).forEach(function(a){
     a.addEventListener('click', function(e){ e.preventDefault(); window.activateTab(a.dataset.tab); });
   });
   var h=(location.hash||'').slice(1);
-  if(ids[h] || h==='estatisticas' || h==='historico'){ var t=setInterval(function(){ var o=document.getElementById('bootOverlay'); if(!o || o.style.display==='none'){ clearInterval(t); window.activateTab(h); } },200); }
+  if(ids[h] || h==='estatisticas' || h==='historico' || h==='geral'){ var t=setInterval(function(){ var o=document.getElementById('bootOverlay'); if(!o || o.style.display==='none'){ clearInterval(t); window.activateTab(h); } },200); }
 })();
 </script>
 </body>
