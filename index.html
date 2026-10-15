@@ -2123,7 +2123,6 @@ function rowHtml(t, firstCol, draggableRow){
     : t.type==='Leitura'
     ? `<span class="pgedit" data-id="${t.id}" title="Clique duas vezes para alterar a quantidade de páginas${t.amount!=null && amt!==t.amount ? ' (original: '+t.amount+')' : ''}">${amt!=null ? `${amt} ${t.unit||'páginas'}` : '<span class="dash">-</span>'}</span>`
     : (t.amount!=null ? `${t.amount} ${t.unit}` : '<span class="dash">-</span>');
-  const qtdHtmlFull = qtdHtml + ritmoHtml(t);
   const studyMin = lsGet('min_'+t.id, '');
   const timeCell = `<td data-label="Tempo total (min)" class="time-cell"><input type="number" min="0" step="1" class="studymin" data-id="${t.id}" value="${studyMin}" placeholder="min"></td>`;
   const firstCell = firstCol==='date'
@@ -2140,7 +2139,7 @@ function rowHtml(t, firstCol, draggableRow){
       ${firstCell}
       <td data-label="Atividade"><span class="badge-type ${typeClass}">${t.type}</span></td>
       <td data-label="Descrição" class="desc-cell">${descHtml}</td>
-      <td data-label="Qtd">${qtdHtmlFull}</td>
+      <td data-label="Qtd">${qtdHtml}</td>
       <td data-label="Status">
         <select class="status" data-id="${t.id}">
           <option value="Pendente" ${status==='Pendente'?'selected':''}>Pendente</option>
