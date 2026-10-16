@@ -1559,8 +1559,9 @@ function persistPending(){
 function restorePending(from){
   try{ JSON.parse(localStorage.getItem(PENDING_KEY)||'[]').forEach(k=>{ if(from && from[k]!==undefined) saveDirtyKeys.add(k); }); }catch(e){}
 }
-window.addEventListener('beforeunload', e=>{
-  if(saveDirtyKeys.size>0 || saveFailedKeys.size>0 || saveWorkerRunning){ writeStoreCache(); persistPending(); e.preventDefault(); e.returnValue=''; }
+// Sem caixa de confirmação ao sair/abrir PDF ou filtro: o pendente já é guardado aqui e reenviado no pagehide e na próxima abertura.
+window.addEventListener('beforeunload', ()=>{
+  if(saveDirtyKeys.size>0 || saveFailedKeys.size>0 || saveWorkerRunning){ writeStoreCache(); persistPending(); }
 });
 window.addEventListener('pagehide', ()=>{
   writeStoreCache(); persistPending();
