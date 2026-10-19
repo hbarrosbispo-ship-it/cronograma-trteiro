@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compilado Português PORT-Pt4</title><style>:root{--blue:#305496;--blue-dark:#1F4E78;--yellow:#FFF2CC;--gray:#666;--light:#F5F7FA;--border:#D9D9D9;--green:#2E7D32;--red:#C0392B;
+--f1:#FFD966;--f2:#7ED957;--f3:#5271FF;--f4:#F45B8F;--f5:#FF3131}
+*{box-sizing:border-box}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--light);color:#222;margin:0;padding:0 0 60px;font-size:16px}
+header{background:var(--blue);color:#fff;padding:22px 20px 18px}
+header h1{margin:0 0 4px;font-size:23px}header p{margin:0;font-size:14px;color:#dbe4f5}
+header a{color:#dbe4f5}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+header .wrap{padding:0}
+.progress-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-top:-14px;padding:16px 18px}
+.summary-stats{display:flex;gap:22px;flex-wrap:wrap;font-size:13px;color:var(--gray)}
+.summary-stats b{color:var(--blue-dark);font-size:16px}
+.legenda{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--gray);align-items:center}
+.legenda strong{color:var(--blue-dark)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-right:5px;background:var(--f1)}
+.dot.f1{background:var(--f1)}.dot.f2{background:var(--f2)}.dot.f3{background:var(--f3)}.dot.f4{background:var(--f4)}.dot.f5{background:var(--f5)}
+.tab-bar{display:flex;gap:8px;margin-top:14px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab-btn{background:none;border:none;padding:10px 16px;font-size:14px;font-weight:bold;color:var(--gray);cursor:pointer;border-bottom:3px solid transparent;font-family:inherit}
+.tab-btn.active{color:var(--blue-dark);border-bottom-color:var(--blue)}.tab-btn:hover{color:var(--blue-dark)}
+.panel{display:none}.panel.active{display:block}
+.subtab-bar{display:flex;gap:8px;margin:14px 0 4px;flex-wrap:wrap;align-items:center}
+.subtab-btn{background:#fff;border:1px solid var(--border);color:var(--gray);padding:7px 14px;border-radius:8px;font-size:13.5px;font-weight:bold;cursor:pointer;font-family:inherit}
+.subtab-btn.active{background:var(--blue);color:#fff;border-color:var(--blue)}.subtab-btn:hover{border-color:var(--blue)}
+.subtab-bar input[type=search]{flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px}
+.small{font-size:12.5px;color:var(--gray)}.note{font-size:13px;color:var(--gray);margin:10px 0 4px;font-style:italic}
+.norma-h{background:#eef1f7;border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:22px 0 0;font-weight:bold;color:var(--blue-dark);font-size:15px}
+.titulo-h{margin:18px 0 0;font-weight:bold;color:var(--blue-dark);font-size:14px;text-transform:uppercase;letter-spacing:.3px;padding-left:2px}
+.day-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:10px 0;overflow:hidden}
+.day-head{background:var(--blue-dark);color:#fff;padding:11px 16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px}
+.day-head .d-date{font-size:15.5px;font-weight:bold}.day-head .d-badge{background:rgba(255,255,255,.18);padding:3px 10px;border-radius:12px;font-size:13px}
+.secao-h{background:#eef1f7;color:var(--blue-dark);font-size:12.5px;font-weight:bold;padding:6px 16px;border-top:1px solid var(--border);text-transform:uppercase;letter-spacing:.3px}
+td.secao-h{border-top:1px solid var(--border)}
+details.art{border-top:1px solid var(--border)}
+.day-head+details.art{border-top:none}
+details.art>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 16px;font-size:14px;flex-wrap:wrap}
+details.art>summary::-webkit-details-marker{display:none}
+details.art>summary::before{content:"▸";font-size:11px;color:var(--blue-dark);width:10px}
+details.art[open]>summary::before{content:"▾"}
+details.art>summary:hover{background:#f7f9fc}
+.ref{font-weight:bold;color:var(--blue-dark);white-space:nowrap}
+.inc{display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:bold;border-radius:12px;padding:2px 9px 2px 7px;white-space:nowrap;color:#222;background:#f0f0f0}
+.inc .dot{margin:0}
+.inc.f1{background:#FFF3CC}.inc.f2{background:#E3F6DA}.inc.f3{background:#DDE3FF}.inc.f4{background:#FDDCE8}.inc.f5{background:#FFD9D9}
+.tit{flex:1;min-width:200px}.ctx{font-size:12px;color:var(--gray);font-style:italic}
+.dm{margin-left:auto;font-size:12.5px;color:var(--gray);white-space:nowrap}
+details.art.dom{opacity:.5}
+.body{padding:2px 18px 14px 36px;font-size:14px;line-height:1.5}
+.body h4{margin:12px 0 4px;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray)}
+.body ul{margin:2px 0 2px 18px;padding:0}.body li{margin:3px 0}
+.body ul.armadilha li::marker{content:"⚠ "}
+.body p{margin:4px 0}
+.cmp{overflow-x:auto}.cmp table{font-size:13px}
+.lei-txt{border-left:3px solid var(--blue);background:#f7f9fc;padding:6px 14px;border-radius:0 8px 8px 0}
+.lei-txt p{margin:7px 0}.lei-txt .d1{margin-left:22px}.lei-txt .d2{margin-left:44px}.lei-txt .d3{margin-left:66px}
+.qs a,.links a{display:inline-block;margin:0 4px 4px 0;padding:1px 8px;border:1px solid var(--border);border-radius:6px;text-decoration:none;font-size:13px;color:var(--blue-dark);background:#fff}
+.qs a.erro{background:#FADBD8;color:var(--red);border-color:#f0b3ad}.qs a.duvida{background:var(--yellow);color:#B9770E;border-color:#ecd9a0}
+table{width:100%;border-collapse:collapse;font-size:13.5px;background:#fff}
+thead th{background:#eef1f7;color:var(--blue-dark);text-align:left;padding:7px 8px;font-size:11.5px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap}
+tbody td{padding:7px 8px;border-bottom:1px solid var(--border);vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+.tbl-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin:14px 0;overflow:hidden}
+.b{display:inline-block;border-radius:5px;padding:1px 7px;font-size:12px;font-weight:bold;margin-right:3px}
+.b.e{background:#FADBD8;color:var(--red)}.b.d{background:var(--yellow);color:#B9770E}
+.lac{background:#FFF9E6;border:1px dashed #d9b95b;border-radius:10px;padding:10px 18px;margin-top:16px}
+a{color:var(--blue-dark)}
+@media(max-width:640px){.dm{margin-left:0}.body{padding-left:18px}}
+@media print{.tab-bar,.subtab-bar{display:none}.panel{display:block!important}details.art:not([open])>*:not(summary){display:block}}
+/* ---- edição (ocultar, editar, anotações) ---- */
+.ed-b{display:none;margin-left:6px;white-space:nowrap}
+body.edicao .ed-b{display:inline}
+.ed-b button{border:0;background:#eef1f7;border-radius:4px;cursor:pointer;font-size:13px;margin-left:3px;padding:0 6px;color:var(--blue-dark);font-family:inherit}
+.ed-b button:hover{background:#dbe4f5}
+.oculto{display:none!important}
+body.ver-ocultos .oculto{display:list-item!important;opacity:.45;text-decoration:line-through}
+body.ver-ocultos p.it.oculto{display:block!important}
+.ed-t[contenteditable=true]{outline:2px solid var(--blue);padding:1px 4px;background:#fff;border-radius:4px}
+.nota-txt{min-height:36px;border:1px dashed var(--border);border-radius:8px;padding:7px 11px;background:#fffdf5;white-space:pre-wrap;color:#444}
+.nota-txt:empty::before{content:"(sem anotações)";color:#aaa}
+.nota-txt{cursor:text}
+.nota-txt:focus{outline:2px solid var(--blue);border-style:solid;border-color:var(--blue);background:#fff}
+.edit-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+.edit-bar .msg{font-size:12.5px;color:var(--green)}
+body.edicao .edit-bar .subtab-btn#btn-edicao{background:var(--blue);color:#fff;border-color:var(--blue)}
+body.ver-ocultos .edit-bar .subtab-btn#btn-ocultos{background:var(--blue);color:#fff;border-color:var(--blue)}
+
+/* ---- estrutura da lei: título, capítulo, botões de expandir ---- */
+.tit-wrap{margin-top:6px}
+.titulo-h{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.mini{border:1px solid var(--border);background:#fff;color:var(--blue-dark);border-radius:6px;font-size:12.5px;padding:2px 9px;cursor:pointer;font-family:inherit;text-transform:none;letter-spacing:0;font-weight:bold}
+.mini:hover{border-color:var(--blue)}
+.day-head .mini{background:rgba(255,255,255,.16);color:#fff;border-color:rgba(255,255,255,.4)}
+.day-head .d-act{display:flex;gap:8px;align-items:center}
+select.sel,select.cap-sel{padding:8px 10px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13.5px;background:#fff;color:#444;max-width:100%}
+
+/* ---- transcrição ---- */
+.lei-txt .extra{display:none;color:#8a8a8a}
+.lei-txt.completo .extra{display:block}
+.lei-txt .nota-extra{margin:6px 0 2px;font-size:12.5px}
+.lei-txt .nota-extra button{border:0;background:none;color:var(--blue-dark);cursor:pointer;font-weight:bold;font-family:inherit;font-size:12.5px;padding:0;text-decoration:underline}
+.resumo li{margin:4px 0}
+
+/* ---- possíveis omissões ---- */
+.omissao{background:#FFF9E6;border:1px dashed #d9b95b;border-radius:8px;padding:6px 14px;margin:4px 0}
+.omissao p{margin:6px 0}
+
+/* ---- barra do site (modo site) ---- */
+.sitenav{background:#1F4E78;display:flex;gap:4px;align-items:center;padding:0 16px;height:40px;font-family:Arial,Helvetica,sans-serif}
+.sitenav a{color:#dbe4f5;text-decoration:none;font-size:13.5px;font-weight:bold;padding:9px 14px;border-radius:6px}
+.sitenav a:hover{background:rgba(255,255,255,.12)}
+.sitenav a.on{background:rgba(255,255,255,.2);color:#fff}
+.sitenav .logo{color:#fff;margin-right:10px;letter-spacing:.4px}
+
+/* ---- cartões de resumo (página de Erros) ---- */
+.week-card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:12px 16px;flex:1;min-width:220px}
+.w-title{font-size:12px;color:var(--gray);font-weight:bold;text-transform:uppercase;letter-spacing:.3px;margin-bottom:4px}
+.w-time{font-size:21px;font-weight:bold;color:var(--blue-dark)}.w-sub{font-size:12.5px;color:var(--gray);margin-top:2px}
+
+details.lei-det{margin:12px 0 4px}details.lei-det>summary{cursor:pointer;list-style:none;font-size:11.5px;text-transform:uppercase;letter-spacing:.4px;color:var(--gray);font-weight:bold;padding:2px 0}details.lei-det>summary::-webkit-details-marker{display:none}details.lei-det>summary::before{content:"▸ ";color:var(--blue-dark)}details.lei-det[open]>summary::before{content:"▾ "}details.lei-det>summary:hover{color:var(--blue-dark)}
+</style></head>
+<body><nav class="sitenav"><span class="logo" style="color:#fff;font-weight:bold;margin-right:10px">Cronograma TRT</span><a href="../../index.html#cronograma">Cronograma</a><a href="../../index.html#desempenho">Desempenho e Estatísticas</a><a href="../../index.html#edital">Edital</a><a href="../index.html" class=on>Compilado de Revisão</a></nav><header><div class="wrap"><h1>Compilado de Revisão: PORT: Pt.4 Reescritura de texto</h1><p><a href="../index.html">Biblioteca</a> › filtro PORT-Pt4 · Português · resolvido em 2026-10-19 · tentativa 1 · <a href="https://www.qconcursos.com/questoes-de-concursos/questoes?notebook_ids%5B%5D=15251261" target="_blank" rel="noopener">abrir o filtro no qconcursos</a> · ver por lei: <a href="../leis/topicos-portugues.html">Tópicos: Português</a></p></div></header>
+<div class="wrap"><div class="progress-card"><div class="summary-stats"><span><b>7</b> Questões</span><span><b>4</b> Dispositivos cobrados</span><span><b>3</b> Erros</span><span><b>1</b> Acertos com dúvida</span></div><div class="legenda"><strong>Legenda (vezes cobrado):</strong><span><i class="dot f1"></i>1 vez</span><span><i class="dot f2"></i>2 vezes</span><span><i class="dot f3"></i>3 vezes</span><span><i class="dot f4"></i>4 vezes</span><span><i class="dot f5"></i>5 ou mais vezes</span></div></div><div class="tab-bar"><button class="tab-btn active" data-tab="lei">Na ordem da lei</button><button class="tab-btn" data-tab="inc">Por incidência</button><button class="tab-btn" data-tab="err">Meus erros e dúvidas (4)</button><button class="tab-btn" data-tab="idx">Índice de questões</button></div><div class="subtab-bar"><input id="busca" type="search" placeholder="Buscar artigo, tema, palavra (funciona sem acento)"><button class="subtab-btn active" data-fx="*">Todas</button><button class="subtab-btn" data-fx="1"><i class="dot f1"></i>1×</button><button class="subtab-btn" data-fx="2"><i class="dot f2"></i>2×</button><button class="subtab-btn" data-fx="4"><i class="dot f4"></i>4×</button><label class="small"><input type="checkbox" id="ocultar"> ocultar dominados</label></div><div class="edit-bar"><button class="subtab-btn" id="btn-edicao" type="button">Modo edição</button><button class="subtab-btn" id="btn-ocultos" type="button">Mostrar ocultos</button><button class="subtab-btn" id="btn-salvar" type="button">Salvar edições</button><span class="msg" id="ed-msg"></span></div><section class="panel active" id="lei"><p class="note">Organizado como a própria lei: Título › Capítulo › Seção, artigos em ordem crescente. O número ao lado de cada artigo é quantas questões deste filtro o cobraram.</p><div class="norma-h">Tópicos: Português</div><div class="day-card" id="cap-conectivos"><div class="day-head"><span class="d-date">Conectivos</span><span class="d-act"><span class="d-badge">1 dispositivo · 1 questão</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-topico-portugues-conectivos-valor-semantico" data-f="1"><summary><span class="ref">Conectivos: finalidade, concessão, causa e condição</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="topico-portugues:conectivos-valor-semantico|titulo|b5b66786" data-raw="Trocar o conectivo muda a relação entre as orações"><span class="ed-t">Trocar o conectivo muda a relação entre as orações</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="topico-portugues:conectivos-valor-semantico|essencial|b933d56a" data-raw="**Concessão**: embora, conquanto, ainda que, apesar de que, a despeito de, mesmo assim; &quot;**conquanto**&quot; é só um &quot;embora&quot; mais difícil."><span class="ed-t"><b>Concessão</b>: embora, conquanto, ainda que, apesar de que, a despeito de, mesmo assim; &quot;<b>conquanto</b>&quot; é só um &quot;embora&quot; mais difícil.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:conectivos-valor-semantico|essencial|4d9df3db" data-raw="**Causa**: porque, pois, porquanto, já que, visto que, uma vez que, devido a. &quot;Porquanto&quot; lembra &quot;porque&quot; (causa), não concessão."><span class="ed-t"><b>Causa</b>: porque, pois, porquanto, já que, visto que, uma vez que, devido a. &quot;Porquanto&quot; lembra &quot;porque&quot; (causa), não concessão.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:conectivos-valor-semantico|essencial|76cb3666" data-raw="**Condição**: se, caso, desde que, contanto que, a menos que, a não ser que."><span class="ed-t"><b>Condição</b>: se, caso, desde que, contanto que, a menos que, a não ser que.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:conectivos-valor-semantico|essencial|48878b07" data-raw="**Finalidade**: para, para que, a fim de, a fim de que (dica: troque por &quot;com a finalidade de&quot;)."><span class="ed-t"><b>Finalidade</b>: para, para que, a fim de, a fim de que (dica: troque por &quot;com a finalidade de&quot;).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:conectivos-valor-semantico|essencial|95561967" data-raw="Na reescrita, a FCC espera que o candidato reconheça que o período original é, por exemplo, **concessivo**, e escolha o conectivo de mesma relação."><span class="ed-t">Na reescrita, a FCC espera que o candidato reconheça que o período original é, por exemplo, <b>concessivo</b>, e escolha o conectivo de mesma relação.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Armadilhas de banca</h4><ul class="armadilha"><li class="" data-ek="topico-portugues:conectivos-valor-semantico|armadilhas|fbb2f09b" data-raw="Conectivos de aparência parecida expressam relações diferentes: porquanto (causa), conquanto (concessão), enquanto (tempo)."><span class="ed-t">Conectivos de aparência parecida expressam relações diferentes: porquanto (causa), conquanto (concessão), enquanto (tempo).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:conectivos-valor-semantico|armadilhas|962876ff" data-raw="Não se deixe levar só pela conjunção expressa; analise o sentido da oração (pode haver conjunção implícita)."><span class="ed-t">Não se deixe levar só pela conjunção expressa; analise o sentido da oração (pode haver conjunção implícita).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Comparativo: Conectivos por relação de sentido</h4><div class="cmp tbl-card" style="margin:4px 0"><table><thead><tr><th>Relação</th><th>Exemplos de conectivos</th></tr></thead><tbody><tr><td>Concessão</td><td>embora, conquanto, ainda que, a despeito de</td></tr><tr><td>Causa</td><td>porque, porquanto, uma vez que, visto que</td></tr><tr><td>Condição</td><td>se, caso, desde que, a menos que</td></tr><tr><td>Finalidade</td><td>para, para que, a fim de</td></tr></tbody></table></div><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="topico-portugues:conectivos-valor-semantico"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro PORT-Pt4:</span> <a href="#q3" class="acerto" title="acerto sem dúvida">Q3 <span class="small">Q2400690</span></a></div><p class="small"><a href="../leis/topicos-portugues.html#a-topico-portugues-conectivos-valor-semantico">ver na página da lei (todos os filtros)</a></p></div></details></div><div class="day-card" id="cap-gramática"><div class="day-head"><span class="d-date">Gramática</span><span class="d-act"><span class="d-badge">1 dispositivo · 1 questão</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-topico-portugues-regencia-e-emprego-de-termos" data-f="1"><summary><span class="ref">Regência verbal e emprego de termos (convir, agradecer, aonde, aprouver)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit" data-ek="topico-portugues:regencia-e-emprego-de-termos|titulo|2465deb8" data-raw="Verbos transitivos diretos e indiretos e a preposição certa"><span class="ed-t">Verbos transitivos diretos e indiretos e a preposição certa</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="topico-portugues:regencia-e-emprego-de-termos|essencial|cda7ab28" data-raw="Regência é a relação entre o verbo (ou nome) e seu complemento: o complemento pode vir **sem preposição** (objeto direto) ou **com preposição** (objeto indireto ou complemento nominal)."><span class="ed-t">Regência é a relação entre o verbo (ou nome) e seu complemento: o complemento pode vir <b>sem preposição</b> (objeto direto) ou <b>com preposição</b> (objeto indireto ou complemento nominal).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:regencia-e-emprego-de-termos|essencial|5558d542" data-raw="Segundo os comentários: &quot;significar&quot; e &quot;expor&quot; pedem complemento **sem preposição** (significar aquilo, expor os mecanismos); &quot;acesso&quot; pede **a** (ter acesso ao); &quot;dar crédito&quot; pede **a** (dar crédito aos mitos)."><span class="ed-t">Segundo os comentários: &quot;significar&quot; e &quot;expor&quot; pedem complemento <b>sem preposição</b> (significar aquilo, expor os mecanismos); &quot;acesso&quot; pede <b>a</b> (ter acesso ao); &quot;dar crédito&quot; pede <b>a</b> (dar crédito aos mitos).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:regencia-e-emprego-de-termos|essencial|fe03e283" data-raw="O pronome &quot;lhe(s)&quot; substitui complemento **preposicionado** (a alguém), e não objeto direto; &quot;agradecer&quot; é transitivo direto e indireto (agradece-se algo a alguém)."><span class="ed-t">O pronome &quot;lhe(s)&quot; substitui complemento <b>preposicionado</b> (a alguém), e não objeto direto; &quot;agradecer&quot; é transitivo direto e indireto (agradece-se algo a alguém).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:regencia-e-emprego-de-termos|essencial|b452a2bf" data-raw="Antes de pronome relativo não se usa crase; &quot;aonde&quot; é preposição + &quot;onde&quot; e só se usa com ideia de movimento."><span class="ed-t">Antes de pronome relativo não se usa crase; &quot;aonde&quot; é preposição + &quot;onde&quot; e só se usa com ideia de movimento.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Armadilhas de banca</h4><ul class="armadilha"><li class="" data-ek="topico-portugues:regencia-e-emprego-de-termos|armadilhas|36339bd2" data-raw="Preposição ou crase inserida onde o verbo não a pede (&quot;significar naquilo&quot;, &quot;expor dos&quot;), ou omitida onde o nome a exige."><span class="ed-t">Preposição ou crase inserida onde o verbo não a pede (&quot;significar naquilo&quot;, &quot;expor dos&quot;), ou omitida onde o nome a exige.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:regencia-e-emprego-de-termos|armadilhas|99debc50" data-raw="O qconcursos classifica o item como Interpretação de Textos, mas ele exige regência: revise como gramática."><span class="ed-t">O qconcursos classifica o item como Interpretação de Textos, mas ele exige regência: revise como gramática.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="topico-portugues:regencia-e-emprego-de-termos"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro PORT-Pt4:</span> <a href="#q4" class="erro" title="erro">Q4 <span class="small">Q2400425</span></a></div><p class="small"><a href="../leis/topicos-portugues.html#a-topico-portugues-regencia-e-emprego-de-termos">ver na página da lei (todos os filtros)</a></p></div></details></div><div class="day-card" id="cap-pronomes-relativos"><div class="day-head"><span class="d-date">Pronomes relativos</span><span class="d-act"><span class="d-badge">1 dispositivo · 2 questões</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-topico-portugues-pronome-relativo-cujo-que-preposicao" data-f="2"><summary><span class="ref">Cujo e que: a preposição certa</span><span class="inc f2"><i class="dot f2"></i>2×</span><span class="tit" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|titulo|409fed7e" data-raw="Descobrir a preposição que acompanha cujo, que e quem"><span class="ed-t">Descobrir a preposição que acompanha cujo, que e quem</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><span class="b d" title="Possível omissão: veja dentro do artigo">omissão?</span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|essencial|be3fb974" data-raw="**Cujo** (cuja, cujos, cujas) indica **posse** entre dois substantivos; **nunca** se usa artigo depois dele (proibido &quot;cujo o&quot;, &quot;cuja a&quot;)."><span class="ed-t"><b>Cujo</b> (cuja, cujos, cujas) indica <b>posse</b> entre dois substantivos; <b>nunca</b> se usa artigo depois dele (proibido &quot;cujo o&quot;, &quot;cuja a&quot;).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|essencial|5a4fedf4" data-raw="Para achar a preposição de **cujo**: pegue a oração depois dele, veja a preposição que ela exige junto ao termo seguinte e some ao termo que vem antes. Exemplo do material: &quot;aquele cuja companhia fora preciosa&quot; não leva preposição, porque &quot;fora preciosa a companhia&quot;."><span class="ed-t">Para achar a preposição de <b>cujo</b>: pegue a oração depois dele, veja a preposição que ela exige junto ao termo seguinte e some ao termo que vem antes. Exemplo do material: &quot;aquele cuja companhia fora preciosa&quot; não leva preposição, porque &quot;fora preciosa a companhia&quot;.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|essencial|dfbb0f22" data-raw="Para achar a preposição de **que/quem/o qual**: some a oração que vem depois ao termo que vem antes. Exemplo do material: &quot;uma fração do real a que pode chegar nossa percepção&quot; (chegar a), e &quot;uma fração do real que nosso entendimento alcança&quot; (sem preposição)."><span class="ed-t">Para achar a preposição de <b>que/quem/o qual</b>: some a oração que vem depois ao termo que vem antes. Exemplo do material: &quot;uma fração do real a que pode chegar nossa percepção&quot; (chegar a), e &quot;uma fração do real que nosso entendimento alcança&quot; (sem preposição).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|essencial|0fd6f51f" data-raw="Resumo do material: cujo = preposição na união dos termos **posteriores**; que = preposição na união do termo posterior com o **anterior**."><span class="ed-t">Resumo do material: cujo = preposição na união dos termos <b>posteriores</b>; que = preposição na união do termo posterior com o <b>anterior</b>.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|essencial|e199c75a" data-raw="&quot;Quem&quot; tem antecedente pessoa e vem sempre antecedido de preposição (a quem, para quem, de quem)."><span class="ed-t">&quot;Quem&quot; tem antecedente pessoa e vem sempre antecedido de preposição (a quem, para quem, de quem).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Armadilhas de banca</h4><ul class="armadilha"><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|armadilhas|21c23cbb" data-raw="&quot;Cujo&quot; denota posse: pode estar gramatical e ainda assim mudar o sentido da frase original (a desconfiança &quot;pertenceria&quot; ao fato)."><span class="ed-t">&quot;Cujo&quot; denota posse: pode estar gramatical e ainda assim mudar o sentido da frase original (a desconfiança &quot;pertenceria&quot; ao fato).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|armadilhas|0d3a2832" data-raw="Verbo pronominal pede preposição: utilizar-se **de**, abdicar **de**, renunciar **a**, desconfiar **de**; trocar a preposição ou usar &quot;cujo&quot; nessa posição é erro."><span class="ed-t">Verbo pronominal pede preposição: utilizar-se <b>de</b>, abdicar <b>de</b>, renunciar <b>a</b>, desconfiar <b>de</b>; trocar a preposição ou usar &quot;cujo&quot; nessa posição é erro.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:pronome-relativo-cujo-que-preposicao|armadilhas|08d8b177" data-raw="&quot;Aonde&quot; (movimento) no lugar de &quot;onde&quot; e mudança de sentido (poder acessar não é poder tocar um local)."><span class="ed-t">&quot;Aonde&quot; (movimento) no lugar de &quot;onde&quot; e mudança de sentido (poder acessar não é poder tocar um local).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Possíveis omissões</h4><div class="omissao"><p><b>Filtro PORT-Pt4, questão 7 (Q2098383), assertiva D:</b> de quem usufruíra bom companheirismo Os comentários e o material não explicam, para o trecho com &quot;de quem usufruíra&quot;, se a regência do verbo usufruir ou o sentido de &quot;companheirismo&quot; tornam a reescrita inadequada. A banca pode ter alterado o sentido ou a regência.</p></div><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="topico-portugues:pronome-relativo-cujo-que-preposicao"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro PORT-Pt4:</span> <a href="#q5" class="acerto" title="acerto sem dúvida">Q5 <span class="small">Q2397960</span></a><a href="#q7" class="duvida" title="dúvida">Q7 <span class="small">Q2098383</span></a></div><p class="small"><a href="../leis/topicos-portugues.html#a-topico-portugues-pronome-relativo-cujo-que-preposicao">ver na página da lei (todos os filtros)</a></p></div></details></div><div class="day-card" id="cap-reescritura-de-texto"><div class="day-head"><span class="d-date">Reescritura de texto</span><span class="d-act"><span class="d-badge">1 dispositivo · 4 questões</span><button type="button" class="mini" data-expand="cap">expandir artigos</button></span></div><details class="art" id="a-topico-portugues-reescrita-equivalencia-de-sentido" data-f="4"><summary><span class="ref">Reescritura: manter sentido e correção</span><span class="inc f4"><i class="dot f4"></i>4×</span><span class="tit" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|titulo|b08ca493" data-raw="Trocar palavras e expressões sem mudar o sentido do trecho"><span class="ed-t">Trocar palavras e expressões sem mudar o sentido do trecho</span><span class="ed-b"><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></span><label class="dm" onclick="event.stopPropagation()"><input type="checkbox" class="dm-i"> dominado</label></summary><div class="body"><h4>O que precisa saber</h4><ul class="resumo"><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|essencial|bf287575" data-raw="Em reescrita, a FCC cobra **correção gramatical** e **manutenção das relações de sentido**: antes de olhar a gramática, identifique a relação do original (causa, consequência, condição, concessão, finalidade, comparação, oposição) e veja se foi preservada."><span class="ed-t">Em reescrita, a FCC cobra <b>correção gramatical</b> e <b>manutenção das relações de sentido</b>: antes de olhar a gramática, identifique a relação do original (causa, consequência, condição, concessão, finalidade, comparação, oposição) e veja se foi preservada.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|essencial|1d038718" data-raw="A banca troca palavras por outras **semanticamente equivalentes**, muda a ordem dos termos, os conectivos e a forma verbal; o que decide é o **sentido do período inteiro**, não a semelhança das palavras."><span class="ed-t">A banca troca palavras por outras <b>semanticamente equivalentes</b>, muda a ordem dos termos, os conectivos e a forma verbal; o que decide é o <b>sentido do período inteiro</b>, não a semelhança das palavras.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|essencial|8c12d85e" data-raw="**Pequenas alterações lexicais** (uma palavra trocada, um advérbio restritivo, uma negação deslocada) produzem mudanças profundas de sentido."><span class="ed-t"><b>Pequenas alterações lexicais</b> (uma palavra trocada, um advérbio restritivo, uma negação deslocada) produzem mudanças profundas de sentido.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|essencial|238f002b" data-raw="Verbos e expressões trocados podem inverter o papel dos termos: &quot;carecer&quot; (necessitar) e &quot;conflitar&quot; mudam quem faz o quê; &quot;para além do concurso de&quot; sugere independência."><span class="ed-t">Verbos e expressões trocados podem inverter o papel dos termos: &quot;carecer&quot; (necessitar) e &quot;conflitar&quot; mudam quem faz o quê; &quot;para além do concurso de&quot; sugere independência.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|essencial|9939b33d" data-raw="Equivalências aceitas nos comentários: &quot;não dar margem a&quot; = evitar; &quot;jamais permite que&quot; = &quot;não se deixa nunca&quot;; &quot;degradar&quot; = rebaixar; &quot;agonizante quase&quot; = &quot;à beira da agonia&quot;."><span class="ed-t">Equivalências aceitas nos comentários: &quot;não dar margem a&quot; = evitar; &quot;jamais permite que&quot; = &quot;não se deixa nunca&quot;; &quot;degradar&quot; = rebaixar; &quot;agonizante quase&quot; = &quot;à beira da agonia&quot;.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Observações do material e dos comentários</h4><ul class=""><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|observacoes|c5533972" data-raw="A lista do material sobre quantificadores, advérbios de exclusividade e modalizadores (todos, alguns, sempre, nunca, apenas, somente) serve para checar se o alcance da informação foi mantido."><span class="ed-t">A lista do material sobre quantificadores, advérbios de exclusividade e modalizadores (todos, alguns, sempre, nunca, apenas, somente) serve para checar se o alcance da informação foi mantido.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Exceções e distinções</h4><ul class=""><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|excecoes|81fe1c4f" data-raw="Os comentários indicam que a banca tolera sinonímia **aproximada** (por exemplo &quot;flerte&quot; por &quot;namoro&quot; foi vista como &quot;a menos pior&quot;), mas não tolera termos de **sentido oposto** (incomensurável é o oposto de medir)."><span class="ed-t">Os comentários indicam que a banca tolera sinonímia <b>aproximada</b> (por exemplo &quot;flerte&quot; por &quot;namoro&quot; foi vista como &quot;a menos pior&quot;), mas não tolera termos de <b>sentido oposto</b> (incomensurável é o oposto de medir).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Armadilhas de banca</h4><ul class="armadilha"><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|armadilhas|d8c99ca2" data-raw="Deslocar a negação ou o termo restritivo: &quot;combate sem rendição&quot; não é o mesmo que &quot;não se rende sem luta&quot; (este admite a rendição depois do combate)."><span class="ed-t">Deslocar a negação ou o termo restritivo: &quot;combate sem rendição&quot; não é o mesmo que &quot;não se rende sem luta&quot; (este admite a rendição depois do combate).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|armadilhas|2943b727" data-raw="Trocar preposição ou pronome que altera o sentido: &quot;combate contra&quot; por &quot;luta com&quot;, já que &quot;com&quot; pode indicar lutar junto."><span class="ed-t">Trocar preposição ou pronome que altera o sentido: &quot;combate contra&quot; por &quot;luta com&quot;, já que &quot;com&quot; pode indicar lutar junto.</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|armadilhas|53b2df2f" data-raw="Expressões do original que induzem a erro: &quot;em última instância&quot; não equivale a &quot;em último lugar&quot; nem a &quot;em último caso&quot; (leitura que levou um comentarista a errar)."><span class="ed-t">Expressões do original que induzem a erro: &quot;em última instância&quot; não equivale a &quot;em último lugar&quot; nem a &quot;em último caso&quot; (leitura que levou um comentarista a errar).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li><li class="" data-ek="topico-portugues:reescrita-equivalencia-de-sentido|armadilhas|94af9de2" data-raw="Quando o original traz uma afirmação, a opção errada costuma inverter o sentido (evitar vira depender, ou vira derivar)."><span class="ed-t">Quando o original traz uma afirmação, a opção errada costuma inverter o sentido (evitar vira depender, ou vira derivar).</span><span class="ed-b"><button class="ed-edit" title="Editar o texto">✎</button><button class="ed-del" title="Ocultar ou restaurar">✕</button></span></li></ul><h4>Minhas anotações</h4><div class="nota-txt" contenteditable="true" spellcheck="true" data-nota="topico-portugues:reescrita-equivalencia-de-sentido"></div><h4>Onde caiu</h4><div class="qs"><span class="small">Filtro PORT-Pt4:</span> <a href="#q1" class="erro" title="erro">Q1 <span class="small">Q3215698</span></a><a href="#q2" class="erro" title="erro">Q2 <span class="small">Q3215692</span></a><a href="#q6" class="acerto" title="acerto sem dúvida">Q6 <span class="small">Q2397958</span></a><a href="#q7" class="duvida" title="dúvida">Q7 <span class="small">Q2098383</span></a></div><p class="small"><a href="../leis/topicos-portugues.html#a-topico-portugues-reescrita-equivalencia-de-sentido">ver na página da lei (todos os filtros)</a></p></div></details></div><div class="lac"><b>Possíveis omissões (1)</b><p class="small">Pontos que os comentários e os materiais locais não permitiram fundamentar. Podem não ser necessários para a resposta, ou a banca pode ter parafraseado ou inventado a informação.</p><p><b>Questão 7 (Q2098383), assertiva D, Cujo e que: a preposição certa:</b> de quem usufruíra bom companheirismo Os comentários e o material não explicam, para o trecho com &quot;de quem usufruíra&quot;, se a regência do verbo usufruir ou o sentido de &quot;companheirismo&quot; tornam a reescrita inadequada. A banca pode ter alterado o sentido ou a regência.</p></div></section><section class="panel" id="inc"><div class="day-card"><div class="day-head"><span class="d-date"><i class="dot f4"></i>Cobrados 4 vezes</span><span class="d-badge">1 dispositivo(s)</span></div><details class="art" data-f="4" data-src="a-topico-portugues-reescrita-equivalencia-de-sentido"><summary><span class="ref">Reescritura: manter sentido e correção</span><span class="inc f4"><i class="dot f4"></i>4×</span><span class="tit">Trocar palavras e expressões sem mudar o sentido do trecho <span class="ctx">· Português › Reescritura de texto</span></span></summary><div class="body"></div></details></div><div class="day-card"><div class="day-head"><span class="d-date"><i class="dot f2"></i>Cobrados 2 vezes</span><span class="d-badge">1 dispositivo(s)</span></div><details class="art" data-f="2" data-src="a-topico-portugues-pronome-relativo-cujo-que-preposicao"><summary><span class="ref">Cujo e que: a preposição certa</span><span class="inc f2"><i class="dot f2"></i>2×</span><span class="tit">Descobrir a preposição que acompanha cujo, que e quem <span class="ctx">· Português › Pronomes relativos</span></span></summary><div class="body"></div></details></div><div class="day-card"><div class="day-head"><span class="d-date"><i class="dot f1"></i>Cobrados 1 vez</span><span class="d-badge">2 dispositivo(s)</span></div><details class="art" data-f="1" data-src="a-topico-portugues-conectivos-valor-semantico"><summary><span class="ref">Conectivos: finalidade, concessão, causa e condição</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Trocar o conectivo muda a relação entre as orações <span class="ctx">· Português › Conectivos</span></span></summary><div class="body"></div></details><details class="art" data-f="1" data-src="a-topico-portugues-regencia-e-emprego-de-termos"><summary><span class="ref">Regência verbal e emprego de termos (convir, agradecer, aonde, aprouver)</span><span class="inc f1"><i class="dot f1"></i>1×</span><span class="tit">Verbos transitivos diretos e indiretos e a preposição certa <span class="ctx">· Português › Gramática</span></span></summary><div class="body"></div></details></div></section><section class="panel" id="err"><p class="note">Reescritura domina: quatro das sete questões cobram equivalência de sentido entre trechos. Erros: duas reescritas com troca sutil de sentido (negação deslocada, verbo que inverte a relação) e uma de regência. A questão de dúvida mistura reescrita lexical e uso de cujo.</p><p class="note">Dispositivos ligados às questões que você errou ou acertou com dúvida. Clique para abrir o conteúdo na aba <b>Na ordem da lei</b>.</p><div class="tbl-card"><table><thead><tr><th>Dispositivo</th><th>Incidência</th><th>Tópico</th><th>Onde</th><th>Histórico no cronograma</th></tr></thead><tbody><tr><td><a href="#a-topico-portugues-reescrita-equivalencia-de-sentido"><b>Reescritura: manter sentido e correção</b></a></td><td><span class="inc f4"><i class="dot f4"></i>4×</span></td><td>Trocar palavras e expressões sem mudar o sentido do trecho</td><td><span class="b e">erro Q1 (PORT-Pt4)</span><span class="b e">erro Q2 (PORT-Pt4)</span><span class="b d">dúvida Q7 (PORT-Pt4)</span></td><td class="small"></td></tr><tr><td><a href="#a-topico-portugues-regencia-e-emprego-de-termos"><b>Regência verbal e emprego de termos (convir, agradecer, aonde, aprouver)</b></a></td><td><span class="inc f1"><i class="dot f1"></i>1×</span></td><td>Verbos transitivos diretos e indiretos e a preposição certa</td><td><span class="b e">erro Q4 (PORT-Pt4)</span></td><td class="small"></td></tr><tr><td><a href="#a-topico-portugues-pronome-relativo-cujo-que-preposicao"><b>Cujo e que: a preposição certa</b></a></td><td><span class="inc f2"><i class="dot f2"></i>2×</span></td><td>Descobrir a preposição que acompanha cujo, que e quem</td><td><span class="b d">dúvida Q7 (PORT-Pt4)</span></td><td class="small"></td></tr></tbody></table></div></section><section class="panel" id="idx"><div class="tbl-card"><table><thead><tr><th>Q</th><th>Código</th><th>Banca</th><th>Resultado</th><th>Dispositivos exigidos</th></tr></thead><tbody><tr id="q1"><td><b>Q1</b></td><td>Q3215698</td><td>FCC 2025</td><td>erro</td><td class="links"><a href="#a-topico-portugues-reescrita-equivalencia-de-sentido">Reescritura: manter sentido e correção</a></td></tr><tr id="q2"><td><b>Q2</b></td><td>Q3215692</td><td>FCC 2025</td><td>erro</td><td class="links"><a href="#a-topico-portugues-reescrita-equivalencia-de-sentido">Reescritura: manter sentido e correção</a></td></tr><tr id="q3"><td><b>Q3</b></td><td>Q2400690</td><td>FCC 2024</td><td>certeza</td><td class="links"><a href="#a-topico-portugues-conectivos-valor-semantico">Conectivos: finalidade, concessão, causa e condição</a></td></tr><tr id="q4"><td><b>Q4</b></td><td>Q2400425</td><td>FCC 2024</td><td>erro</td><td class="links"><a href="#a-topico-portugues-regencia-e-emprego-de-termos">Regência verbal e emprego de termos (convir, agradecer, aonde, aprouver)</a></td></tr><tr id="q5"><td><b>Q5</b></td><td>Q2397960</td><td>FCC 2023</td><td>certeza</td><td class="links"><a href="#a-topico-portugues-pronome-relativo-cujo-que-preposicao">Cujo e que: a preposição certa</a></td></tr><tr id="q6"><td><b>Q6</b></td><td>Q2397958</td><td>FCC 2023</td><td>certeza</td><td class="links"><a href="#a-topico-portugues-reescrita-equivalencia-de-sentido">Reescritura: manter sentido e correção</a></td></tr><tr id="q7"><td><b>Q7</b></td><td>Q2098383</td><td>FCC 2023</td><td>duvida</td><td class="links"><a href="#a-topico-portugues-reescrita-equivalencia-de-sentido">Reescritura: manter sentido e correção</a> <a href="#a-topico-portugues-pronome-relativo-cujo-que-preposicao">Cujo e que: a preposição certa</a></td></tr></tbody></table></div></section></div><script>window.__ED={"ocultar": [], "editar": {}, "notas": {}};</script><script>(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return [].slice.call((r || document).querySelectorAll(s)); };
+  var N = function (x) { return (x || '').normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase(); };
+  var st = function (k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { return null; } };
+  var esc = function (t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); };
+  var rich = function (t) { return esc(t).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>'); };
+
+  /* ---------- abas ---------- */
+  function tab(id) {
+    $$('.tab-btn').forEach(function (t) { t.classList.toggle('active', t.dataset.tab === id); });
+    $$('.panel').forEach(function (p) { p.classList.toggle('active', p.id === id); });
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
+  }
+  $$('.tab-btn').forEach(function (t) { t.onclick = function () { tab(t.dataset.tab); }; });
+
+  /* ---------- cartões ---------- */
+  var law = $$('#lei details.art'), lite = $$('#inc details.art');
+  var dom = function (c) { return c.id || c.dataset.src; };
+  law.forEach(function (c) {
+    var k = $('input.dm-i', c);
+    if (st('dom:' + c.id) === '1') { c.classList.add('dom'); if (k) k.checked = true; }
+    if (k) {
+      k.onclick = function (e) { e.stopPropagation(); };
+      k.onchange = function () {
+        c.classList.toggle('dom', k.checked); st('dom:' + c.id, k.checked ? '1' : '0');
+        lite.forEach(function (l) { if (l.dataset.src === c.id) l.classList.toggle('dom', k.checked); });
+      };
+    }
+  });
+  lite.forEach(function (l) {
+    if (st('dom:' + l.dataset.src) === '1') l.classList.add('dom');
+    l.addEventListener('toggle', function () {
+      var b = $('.body', l);
+      if (l.open && b && !b.innerHTML.trim()) { var s = document.getElementById(l.dataset.src); if (s) b.innerHTML = $('.body', s).innerHTML; }
+    });
+  });
+
+  /* ---------- filtros e busca (sem acento) ---------- */
+  var f = { fx: '*', q: '', ocultar: false };
+  function apply() {
+    var qs = N(f.q);
+    law.concat(lite).forEach(function (c) {
+      var t = c.dataset.src ? document.getElementById(c.dataset.src).textContent : c.textContent;
+      var ok = (f.fx === '*' || c.dataset.f === f.fx) && (!qs || N(t).indexOf(qs) > -1) && !(f.ocultar && c.classList.contains('dom'));
+      c.style.display = ok ? '' : 'none';
+    });
+    $$('.day-card').forEach(function (c) {
+      if (!$('details.art', c)) return;
+      c.style.display = $$('details.art', c).some(function (d) { return d.style.display !== 'none'; }) ? '' : 'none';
+    });
+    $$('.tit-wrap').forEach(function (w) {
+      w.style.display = $$('.day-card', w).some(function (d) { return d.style.display !== 'none'; }) ? '' : 'none';
+    });
+    $$('div.secao-h').forEach(function (h) {
+      var n = h.nextElementSibling, any = false;
+      while (n && !n.classList.contains('secao-h')) { if (n.matches('details.art') && n.style.display !== 'none') any = true; n = n.nextElementSibling; }
+      h.style.display = any ? '' : 'none';
+    });
+  }
+  $$('[data-fx]').forEach(function (b) {
+    b.onclick = function () { f.fx = b.dataset.fx; $$('[data-fx]').forEach(function (x) { x.classList.toggle('active', x.dataset.fx === f.fx); }); apply(); };
+  });
+  var s = $('#busca'); if (s) s.oninput = function () { f.q = s.value; apply(); };
+  var oc = $('#ocultar'); if (oc) oc.onchange = function () { f.ocultar = oc.checked; apply(); };
+
+  /* ---------- expandir / recolher partes da lei (botão de cada título e de cada capítulo) ---------- */
+  function setOpen(list, open) { list.forEach(function (d) { d.open = open; }); }
+  $$('[data-expand]').forEach(function (b) {
+    b.onclick = function (e) {
+      e.stopPropagation();
+      var box = b.closest(b.dataset.expand === 'tit' ? '.tit-wrap' : '.day-card');
+      var ds = $$('details.art', box);
+      var open = !ds.every(function (d) { return d.open; });
+      setOpen(ds, open);
+      b.textContent = open ? 'recolher' : 'expandir artigos';
+    };
+  });
+
+  /* ---------- edição: ocultar, editar texto, anotações ---------- */
+  var BASE = window.__ED || { ocultar: [], editar: {}, notas: {} };
+  var LOC = { ocultar: {}, editar: {}, notas: {} };
+  try { var raw = JSON.parse(st('cr:ed:v1') || 'null'); if (raw) LOC = raw; } catch (e) {}
+  LOC.ocultar = LOC.ocultar || {}; LOC.editar = LOC.editar || {}; LOC.notas = LOC.notas || {};
+  function persist() { st('cr:ed:v1', JSON.stringify(LOC)); }
+  function setText(el, raw) { el.dataset.raw = raw; var t = $('.ed-t', el); if (t) t.innerHTML = rich(raw); }
+  $$('[data-ek]').forEach(function (el) {
+    var k = el.dataset.ek;
+    if (k in LOC.ocultar) el.classList.toggle('oculto', !!LOC.ocultar[k]);
+    if (k in LOC.editar) setText(el, LOC.editar[k]);
+  });
+  $$('.nota-txt').forEach(function (n) { var k = n.dataset.nota; if (k in LOC.notas) n.textContent = LOC.notas[k]; });
+
+  function msg(t) { var m = $('#ed-msg'); if (m) { m.textContent = t; setTimeout(function () { m.textContent = ''; }, 6000); } }
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (t.classList.contains('ed-del')) {
+      e.preventDefault(); e.stopPropagation();
+      var el = t.closest('[data-ek]'), k = el.dataset.ek, now = el.classList.contains('oculto');
+      LOC.ocultar[k] = !now; el.classList.toggle('oculto', !now); persist();
+      msg(now ? 'Item restaurado.' : 'Item ocultado (use "Mostrar ocultos" para restaurar).');
+    } else if (t.classList.contains('ed-edit')) {
+      e.preventDefault(); e.stopPropagation();
+      var li = t.closest('[data-ek]'), sp = $('.ed-t', li), antes = li.dataset.raw;
+      sp.textContent = antes; sp.contentEditable = 'true'; sp.focus();
+      var fim = function (salvar) {
+        sp.contentEditable = 'false';
+        if (salvar) { var novo = sp.innerText.replace(/\s+/g, ' ').trim(); if (novo && novo !== antes) { LOC.editar[li.dataset.ek] = novo; persist(); setText(li, novo); msg('Texto editado.'); return; } }
+        setText(li, antes);
+      };
+      sp.onkeydown = function (ev) { if (ev.key === 'Enter' && !ev.shiftKey) { ev.preventDefault(); sp.onblur = null; fim(true); } else if (ev.key === 'Escape') { sp.onblur = null; fim(false); } };
+      sp.onblur = function () { fim(true); };
+    }
+  }, true);
+
+  function editMode(on) { document.body.classList.toggle('edicao', on); }
+  var be = $('#btn-edicao'); if (be) be.onclick = function () { editMode(!document.body.classList.contains('edicao')); };
+  var bo = $('#btn-ocultos'); if (bo) bo.onclick = function () { document.body.classList.toggle('ver-ocultos'); };
+  document.addEventListener('input', function (e) {
+    var n = e.target.closest && e.target.closest('.nota-txt');
+    if (n) { LOC.notas[n.dataset.nota] = n.innerText; persist(); }
+  });
+  function merged() {
+    var o = BASE.ocultar.filter(function (k) { return !(k in LOC.ocultar) || LOC.ocultar[k]; });
+    Object.keys(LOC.ocultar).forEach(function (k) { if (LOC.ocultar[k] && o.indexOf(k) < 0) o.push(k); });
+    return { ocultar: o, editar: Object.assign({}, BASE.editar, LOC.editar), notas: Object.assign({}, BASE.notas, LOC.notas) };
+  }
+  function baixar(txt) {
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'application/json' }));
+    a.download = 'compilado-edicoes.json'; document.body.appendChild(a); a.click(); a.remove();
+    msg('Arquivo "compilado-edicoes.json" baixado. Ele é importado sozinho na próxima geração do compilado.');
+  }
+  var bs = $('#btn-salvar');
+  if (bs) bs.onclick = function () {
+    var txt = JSON.stringify(merged(), null, 1);
+    if (window.showSaveFilePicker) {
+      window.showSaveFilePicker({ suggestedName: 'edicoes.json', types: [{ description: 'JSON', accept: { 'application/json': ['.json'] } }] })
+        .then(function (h) { return h.createWritable().then(function (w) { return w.write(txt).then(function () { return w.close(); }); }); })
+        .then(function () { msg('Edições salvas no arquivo escolhido.'); })
+        .catch(function (e) { if (!e || e.name !== 'AbortError') baixar(txt); });
+    } else baixar(txt);
+  };
+
+  /* ---------- links entre abas/páginas ---------- */
+  $$('a[href^="#a-"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); tab('lei');
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if (c) { c.style.display = ''; c.open = true; setTimeout(function () { c.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 30); }
+    });
+  });
+  $$('a[href^="#q"]').forEach(function (a) {
+    a.addEventListener('click', function (e) {
+      e.preventDefault(); tab('idx');
+      var c = document.getElementById(a.getAttribute('href').slice(1));
+      if (c) setTimeout(function () { c.scrollIntoView({ block: 'center' }); }, 30);
+    });
+  });
+  $$('.lei-txt').forEach(function (b) {
+    var btn = $('.ver-completo', b);
+    if (btn) btn.onclick = function () { b.classList.toggle('completo'); btn.textContent = b.classList.contains('completo') ? 'mostrar só os trechos cobrados' : 'ver o artigo completo'; };
+  });
+
+  var h = (location.hash || '').slice(1);
+  if (h && $('#' + h + '.panel')) tab(h);
+  if (h.indexOf('a-') === 0) { var c0 = document.getElementById(h); if (c0) { tab('lei'); c0.open = true; setTimeout(function () { c0.scrollIntoView(); }, 50); } }
+  if (/^q\d+$/.test(h)) { tab('idx'); var q0 = document.getElementById(h); if (q0) setTimeout(function () { q0.scrollIntoView({ block: 'center' }); }, 50); }
+  apply();
+})();
+</script></body></html>
