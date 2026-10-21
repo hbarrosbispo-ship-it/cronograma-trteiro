@@ -2462,7 +2462,7 @@ function startInterval(){
 function populateTaskSelect(){
   const sel = document.getElementById('swTaskSelect');
   const prev = sel.value;
-  const options = tasks.filter(t=>t.type!=='Flashcards' && lsGet('status_'+t.id,'Pendente')!=='Concluído');
+  const options = tasks.filter(t=>t.type!=='Flashcards' && !/videoaula do curso Rezende/i.test(t.desc) && lsGet('status_'+t.id,'Pendente')!=='Concluído');
   sel.innerHTML = '<option value="">Selecione a atividade...</option>' +
     options.map(t=>`<option value="${t.id}">${t.date} · ${t.subj} · ${t.desc.length>32?t.desc.slice(0,32)+'…':t.desc}</option>`).join('');
   sel.value = timerTaskId || prev || '';
