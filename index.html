@@ -208,6 +208,9 @@
   .add-menu button + button{border-top:1px solid var(--border);}
   #dupList{width:100%;font-size:12px;}
   .dup-hint{font-size:11px;color:var(--gray);margin-top:4px;line-height:1.4;}
+  .descedit{cursor:text;border-bottom:1px dotted transparent;}
+  .descedit:hover{border-bottom-color:#aaa;background:#fff8d6;}
+  .descinput{width:100%;box-sizing:border-box;font:inherit;padding:3px 5px;}
   .pgedit{cursor:text;border-bottom:1px dotted #aaa;}
   .pgedit:hover{background:#fff8d6;}
   .btn-add-task{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12.5px;font-weight:bold;cursor:pointer;font-family:inherit;margin:14px 0 0;}
@@ -1756,6 +1759,7 @@ function effectiveDate(t){
   const moved = lsGet('moveto_'+t.id, '');
   return moved && DAY_INFO[moved] ? moved : t.date;
 }
+function effectiveDesc(t){ const v = lsGet('desc_'+t.id,''); return v ? v : t.desc; }
 function effectiveAmount(t){
   // Questões e Leitura aceitam ajuste manual (qtd_<id>): questões pelo campo numérico, leitura
   // com duplo clique na quantidade de páginas (útil pra dividir um PDF em mais de um dia).
@@ -2149,7 +2153,7 @@ function rowHtml(t, firstCol, draggableRow){
   const linkHtml = t.link ? ` <a href="${t.link}" target="_blank" rel="noopener" class="qc-link" title="Abrir filtro no QConcursos">QConcursos ↗</a>` : '';
   const fileHtml = t.file ? ` <a href="${fileUri(t.file)}" class="file-link" title="Abrir o PDF direto no Okular">Abrir arquivo ↗</a> <a href="${fileUriChrome(t.file)}" class="file-link-chrome" title="Abrir o PDF no Google Chrome (só funciona neste computador)">Chrome ↗</a>` : '';
   const topicsHtml = isQ ? `<textarea class="topicsedit" data-id="${t.id}" rows="1" placeholder="Assuntos abordados pelo filtro">${escapeHtml(effectiveTopics(t))}</textarea>` : '';
-  const descHtml = `${t.desc}${linkHtml}${fileHtml}${topicsHtml}`;
+  const descHtml = `<span class="descedit" data-id="${t.id}" title="Clique duas vezes (ou com o botão direito) para editar o nome da tarefa">${escapeHtml(effectiveDesc(t))}</span>${linkHtml}${fileHtml}${topicsHtml}`;
   const amt = effectiveAmount(t);
   const qtdHtml = isQ
     ? `<input type="number" min="1" class="qtdedit" data-id="${t.id}" value="${amt}" title="Ajuste conforme a quantidade real de questões no filtro"> ${t.unit}`
@@ -2283,6 +2287,34 @@ function attachRowEvents(){
     sel.addEventListener('change', ()=>{
       moveTaskTo(sel.dataset.id, sel.value);
     });
+  });
+  document.querySelectorAll('span.descedit').forEach(sp=>{
+    const edit = (e)=>{
+      if(e) e.preventDefault();
+      const id = sp.dataset.id;
+      const t = tasks.find(x=>x.id===id);
+      if(!t) return;
+      const inp = document.createElement('input');
+      inp.type = 'text'; inp.className = 'descinput';
+      inp.value = effectiveDesc(t);
+      inp.title = 'Enter confirma, Esc cancela. Vazio volta ao nome original.';
+      sp.replaceWith(inp);
+      inp.focus(); inp.select();
+      let done = false;
+      const commit = ()=>{
+        if(done) return; done = true;
+        const v = inp.value.trim();
+        lsSet('desc_'+id, (v==='' || v===t.desc) ? '' : v);
+        renderAll();
+      };
+      inp.addEventListener('blur', commit);
+      inp.addEventListener('keydown', (ev)=>{
+        if(ev.key==='Enter') commit();
+        else if(ev.key==='Escape'){ done = true; renderAll(); }
+      });
+    };
+    sp.addEventListener('dblclick', edit);
+    sp.addEventListener('contextmenu', edit);
   });
   document.querySelectorAll('span.pgedit').forEach(sp=>{
     sp.addEventListener('dblclick', ()=>{
@@ -2467,7 +2499,7 @@ function updateSwDisplay(){
   const hh = pad(Math.floor(s/3600)), mm = pad(Math.floor((s%3600)/60)), ss = pad(s%60);
   document.getElementById('swTime').textContent = hh+':'+mm+':'+ss;
   const t = tasks.find(x=>x.id===timerTaskId);
-  document.getElementById('swTag').textContent = t ? (t.subj+' · '+t.desc) : 'nenhuma atividade selecionada';
+  document.getElementById('swTag').textContent = t ? (t.subj+' · '+effectiveDesc(t)) : 'nenhuma atividade selecionada';
   const toggleBtn = document.getElementById('swToggle');
   if(timerRunning){
     toggleBtn.innerHTML = '&#10074;&#10074;';
@@ -2488,7 +2520,7 @@ function populateTaskSelect(){
   const prev = sel.value;
   const options = tasks.filter(t=>t.type!=='Flashcards' && !/videoaula do curso Rezende/i.test(t.desc) && lsGet('status_'+t.id,'Pendente')!=='Concluído');
   sel.innerHTML = '<option value="">Selecione a atividade...</option>' +
-    options.map(t=>`<option value="${t.id}">${t.date} · ${t.subj} · ${t.desc.length>32?t.desc.slice(0,32)+'…':t.desc}</option>`).join('');
+    options.map(t=>`<option value="${t.id}">${t.date} · ${t.subj} · ${effectiveDesc(t).length>32?effectiveDesc(t).slice(0,32)+'…':effectiveDesc(t)}</option>`).join('');
   sel.value = timerTaskId || prev || '';
 }
 
